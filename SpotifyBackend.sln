@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyAPI", "SpotifyAPI\SpotifyAPI.csproj", "{8DBF8C34-CED0-4382-8142-CF805D7DC5FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyDAL", "SpotifyDAL\SpotifyDAL.csproj", "{EF7CCC8B-D2BE-4607-AA08-15E302A6ECCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyBLL", "SpotifyBLL\SpotifyBLL.csproj", "{E99ACFE7-F511-48E8-A374-D040C80FD7E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyShared", "SpotifyShared\SpotifyShared.csproj", "{FD71FACE-17CE-4787-AA40-1E7382DC9BBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugConsole", "DebugConsole\DebugConsole.csproj", "{928259AD-CCAA-4129-A200-F8171E609A2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIdentity", "MyIdentity\MyIdentity.csproj", "{7C50E5DE-4F29-4D80-B82F-4B505FE3EA75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{487C1320-2BA6-4024-BAB3-31371EC92D84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscgogsDAL", "DiscgogsDAL\DiscgogsDAL.csproj", "{E8D709D5-EB5B-4BD3-9DF2-5E43373B1EDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DBF8C34-CED0-4382-8142-CF805D7DC5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DBF8C34-CED0-4382-8142-CF805D7DC5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DBF8C34-CED0-4382-8142-CF805D7DC5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DBF8C34-CED0-4382-8142-CF805D7DC5FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF7CCC8B-D2BE-4607-AA08-15E302A6ECCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF7CCC8B-D2BE-4607-AA08-15E302A6ECCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF7CCC8B-D2BE-4607-AA08-15E302A6ECCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF7CCC8B-D2BE-4607-AA08-15E302A6ECCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E99ACFE7-F511-48E8-A374-D040C80FD7E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E99ACFE7-F511-48E8-A374-D040C80FD7E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E99ACFE7-F511-48E8-A374-D040C80FD7E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E99ACFE7-F511-48E8-A374-D040C80FD7E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD71FACE-17CE-4787-AA40-1E7382DC9BBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD71FACE-17CE-4787-AA40-1E7382DC9BBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD71FACE-17CE-4787-AA40-1E7382DC9BBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD71FACE-17CE-4787-AA40-1E7382DC9BBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{928259AD-CCAA-4129-A200-F8171E609A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{928259AD-CCAA-4129-A200-F8171E609A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{928259AD-CCAA-4129-A200-F8171E609A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{928259AD-CCAA-4129-A200-F8171E609A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C50E5DE-4F29-4D80-B82F-4B505FE3EA75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C50E5DE-4F29-4D80-B82F-4B505FE3EA75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C50E5DE-4F29-4D80-B82F-4B505FE3EA75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C50E5DE-4F29-4D80-B82F-4B505FE3EA75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487C1320-2BA6-4024-BAB3-31371EC92D84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487C1320-2BA6-4024-BAB3-31371EC92D84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487C1320-2BA6-4024-BAB3-31371EC92D84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487C1320-2BA6-4024-BAB3-31371EC92D84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8D709D5-EB5B-4BD3-9DF2-5E43373B1EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8D709D5-EB5B-4BD3-9DF2-5E43373B1EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8D709D5-EB5B-4BD3-9DF2-5E43373B1EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8D709D5-EB5B-4BD3-9DF2-5E43373B1EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
