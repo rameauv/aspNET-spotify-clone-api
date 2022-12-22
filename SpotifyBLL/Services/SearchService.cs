@@ -20,8 +20,8 @@ public class SearchService : ISearchService
     {
         var res = await _searchRepository.SearchAsync(new DAL.Search.Models.Search(
             search.Query,
-            search.Page,
-            search.PerPage
+            search.Offset,
+            search.Limit
         ));
         return _mapper.Map<SearchResult>(res);
     }

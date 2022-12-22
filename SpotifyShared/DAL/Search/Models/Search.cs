@@ -1,8 +1,8 @@
 namespace Spotify.Shared.DAL.Search.Models;
 
-public record Search(string Query, uint? Page = null, uint? PerPage = null)
+public record Search(string Query, int? Offset = null, int? Limit = null)
 {
     public string Query { get; set; } = Query;
-    public uint? Page { get; set; } = Page;
-    public uint? PerPage { get; set; } = PerPage;
+    public int? Offset { get; set; } = Offset;
+    public int? Limit { get; set; } = Limit;
 }

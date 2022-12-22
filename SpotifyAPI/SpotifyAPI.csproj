@@ -18,11 +18,12 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DiscgogsDAL\DiscgogsDAL.csproj" />
+      <ProjectReference Include="..\RealSpotifyDAL\RealSpotifyDAL.csproj" />
       <ProjectReference Include="..\SpotifyBLL\SpotifyBLL.csproj" />
       <ProjectReference Include="..\SpotifyDAL\SpotifyDAL.csproj" />
     </ItemGroup>

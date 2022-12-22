@@ -1,8 +1,8 @@
 using System.Text;
-using AutoMapper;
-using DiscgogsDAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RealSpotifyDAL;
+using RealSpotifyDAL.Repositories;
 using Repositories.Repositories;
 using Spotify.BLL.Services;
 using Spotify.Models.BLL.Contracts;
@@ -11,7 +11,6 @@ using Spotify.Shared.BLL.Search;
 using Spotify.Shared.DAL.Contracts;
 using Spotify.Shared.DAL.Search;
 using Spotify.Shared.MyIdentity.Contracts;
-using SpotifyApi;
 using SpotifyApi.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +50,7 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ISearchRepository, SearchRepository>();
+builder.Services.AddSingleton<MySpotifyClient, MySpotifyClient>();
 
 // BLL Dependencies
 builder.Services.AddScoped<IUserService, UserService>();

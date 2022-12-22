@@ -1,42 +1,54 @@
 namespace Spotify.Shared.DAL.Search.Models;
 
-public class SearchResult
+public record SearchResult(ReleaseResult[] ReleaseResults, SongResult[] SongResult, ArtistResult[] ArtistResult)
 {
-    public SearchPagination Pagination { get; set; }
-    public ReleaseResult[] ReleaseResults { get; set; }
-    public SongResult[] SongResult { get; set; }
-    public ArtistResult[] ArtistResult { get; set; }
-}
-
-public class SearchPagination
-{
-    public uint Page { get; set; }
-    public uint Pages { get; set; }
-    public uint PerPage { get; set; }
-    public uint Items { get; set; }
+    public ReleaseResult[] ReleaseResults { get; set; } = ReleaseResults;
+    public SongResult[] SongResult { get; set; } = SongResult;
+    public ArtistResult[] ArtistResult { get; set; } = ArtistResult;
 }
 
 public class BaseResult
 {
+    public BaseResult(string id, string? thumbnailUrl)
+    {
+        Id = id;
+        ThumbnailUrl = thumbnailUrl;
+    }
+
     public string Id { get; set; }
-    public uint Order { get; set; }
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; set; }
 }
 
 public class ReleaseResult : BaseResult
 {
     public string Title { get; set; }
     public string ArtistName { get; set; }
+
+    public ReleaseResult(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
+    {
+        Title = title;
+        ArtistName = artistName;
+    }
 }
 
 public class SongResult : BaseResult
 {
     public string Title { get; set; }
     public string ArtistName { get; set; }
+
+    public SongResult(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
+    {
+        Title = title;
+        ArtistName = artistName;
+    }
 }
 
 public class ArtistResult : BaseResult
 {
     public string Name { get; set; }
-}
 
+    public ArtistResult(string id, string? thumbnailUrl, string name) : base(id, thumbnailUrl)
+    {
+        Name = name;
+    }
+}

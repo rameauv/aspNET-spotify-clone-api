@@ -1,5 +1,11 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
+  &lt;Assembly Path="/Users/valentinrameau/projects/SpotifyBackend/DiscgogsDAL/bin/Debug/net7.0/DiscgogsDAL.dll" /&gt;
+&lt;/AssemblyExplorer&gt;</s:String>
+	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=487c1320_002D2ba6_002D4024_002Dbab3_002D31371ec92d84_0023WebApplication1/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7c50e5de_002D4f29_002D4d80_002Db82f_002D4b505fe3ea75_0023MyIdentity/@EntryIndexedValue">True</s:Boolean>
 	
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=928259ad_002Dccaa_002D4129_002Da200_002Df8171e609a2c_0023DebugConsole/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=928259ad_002Dccaa_002D4129_002Da200_002Df8171e609a2c_0023DebugConsole/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=e8d709d5_002Deb5b_002D4bd3_002D9df2_002D5e43373b1edb_0023DiscgogsDAL/@EntryIndexedValue">True</s:Boolean>
+	</wpf:ResourceDictionary>

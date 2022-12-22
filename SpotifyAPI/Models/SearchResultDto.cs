@@ -1,42 +1,54 @@
 namespace SpotifyApi.Models;
 
-public class SearchResultDto
+public record SearchResultDto(ReleaseResultDto[] ReleaseResults, SongResultDto[] SongResult, ArtistResultDto[] ArtistResult)
 {
-    public SearchPagination Pagination { get; set; }
-    public ReleaseResult[] ReleaseResults { get; set; }
-    public SongResult[] SongResult { get; set; }
-    public ArtistResult[] ArtistResult { get; set; }
+    public ReleaseResultDto[] ReleaseResults { get; set; } = ReleaseResults;
+    public SongResultDto[] SongResult { get; set; } = SongResult;
+    public ArtistResultDto[] ArtistResult { get; set; } = ArtistResult;
 }
 
-public class SearchPagination
+public class BaseResultDto
 {
-    uint Page { get; set; }
-    uint Pages { get; set; }
-    uint PerPage { get; set; }
-    uint Items { get; set; }
-}
+    public BaseResultDto(string id, string? thumbnailUrl)
+    {
+        Id = id;
+        ThumbnailUrl = thumbnailUrl;
+    }
 
-public class BaseResult
-{
     public string Id { get; set; }
-    public uint Order { get; set; }
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; set; }
 }
 
-public class ReleaseResult : BaseResult
+public class ReleaseResultDto : BaseResultDto
 {
     public string Title { get; set; }
     public string ArtistName { get; set; }
+
+    public ReleaseResultDto(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
+    {
+        Title = title;
+        ArtistName = artistName;
+    }
 }
 
-public class SongResult : BaseResult
+public class SongResultDto : BaseResultDto
 {
     public string Title { get; set; }
     public string ArtistName { get; set; }
+
+    public SongResultDto(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
+    {
+        Title = title;
+        ArtistName = artistName;
+    }
 }
 
-public class ArtistResult : BaseResult
+public class ArtistResultDto : BaseResultDto
 {
     public string Name { get; set; }
-}
 
+    public ArtistResultDto(string id, string? thumbnailUrl, string name) : base(id, thumbnailUrl)
+    {
+        Name = name;
+    }
+}

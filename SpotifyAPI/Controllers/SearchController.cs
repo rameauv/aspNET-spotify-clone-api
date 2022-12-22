@@ -23,14 +23,14 @@ public class SearchController : ControllerBase
     [HttpPost("Search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<SearchResultDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResultDto<SearchResultDto>))]
-    public async Task<ActionResult<ResultDto<SearchResultDto>>> Search(SearchDto search)
+    public async Task<ActionResult<ResultDto<SearchResultDto>>> Search(string q, int? offset, int? limit)
     {
         try
         {
-            var res = await _searchService.SearchAsync(new Search(search.Query)
+            var res = await _searchService.SearchAsync(new Search(q)
             {
-                Page = search.Page,
-                PerPage = search.PerPage
+                Limit = limit,
+                Offset = offset
             });
             var searchResultDto = _mapper.Map<SearchResultDto>(res);
             var result = new ResultDto<SearchResultDto>
