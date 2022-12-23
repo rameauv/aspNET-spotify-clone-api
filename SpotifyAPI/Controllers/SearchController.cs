@@ -20,7 +20,7 @@ public class SearchController : ControllerBase
         this._mapper = mapper;
     }
 
-    [HttpPost("Search")]
+    [HttpGet("Search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<SearchResultDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResultDto<SearchResultDto>))]
     public async Task<ActionResult<ResultDto<SearchResultDto>>> Search(string q, int? offset, int? limit)
@@ -37,7 +37,7 @@ public class SearchController : ControllerBase
             {
                 Result = searchResultDto
             };
-            return Ok(res);
+            return Ok(result);
         }
         catch (Exception e)
         {

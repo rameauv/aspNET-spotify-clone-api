@@ -25,10 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Models" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="Microsoft.Extensions.Identity.Stores">
         <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.0\Microsoft.Extensions.Identity.Stores.dll</HintPath>
       </Reference>

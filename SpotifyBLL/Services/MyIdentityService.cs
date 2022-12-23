@@ -14,17 +14,17 @@ namespace Spotify.BLL.Services;
 public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
 {
     private readonly SharedDal.Contracts.IUserRepository _userRepository;
-    private readonly SharedDal.Contracts.IRefreshTokenRepository _tokenRepository;
+    private readonly SharedDal.Contracts.IRefreshTokenRepository _refreshTokenRepository;
     private readonly JwtConfig _jwtSettings;
 
     public MyIdentityService(
         SharedDal.Contracts.IUserRepository userRepository,
-        SharedDal.Contracts.IRefreshTokenRepository tokenRepository,
+        SharedDal.Contracts.IRefreshTokenRepository refreshTokenRepository,
         IConfiguration configuration
     )
     {
         this._userRepository = userRepository;
-        this._tokenRepository = tokenRepository;
+        this._refreshTokenRepository = refreshTokenRepository;
         var jwtSettingsSection = configuration.GetSection("Jwt");
         var jwtIssuer = jwtSettingsSection.GetSection("Issuer").Value;
         var jwtAudience = jwtSettingsSection.GetSection("Audience").Value;
@@ -77,7 +77,7 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
             return null;
         }
 
-        var refreshTokenDal = await _tokenRepository.FindByDeviceIdAndUserId(credentials.DeviceId, user.Id);
+        var refreshTokenDal = await _refreshTokenRepository.FindByDeviceIdAndUserId(credentials.DeviceId, user.Id);
         var refreshTokenDalValidated = refreshTokenDal != null && ValidateRefreshToken(refreshTokenDal.Token);
         var accessToken = _generateToken(user);
         var refreshToken = refreshTokenDalValidated
@@ -90,14 +90,14 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
 
         if (refreshTokenDal != null && !refreshTokenDalValidated)
         {
-            await _tokenRepository.UpdateAsync(credentials.DeviceId, new SharedDal.UpdateRefreshToken
+            await _refreshTokenRepository.UpdateAsync(credentials.DeviceId, new SharedDal.UpdateRefreshToken
             {
                 Token = new Optional<string?>(refreshToken)
             });
         }
         else if (refreshTokenDal == null)
         {
-            await _tokenRepository.CreateAsync(new SharedDal.RefreshToken(user.Id, credentials.DeviceId, refreshToken));
+            await _refreshTokenRepository.CreateAsync(new SharedDal.RefreshToken(user.Id, credentials.DeviceId, refreshToken));
         }
 
         return new SharedMyIdentity.Models.Token(accessToken, refreshToken);
@@ -129,14 +129,14 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
             }
 
             // If the refresh token is valid, return the associated user
-            var currentToken = await _tokenRepository.FindByDeviceIdAndUserId(new Guid(deviceId), new Guid(userId));
+            var savedRefreshToken = await _refreshTokenRepository.FindByDeviceIdAndUserId(new Guid(deviceId), new Guid(userId));
 
-            if (currentToken == null)
+            if (savedRefreshToken == null)
             {
                 return null;
             }
 
-            if (currentToken.Token != refreshToken)
+            if (savedRefreshToken.Token != refreshToken)
             {
                 return null;
             }
@@ -254,7 +254,7 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings.ExpiryInMinutes)),
+            expires: DateTime.Now.AddSeconds(Convert.ToDouble(_jwtSettings.ExpiryInMinutes)),
             signingCredentials: signingCredentials);
         return tokenOptions;
     }

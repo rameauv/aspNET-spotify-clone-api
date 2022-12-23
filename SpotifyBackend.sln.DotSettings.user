@@ -1,6 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Users/valentinrameau/projects/SpotifyBackend/DiscgogsDAL/bin/Debug/net7.0/DiscgogsDAL.dll" /&gt;
+  &lt;Assembly Path="/Users/valentinrameau/.nuget/packages/spotifyapi.web/7.0.0/lib/net7.0/SpotifyAPI.Web.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=487c1320_002D2ba6_002D4024_002Dbab3_002D31371ec92d84_0023WebApplication1/@EntryIndexedValue">True</s:Boolean>

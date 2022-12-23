@@ -13,7 +13,8 @@ public class UserRepository : IUserRepository
     public UserRepository(IConfiguration configuration)
     {
         var optionsBuilder =
-            new DbContextOptionsBuilder<Contexts.SpotifyContext>().UseNpgsql(configuration.GetConnectionString("DBContext"));
+            new DbContextOptionsBuilder<Contexts.SpotifyContext>().UseNpgsql(
+                configuration.GetConnectionString("DBContext"));
         this.Context = new Contexts.SpotifyContext(optionsBuilder.Options);
     }
 
@@ -95,7 +96,7 @@ public class UserRepository : IUserRepository
     public async Task<MyUser> CreateAsync(CreateUser user)
     {
         await using var dbContextTransaction = await this.Context.Database.BeginTransactionAsync();
-        var newUser = (await Context.Users.AddAsync(new Contexts.User()
+        var newUser = (await Context.Users.AddAsync(new User()
         {
             UserName = user.UserName,
             PasswordHash = user.Password,

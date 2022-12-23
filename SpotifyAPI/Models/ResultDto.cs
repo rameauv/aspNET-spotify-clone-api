@@ -4,8 +4,8 @@ namespace SpotifyApi.Models;
 
 public class ResultDto<T>
 {
-    public T Result { get; set; }
-    public ErrorDto Error { get; set; }
+    public T? Result { get; set; }
+    public ErrorDto? Error { get; set; }
 }
 
 public class ErrorDto

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Repositories.Contexts;
 using Spotify.Shared.DAL.Contracts;
-using RefreshToken = Repositories.Contexts.RefreshToken;
 using SharedDal = Spotify.Shared.DAL;
 
 namespace Repositories.Repositories;
@@ -56,11 +55,11 @@ public class RefreshTokenRepository : IRefreshTokenRepository
     public async Task<SharedDal.RefreshToken> CreateAsync(SharedDal.RefreshToken token)
     {
         await using var dbContextTransaction = await Context.Database.BeginTransactionAsync();
-        var newUser = (await Context.RefreshTokens.AddAsync(new RefreshToken(
-            token.UserId,
-            token.DeviceId,
-            token.Token
-        ))).Entity;
+        var newUser = (await Context.RefreshTokens.AddAsync(new RefreshToken{
+            UserId = token.UserId,
+            DeviceId = token.DeviceId,
+            Token = token.Token
+        })).Entity;
         await Context.SaveChangesAsync();
         await dbContextTransaction.CommitAsync();
         return new SharedDal.RefreshToken(

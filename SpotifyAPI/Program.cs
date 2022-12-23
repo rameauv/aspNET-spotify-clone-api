@@ -7,9 +7,15 @@ using Repositories.Repositories;
 using Spotify.BLL.Services;
 using Spotify.Models.BLL.Contracts;
 using Spotify.Shared;
+using Spotify.Shared.BLL.Album;
+using Spotify.Shared.BLL.Artist;
 using Spotify.Shared.BLL.Search;
+using Spotify.Shared.BLL.Track;
+using Spotify.Shared.DAL.Album;
+using Spotify.Shared.DAL.Artist;
 using Spotify.Shared.DAL.Contracts;
 using Spotify.Shared.DAL.Search;
+using Spotify.Shared.DAL.Track;
 using Spotify.Shared.MyIdentity.Contracts;
 using SpotifyApi.AutoMapper;
 
@@ -51,13 +57,18 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ISearchRepository, SearchRepository>();
 builder.Services.AddSingleton<MySpotifyClient, MySpotifyClient>();
+builder.Services.AddScoped<ITrackRepository, TrackRepository>();
+builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
+builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
 // BLL Dependencies
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMyIdentityService, MyIdentityService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
-
-
+builder.Services.AddScoped<ITrackService, TrackService>();
+builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<IAlbumService, AlbumService>();
+    
 var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
 var jwtIssuer = jwtSettingsSection.GetSection("Issuer").Value;
 var jwtAudience = jwtSettingsSection.GetSection("Audience").Value;
