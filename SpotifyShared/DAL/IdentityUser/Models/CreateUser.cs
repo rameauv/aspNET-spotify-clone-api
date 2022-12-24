@@ -1,4 +1,4 @@
-namespace Spotify.Shared.DAL;
+namespace Spotify.Shared.DAL.IdentityUser.Models;
 
 public record CreateUser(string UserName, string Password)
 {

@@ -1,7 +1,8 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Spotify.Shared.MyIdentity.Contracts;
-using Spotify.Shared.MyIdentity.Models;
+using Spotify.Shared.BLL.MyIdentity;
+using Spotify.Shared.BLL.MyIdentity.Models;
 using SpotifyApi.Models;
 
 namespace SpotifyApi.Controllers;
@@ -44,6 +45,7 @@ public class AccountsController : ControllerBase
         return StatusCode(201);
     }
 
+    [Authorize]
     [HttpPost("RefreshAccessToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

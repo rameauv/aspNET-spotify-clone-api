@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Spotify.Shared.MyIdentity.Models;
+namespace Spotify.Shared.BLL.MyIdentity.Models;
 
 public class MyResult
 {

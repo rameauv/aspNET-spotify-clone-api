@@ -1,16 +1,6 @@
-namespace Spotify.Shared.DAL.Contracts;
+namespace Spotify.Shared.DAL.User;
 
-public interface IUserRepository : IDisposable
+public interface IUserRepository
 {
-    public Task<MyUser> CreateAsync(CreateUser user);
-
-    public void DeleteById(string id);
-
-    public void UpdateById(string id, UpdateUser user);
-
-    public Task<MyUser?> FindByUserNameWithHashedPasswordAsync(string userName);
-
-    public Task<MyUser?> FindByUserNameAsync(string userName);
-    
-    public Task<MyUser?> FindByIdAsync(Guid id);
+    Task<Models.User> GetAsync(string id);
 }

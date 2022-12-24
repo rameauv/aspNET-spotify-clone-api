@@ -1,6 +1,6 @@
 using Spotify.Shared.tools;
 
-namespace Spotify.Shared.DAL;
+namespace Spotify.Shared.DAL.IdentityUser.Models;
 
 public record UpdateUser
 {

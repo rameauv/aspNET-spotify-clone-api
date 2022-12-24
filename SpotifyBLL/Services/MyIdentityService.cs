@@ -4,26 +4,29 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Spotify.Shared;
-using Spotify.Shared.BLL;
+using Spotify.Shared.BLL.MyIdentity;
+using Spotify.Shared.BLL.MyIdentity.Models;
+using Spotify.Shared.DAL.Contracts;
+using Spotify.Shared.DAL.IdentityUser;
+using Spotify.Shared.DAL.IdentityUser.Models;
 using Spotify.Shared.tools;
 using SharedDal = Spotify.Shared.DAL;
-using SharedMyIdentity = Spotify.Shared.MyIdentity;
 
 namespace Spotify.BLL.Services;
 
-public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
+public class MyIdentityService : IMyIdentityService
 {
-    private readonly SharedDal.Contracts.IUserRepository _userRepository;
-    private readonly SharedDal.Contracts.IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IIdentityUserRepository _identityUserRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly JwtConfig _jwtSettings;
 
     public MyIdentityService(
-        SharedDal.Contracts.IUserRepository userRepository,
-        SharedDal.Contracts.IRefreshTokenRepository refreshTokenRepository,
+        IIdentityUserRepository identityUserRepository,
+        IRefreshTokenRepository refreshTokenRepository,
         IConfiguration configuration
     )
     {
-        this._userRepository = userRepository;
+        this._identityUserRepository = identityUserRepository;
         this._refreshTokenRepository = refreshTokenRepository;
         var jwtSettingsSection = configuration.GetSection("Jwt");
         var jwtIssuer = jwtSettingsSection.GetSection("Issuer").Value;
@@ -46,20 +49,20 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
         );
     }
 
-    public async Task<SharedMyIdentity.Models.MyResult> Register(SharedMyIdentity.Models.RegisterUser user)
+    public async Task<MyResult> Register(RegisterUser user)
     {
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password, 11, true);
-        var result = await _userRepository.CreateAsync(new SharedDal.CreateUser(
+        var result = await _identityUserRepository.CreateAsync(new CreateUser(
             user.Username,
             passwordHash
         ));
 
-        return SharedMyIdentity.Models.MyResult.Success;
+        return MyResult.Success;
     }
 
-    public async Task<SharedMyIdentity.Models.Token?> Login(SharedMyIdentity.Models.LoginCredentials credentials)
+    public async Task<Token?> Login(LoginCredentials credentials)
     {
-        var userDal = await _userRepository.FindByUserNameWithHashedPasswordAsync(credentials.Username);
+        var userDal = await _identityUserRepository.FindByUserNameWithHashedPasswordAsync(credentials.Username);
         if (userDal == null)
         {
             return null;
@@ -97,13 +100,14 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
         }
         else if (refreshTokenDal == null)
         {
-            await _refreshTokenRepository.CreateAsync(new SharedDal.RefreshToken(user.Id, credentials.DeviceId, refreshToken));
+            await _refreshTokenRepository.CreateAsync(new SharedDal.RefreshToken(user.Id, credentials.DeviceId,
+                refreshToken));
         }
 
-        return new SharedMyIdentity.Models.Token(accessToken, refreshToken);
+        return new Token(accessToken, refreshToken);
     }
 
-    public async Task<SharedMyIdentity.Models.Token?> RefreshAccessToken(string refreshToken)
+    public async Task<Token?> RefreshAccessToken(string refreshToken)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = GetValidationParameters();
@@ -129,7 +133,8 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
             }
 
             // If the refresh token is valid, return the associated user
-            var savedRefreshToken = await _refreshTokenRepository.FindByDeviceIdAndUserId(new Guid(deviceId), new Guid(userId));
+            var savedRefreshToken =
+                await _refreshTokenRepository.FindByDeviceIdAndUserId(new Guid(deviceId), new Guid(userId));
 
             if (savedRefreshToken == null)
             {
@@ -141,7 +146,7 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
                 return null;
             }
 
-            var user = await _userRepository.FindByIdAsync(new Guid(userId));
+            var user = await _identityUserRepository.GetAsync(new Guid(userId));
             if (user == null)
             {
                 return null;
@@ -154,7 +159,7 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
                 return null;
             }
 
-            return new SharedMyIdentity.Models.Token(newAccessToken, refreshToken);
+            return new Token(newAccessToken, refreshToken);
         }
         catch (SecurityTokenExpiredException)
         {
@@ -166,6 +171,14 @@ public class MyIdentityService : SharedMyIdentity.Contracts.IMyIdentityService
             // The refresh token is invalid
             return null;
         }
+    }
+
+    public ValidatedToken GetSecurityToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = GetValidationParameters();
+        var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+        return new ValidatedToken(principal, validatedToken);
     }
 
     private bool ValidateRefreshToken(string token)

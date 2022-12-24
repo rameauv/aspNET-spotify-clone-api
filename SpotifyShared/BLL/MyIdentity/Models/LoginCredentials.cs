@@ -1,4 +1,4 @@
-namespace Spotify.Shared.MyIdentity.Models;
+namespace Spotify.Shared.BLL.MyIdentity.Models;
 
 public record LoginCredentials(string Username, string Password, Guid DeviceId)
 {

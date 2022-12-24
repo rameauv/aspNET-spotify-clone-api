@@ -1,23 +1,27 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RealSpotifyDAL;
 using RealSpotifyDAL.Repositories;
 using Repositories.Repositories;
 using Spotify.BLL.Services;
-using Spotify.Models.BLL.Contracts;
 using Spotify.Shared;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Artist;
+using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.Search;
 using Spotify.Shared.BLL.Track;
+using Spotify.Shared.BLL.User;
 using Spotify.Shared.DAL.Album;
 using Spotify.Shared.DAL.Artist;
 using Spotify.Shared.DAL.Contracts;
+using Spotify.Shared.DAL.IdentityUser;
 using Spotify.Shared.DAL.Search;
 using Spotify.Shared.DAL.Track;
-using Spotify.Shared.MyIdentity.Contracts;
+using Spotify.Shared.DAL.User;
 using SpotifyApi.AutoMapper;
+using SpotifyApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +30,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition(JwtAuthenticationDefaults.AuthenticationScheme,     
+        new OpenApiSecurityScheme
+        {
+            Description = "JWT Authorization header using the Bearer scheme.",
+            Name = JwtAuthenticationDefaults.HeaderName, // Authorization
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer"
+        });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtAuthenticationDefaults.AuthenticationScheme
+                }
+            },
+            new List<string>()
+        }
+    });
+});
 
 // Logger
 builder.Logging.ClearProviders();
@@ -53,21 +82,22 @@ builder.Services.AddAutoMapper(typeof(ApiProfile), typeof(BllProfile));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 // DAL Dependencies
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IIdentityUserRepository, IdentityUserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ISearchRepository, SearchRepository>();
 builder.Services.AddSingleton<MySpotifyClient, MySpotifyClient>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // BLL Dependencies
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMyIdentityService, MyIdentityService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
+builder.Services.AddScoped<IUserService, UserService>();
     
 var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
 var jwtIssuer = jwtSettingsSection.GetSection("Issuer").Value;

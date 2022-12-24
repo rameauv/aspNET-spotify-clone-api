@@ -1,4 +1,4 @@
-namespace Spotify.Shared.MyIdentity.Models;
+namespace Spotify.Shared.BLL.MyIdentity.Models;
 
 public record Token(string AccessToken, string RefreshToken)
 {

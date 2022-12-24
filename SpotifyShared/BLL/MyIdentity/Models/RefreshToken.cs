@@ -1,4 +1,4 @@
-namespace Spotify.Shared.BLL;
+namespace Spotify.Shared.BLL.MyIdentity.Models;
 
 public record RefreshToken(Guid UserId, Guid DeviceId, string? Token)
 {

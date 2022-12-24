@@ -1,7 +1,6 @@
-using Spotify.Shared.DAL;
-using Spotify.Shared.MyIdentity.Models;
+using Spotify.Shared.BLL.MyIdentity.Models;
 
-namespace Spotify.Shared.MyIdentity.Contracts;
+namespace Spotify.Shared.BLL.MyIdentity;
 
 public interface IMyIdentityService
 {
@@ -10,4 +9,6 @@ public interface IMyIdentityService
     public Task<Token?> Login(LoginCredentials credentials);
 
     public Task<Token?> RefreshAccessToken(string refreshToken);
+    public ValidatedToken GetSecurityToken(string token);
+
 }
