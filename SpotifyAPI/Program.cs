@@ -9,6 +9,7 @@ using Spotify.BLL.Services;
 using Spotify.Shared;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Artist;
+using Spotify.Shared.BLL.Like;
 using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.Search;
 using Spotify.Shared.BLL.Track;
@@ -17,6 +18,7 @@ using Spotify.Shared.DAL.Album;
 using Spotify.Shared.DAL.Artist;
 using Spotify.Shared.DAL.Contracts;
 using Spotify.Shared.DAL.IdentityUser;
+using Spotify.Shared.DAL.Like;
 using Spotify.Shared.DAL.Search;
 using Spotify.Shared.DAL.Track;
 using Spotify.Shared.DAL.User;
@@ -90,6 +92,7 @@ builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
 // BLL Dependencies
 builder.Services.AddScoped<IMyIdentityService, MyIdentityService>();
@@ -98,6 +101,7 @@ builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
     
 var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
 var jwtIssuer = jwtSettingsSection.GetSection("Issuer").Value;

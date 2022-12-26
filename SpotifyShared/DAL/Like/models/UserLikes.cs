@@ -1,4 +1,3 @@
-using Spotify.Shared.DAL.Album.Models;
 using Spotify.Shared.DAL.Models;
 
 namespace Spotify.Shared.DAL.Like.models;

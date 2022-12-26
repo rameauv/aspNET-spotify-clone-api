@@ -1,8 +1,8 @@
 namespace SpotifyApi.Models;
 
-public record CreateUserDto
+public class CreateUserDto
 {
-    public string username { get; set; } = null!;
-    public string password { get; set; } = null!;
-    public string data { get; set; } = null!;
+    public string Username { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public string Data { get; set; } = null!;
 }

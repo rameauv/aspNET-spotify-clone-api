@@ -11,7 +11,7 @@ public class AlbumDto
         string artistName,
         string? artistThumbnailUrl,
         string albumType,
-        bool isLiked
+        string? likeId
         )
     {
         Id = id;
@@ -22,7 +22,7 @@ public class AlbumDto
         ArtistName = artistName;
         ArtistThumbnailUrl = artistThumbnailUrl;
         AlbumType = albumType;
-        IsLiked = isLiked;
+        LikeId = likeId;
     }
 
     public string Id { get; set; }
@@ -33,5 +33,5 @@ public class AlbumDto
     public string ArtistName { get; set; }
     public string? ArtistThumbnailUrl { get; set; }
     public string AlbumType { get; set; }
-    public bool IsLiked { get; set; }
+    public string? LikeId { get; set; }
 }

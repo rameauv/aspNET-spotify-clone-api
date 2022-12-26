@@ -44,6 +44,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         }
 
         Context.RefreshTokens.Update(entity);
+        await Context.SaveChangesAsync();
         await dbContextTransaction.CommitAsync();
         return new SharedDal.RefreshToken(
             entity.UserId,

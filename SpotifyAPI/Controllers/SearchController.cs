@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,9 @@ public class SearchController : ControllerBase
     }
 
     [HttpGet("Search")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<SearchResultDto>))]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResultDto<SearchResultDto>))]
-    public async Task<ActionResult<ResultDto<SearchResultDto>>> Search(string q, int? offset, int? limit)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResultDto<SearchResultDto>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(BaseResultDto<SearchResultDto>))]
+    public async Task<ActionResult<BaseResultDto<SearchResultDto>>> Search([Required]string q, int? offset, int? limit)
     {
         try
         {
@@ -33,7 +34,7 @@ public class SearchController : ControllerBase
                 Offset = offset
             });
             var searchResultDto = _mapper.Map<SearchResultDto>(res);
-            var result = new ResultDto<SearchResultDto>
+            var result = new BaseResultDto<SearchResultDto>
             {
                 Result = searchResultDto
             };
@@ -44,7 +45,7 @@ public class SearchController : ControllerBase
             await Console.Error.WriteLineAsync(e.Message);
             await Console.Error.WriteLineAsync(e.StackTrace);
             var error = new ErrorDto(HttpStatusCode.InternalServerError, "internal server error");
-            var result = new ResultDto<SearchResultDto>
+            var result = new BaseResultDto<SearchResultDto>
             {
                 Error = error
             };

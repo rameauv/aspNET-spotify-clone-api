@@ -267,7 +267,7 @@ public class MyIdentityService : IMyIdentityService
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.Now.AddSeconds(Convert.ToDouble(_jwtSettings.ExpiryInMinutes)),
+            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings.ExpiryInMinutes)),
             signingCredentials: signingCredentials);
         return tokenOptions;
     }

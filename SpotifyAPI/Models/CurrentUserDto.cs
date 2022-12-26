@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SpotifyApi.Models;
 
 public class CurrentUserDto
@@ -9,7 +11,7 @@ public class CurrentUserDto
         Name = name;
     }
 
-    public string Id { get; set; }
-    public string Username { get; set; }
-    public string Name { get; set; }
+    [Required] public string Id { get; set; }
+    [Required] public string Username { get; set; }
+    [Required] public string Name { get; set; }
 }

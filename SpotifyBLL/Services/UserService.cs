@@ -1,8 +1,9 @@
 using System.Security.Claims;
 using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.User;
-using Spotify.Shared.BLL.User.Models;
 using Spotify.Shared.DAL.User;
+using Spotify.Shared.DAL.User.Models;
+using User = Spotify.Shared.BLL.User.Models.User;
 
 namespace Spotify.BLL.Services;
 
@@ -33,5 +34,20 @@ public class UserService : IUserService
         }
 
         return GetAsync(userId);
+    }
+
+    public async Task SetName(string accessToken, string name)
+    {
+        var validatedToken = _identityService.GetSecurityToken(accessToken);
+        var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null)
+        {
+            throw new Exception("no userid in this access token");
+        }
+
+        await _userRepository.SetUser(userId, new SetUserRequest
+        {
+            Name = name
+        });
     }
 }

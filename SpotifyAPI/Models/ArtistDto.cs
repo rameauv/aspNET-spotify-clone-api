@@ -1,19 +1,22 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SpotifyApi.Models;
 
 public class ArtistDto
 {
-    public ArtistDto(string id, string name, string? thumbnailUrl, bool isFollowing, int monthlyListeners)
+    public ArtistDto(string id, string name, string? thumbnailUrl, string? likeId, int monthlyListeners)
     {
         Id = id;
         Name = name;
         ThumbnailUrl = thumbnailUrl;
-        IsFollowing = isFollowing;
+        LikeId = likeId;
         MonthlyListeners = monthlyListeners;
     }
 
-    public string Id { get; set; }
+    [Required] public string Id { get; set; }
     public string Name { get; set; }
     public string? ThumbnailUrl { get; set; }
-    public bool IsFollowing { get; set; }
+    public string? LikeId { get; set; }
+
     public int MonthlyListeners { get; set; }
 }

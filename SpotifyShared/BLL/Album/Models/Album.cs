@@ -9,7 +9,7 @@ public record Album(
     string ArtistName,
     string? ArtistThumbnailUrl,
     string AlbumType,
-    bool IsLiked
+    string? LikeId
 )
 {
     public string Id { get; set; } = Id;
@@ -20,5 +20,5 @@ public record Album(
     public string ArtistName { get; set; } = ArtistName;
     public string? ArtistThumbnailUrl { get; set; } = ArtistThumbnailUrl;
     public string AlbumType { get; set; } = AlbumType;
-    public bool IsLiked { get; set; } = IsLiked;
+    public string? LikeId { get; set; } = LikeId;
 }

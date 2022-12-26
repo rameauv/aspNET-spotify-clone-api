@@ -26,9 +26,9 @@ public class AccountsController : ControllerBase
     {
         Console.WriteLine(userModel);
         var res = await this._identityService.Register(new RegisterUser(
-            userModel.username,
-            userModel.password,
-            userModel.data
+            userModel.Username,
+            userModel.Password,
+            userModel.Data
         ));
         if (!res.Succeeded)
         {
@@ -36,16 +36,15 @@ public class AccountsController : ControllerBase
                 .Select(error => error.ToString() ?? "")
                 .Aggregate((prec, current) => $"{prec}\n{current}");
             await Console.Error.WriteLineAsync(error);
-            _logger.LogError("error at {DT}", 
+            _logger.LogError("error at {DT}",
                 DateTime.UtcNow.ToLongTimeString());
-            _logger.LogError( JsonSerializer.Serialize(res.Errors.ToArray()));
+            _logger.LogError(JsonSerializer.Serialize(res.Errors.ToArray()));
             return Problem(error);
         }
 
         return StatusCode(201);
     }
 
-    [Authorize]
     [HttpPost("RefreshAccessToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -67,7 +66,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost("Login")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<NewAccessTokenDto>> Login(LoginCredentialsDto credentialsModel)
     {
@@ -87,7 +86,7 @@ public class AccountsController : ControllerBase
                     SameSite = SameSiteMode.None,
                     Secure = true,
                 });
-            return Ok(token.AccessToken);
+            return Ok(new NewAccessTokenDto(token.AccessToken));
         }
 
         return Unauthorized("Invalid Authentication");
