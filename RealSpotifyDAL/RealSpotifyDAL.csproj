@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SpotifyShared\SpotifyShared.csproj" />
+      <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>

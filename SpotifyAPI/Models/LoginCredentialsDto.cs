@@ -1,8 +1,0 @@
-namespace SpotifyApi.Models;
-
-public record LoginCredentialsDto(string Username, string Password, Guid DeviceId)
-{
-    public string Username { get; set; } = Username;
-    public string Password { get; set; } = Password;
-    public Guid DeviceId { get; set; } = DeviceId;
-}
