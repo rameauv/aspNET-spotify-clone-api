@@ -1,0 +1,23 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Jwt": {
+    "Issuer": "https:/issuer/",
+    "Audience": "https://audience/",
+    "AccessTokenKey": "This is a sample secret key - please don't use in production environment.'",
+    "RefreshTokenKey": "This is a sample secret key - please don't use in production environment.'",
+    "AccessTokenExpiryInMinutes": 5,
+    "RefreshTokenExpiryInMinutes": 7
+  },
+  "ConnectionStrings": {
+    "DBContext": "Host=localhost;Database=MyDbName;Username=postgres;Password=myPassword"
+  },
+  "Spotify": {
+    "ClientId": "client Id",
+    "ClientSecret": "client secret"
+  }
+}
