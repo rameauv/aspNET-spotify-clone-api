@@ -12,24 +12,40 @@ using Spotify.Shared.tools;
 
 namespace Spotify.BLL.Services;
 
+/// <summary>
+/// Provides methods for handling user authentication and authorization.
+/// </summary>
 public class MyIdentityService : IMyIdentityService
 {
     private readonly IIdentityUserRepository _identityUserRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IJwtService _jwtService;
 
+    /// <summary>
+    /// Initializes a new instance of the MyIdentityService class.
+    /// </summary>
+    /// <param name="identityUserRepository">An interface that provides methods for accessing user data in a database.</param>
+    /// <param name="refreshTokenRepository">An interface that provides methods for accessing refresh token data in a database.</param>
+    /// <param name="jwtService">An interface that provides methods for generating and validating JSON Web Tokens (JWTs).</param>
     public MyIdentityService(
         IIdentityUserRepository identityUserRepository,
         IRefreshTokenRepository refreshTokenRepository,
-        IJwtService jwtService,
-        JwtConfig jwtConfig
+        IJwtService jwtService
     )
     {
         this._identityUserRepository = identityUserRepository;
         this._refreshTokenRepository = refreshTokenRepository;
         this._jwtService = jwtService;
     }
-
+    
+    /// <summary>
+    /// Registers a new user with the provided username and password.
+    /// </summary>
+    /// <param name="user">The user to register.</param>
+    /// <returns>A MyResult object indicating the success or failure of the operation.</returns>
+    /// <remarks> 
+    /// Many of the exceptions listed above are not thrown directly from this method. See <see cref="Validators"/> to examine the call graph.
+    /// </remarks>
     public async Task<MyResult> Register(RegisterUser user)
     {
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password, 11, true);
@@ -41,6 +57,13 @@ public class MyIdentityService : IMyIdentityService
         return MyResult.Success;
     }
 
+    /// <summary>
+    /// Logs in a user with the provided login credentials.
+    /// If the provided credentials are valid, returns a Token object containing an access token and refresh token.
+    /// If the provided credentials are invalid, returns null.
+    /// </summary>
+    /// <param name="credentials">The login credentials of the user.</param>
+    /// <returns>A Token object containing an access token and refresh token, or null if the provided credentials are invalid.</returns>
     public async Task<Token?> Login(LoginCredentials credentials)
     {
         var userDal = await _identityUserRepository.FindByUserNameWithHashedPasswordAsync(credentials.Username);
@@ -71,11 +94,22 @@ public class MyIdentityService : IMyIdentityService
         return new Token(accessToken, refreshToken);
     }
 
+    /// <summary>
+    /// Logs out a user by deleting the provided refresh token.
+    /// </summary>
+    /// <param name="refreshToken">The refresh token to delete.</param>
     public async Task Logout(string refreshToken)
     {
         await _refreshTokenRepository.Delete(refreshToken);
     }
 
+    /// <summary>
+    /// Refreshes an access token using the provided refresh token.
+    /// If the provided refresh token is valid, returns a Token object containing a new access token and refresh token.
+    /// If the provided refresh token is invalid, returns null.
+    /// </summary>
+    /// <param name="refreshToken">The refresh token to use for refreshing the access token.</param>
+    /// <returns>A Token object containing a new access token and refresh token, or null if the provided refresh token is invalid.</returns>
     public async Task<Token?> RefreshAccessToken(string refreshToken)
     {
         var tokenContent = _jwtService.ReadJwtToken(refreshToken);
@@ -141,6 +175,13 @@ public class MyIdentityService : IMyIdentityService
         return new Token(newAccessToken, newRefreshToken);
     }
 
+    /// <summary>
+    /// Handles exceptions that occur during the validation of a refresh token.
+    /// If the caught exception is a SecurityTokenValidationException, returns the default value for the generic type T.
+    /// If the exception is not a SecurityTokenValidationException, rethrows the exception.
+    /// </summary>
+    /// <param name="e">The exception that was caught.</param>
+    /// <returns>The default value for the generic type T if the caught exception is a SecurityTokenValidationException, or null if T is a reference type.</returns>
     private T? _handleRefreshTokenValidationException<T>(Exception e)
     {
         // if the caught exception is a token validation exception return null

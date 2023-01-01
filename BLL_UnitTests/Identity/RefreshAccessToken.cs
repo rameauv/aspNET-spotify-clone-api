@@ -1,7 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Spotify.BLL.Services;
-using Spotify.Shared;
 using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.Jwt.Models;
 using Spotify.Shared.DAL.IdentityUser;
@@ -13,18 +12,8 @@ namespace BLL_UnitTests.Identity;
 
 public class RefreshAccessToken
 {
-    private readonly JwtConfig _jwtConfig;
-
     public RefreshAccessToken()
     {
-        _jwtConfig = new JwtConfig(
-            "FakeIssuer",
-            "fakeAudience",
-            "fakeAccessTokenKey",
-            "fakeRefreshTokenKey",
-            "1",
-            "2"
-        );
     }
 
     [Fact]
@@ -56,8 +45,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         var res = await identityService.RefreshAccessToken(currentRefreshToken);
         jwtServiceMock.Verify(service => service.GenerateRefreshToken(It.Is<MyUser>(b => b == myUser)));
@@ -95,8 +83,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         var res = await identityService.RefreshAccessToken(currentRefreshToken);
 
@@ -126,8 +113,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         var res = await identityService.RefreshAccessToken(currentRefreshToken);
         Assert.Null(res);
@@ -152,8 +138,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         await identityService.RefreshAccessToken(currentRefreshToken);
         refreshTokenRepositoryMock.Verify(service => service.DeleteAllTokensByUserId(fakeUserId), Times.Once);
@@ -180,8 +165,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         await identityService.RefreshAccessToken(currentRefreshToken);
     }
@@ -202,8 +186,7 @@ public class RefreshAccessToken
         var identityService = new MyIdentityService(
             identityUserRepositoryMock.Object,
             refreshTokenRepositoryMock.Object,
-            jwtServiceMock.Object,
-            _jwtConfig
+            jwtServiceMock.Object
         );
         await identityService.RefreshAccessToken(currentRefreshToken);
         refreshTokenRepositoryMock.Verify(service => service.DeleteAllTokensByUserId(fakeUserId), Times.Once);
@@ -232,8 +215,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
 
         await Assert.ThrowsAsync<IOException>(() => identityService.RefreshAccessToken(fakeCurrentRefreshToken));
@@ -262,8 +244,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
 
         var res = await identityService.RefreshAccessToken(fakeCurrentRefreshToken);
@@ -290,8 +271,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
 
         var res = await identityService.RefreshAccessToken(fakeCurrentRefreshToken);
@@ -319,8 +299,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         await Assert.ThrowsAsync<IOException>(() => identityService.RefreshAccessToken(fakeCurrentRefreshToken));
     }
@@ -345,8 +324,7 @@ public class RefreshAccessToken
             new MyIdentityService(
                 identityUserRepositoryMock.Object,
                 refreshTokenRepositoryMock.Object,
-                jwtServiceMock.Object,
-                _jwtConfig
+                jwtServiceMock.Object
             );
         var res = await identityService.RefreshAccessToken(fakeCurrentRefreshToken);
         Assert.Null(res);
