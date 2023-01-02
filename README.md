@@ -99,3 +99,12 @@ A playground is available at the path `swagger/index.html`
 ## Doc
 
 The documentation is available in the `doc` folder.
+
+## Todo
+
+- More Unit tests
+- UAT tests
+- E2e tests
+- Better documentation
+- More code comments
+- Use an authentication service like Auth0
