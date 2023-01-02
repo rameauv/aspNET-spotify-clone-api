@@ -59,7 +59,7 @@ Simply run `dotnet test at the racine of the repo`.
 ## Configuration
 
   
-The configuration must be set in an `appsettings.json` file in the `API` folder.
+The configuration must be set in a `appsettings.json` file in the `API` folder.
 An exemple configuration file, `appsettings.json.exemple` is provided in the `API` folder.
 
 
@@ -90,6 +90,9 @@ An exemple configuration file, `appsettings.json.exemple` is provided in the `AP
 }
 
 ```
+
+Launch settings are available in the file `repo/API/Properties/launchSettings.json
+
 
 ## Routes
 
