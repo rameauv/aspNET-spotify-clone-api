@@ -12,12 +12,12 @@ namespace Api.Controllers;
 [ApiController]
 public class AccountsController : ControllerBase
 {
-    private readonly IMyIdentityService _identityService;
+    private readonly IAuthService _identityService;
     private readonly ILogger<AccountsController> _logger;
     private readonly JwtConfig _jwtConfig;
 
     public AccountsController(
-        IMyIdentityService identityService,
+        IAuthService identityService,
         ILogger<AccountsController> logger,
         JwtConfig jwtConfig)
     {
@@ -31,23 +31,11 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> Register(CreateUserDto userModel)
     {
         Console.WriteLine(userModel);
-        var res = await this._identityService.Register(new RegisterUser(
+        await this._identityService.Register(new RegisterUser(
             userModel.Username,
             userModel.Password,
             userModel.Data
         ));
-        if (!res.Succeeded)
-        {
-            var error = res.Errors
-                .Select(error => error.ToString() ?? "")
-                .Aggregate((prec, current) => $"{prec}\n{current}");
-            await Console.Error.WriteLineAsync(error);
-            _logger.LogError("error at {DT}",
-                DateTime.UtcNow.ToLongTimeString());
-            _logger.LogError(JsonSerializer.Serialize(res.Errors.ToArray()));
-            return Problem(error);
-        }
-
         return StatusCode(201);
     }
 
@@ -76,15 +64,7 @@ public class AccountsController : ControllerBase
             return Unauthorized("Invalid Authentication");
         }
 
-        Response.Cookies.Append(
-            "X-Refresh-Token",
-            newToken.RefreshToken,
-            new CookieOptions()
-            {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict,
-                Secure = false,
-            });
+        _addRefreshTokenCookie(newToken.RefreshToken);
         return new NewAccessTokenDto(newToken.AccessToken);
     }
 
@@ -98,15 +78,8 @@ public class AccountsController : ControllerBase
             credentialsModel.Password
         ));
         if (token == null) return Unauthorized("Invalid Authentication");
-        Response.Cookies.Append(
-            "X-Refresh-Token",
-            token.RefreshToken,
-            new CookieOptions()
-            {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict,
-                Secure = false,
-            });
+        _addRefreshTokenCookie(token.RefreshToken);
+
         return Ok(new NewAccessTokenDto(token.AccessToken));
     }
 
@@ -152,7 +125,7 @@ public class AccountsController : ControllerBase
                 HttpOnly = true,
                 SameSite = SameSiteMode.Strict,
                 Secure = false,
-                Expires = DateTimeOffset.Now.AddMinutes(double.Parse(expiryTimeInMinutes))
+                Expires = DateTimeOffset.Now.AddMinutes(expiryTimeInMinutes)
             });
     }
 }

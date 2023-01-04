@@ -48,7 +48,7 @@ public class IdentityUserRepository : IIdentityUserRepository
         dbContextTransaction.Commit();
     }
 
-    public async Task<IdentityUser?> FindByUserNameWithHashedPasswordAsync(string userName)
+    public async Task<AuthUser?> FindByUserNameWithHashedPasswordAsync(string userName)
     {
         var entity = await this.Context.Users.FirstOrDefaultAsync(a => a.UserName == userName);
         if (entity == null)
@@ -56,13 +56,13 @@ public class IdentityUserRepository : IIdentityUserRepository
             return null;
         }
 
-        return new IdentityUser(entity.Id.ToString(), entity.UserName ?? "")
+        return new AuthUser(entity.Id.ToString(), entity.UserName ?? "")
         {
             PasswordHash = entity.PasswordHash
         };
     }
 
-    public async Task<IdentityUser?> FindByUserNameAsync(string userName)
+    public async Task<AuthUser?> FindByUserNameAsync(string userName)
     {
         var entity = await this.Context.Users.FirstOrDefaultAsync(a => a.UserName == userName);
         if (entity == null)
@@ -70,10 +70,10 @@ public class IdentityUserRepository : IIdentityUserRepository
             return null;
         }
 
-        return new IdentityUser(entity.Id.ToString(), entity.UserName ?? "");
+        return new AuthUser(entity.Id.ToString(), entity.UserName ?? "");
     }
 
-    public async Task<IdentityUser?> GetAsync(string id)
+    public async Task<AuthUser?> GetAsync(string id)
     {
         var entity = await this.Context.Users.FirstOrDefaultAsync(a => a.Id == new Guid(id));
         if (entity == null)
@@ -81,7 +81,7 @@ public class IdentityUserRepository : IIdentityUserRepository
             return null;
         }
 
-        return new IdentityUser(entity.Id.ToString(), entity.UserName ?? "");
+        return new AuthUser(entity.Id.ToString(), entity.UserName ?? "");
     }
 
     public void DeleteById(string id)
@@ -93,7 +93,7 @@ public class IdentityUserRepository : IIdentityUserRepository
         dbContextTransaction.Commit();
     }
 
-    public async Task<IdentityUser> CreateAsync(CreateUser user)
+    public async Task<AuthUser> CreateAsync(CreateUser user)
     {
         await using var dbContextTransaction = await this.Context.Database.BeginTransactionAsync();
         var newUser = (await Context.Users.AddAsync(new User
@@ -103,6 +103,6 @@ public class IdentityUserRepository : IIdentityUserRepository
         })).Entity;
         await this.Context.SaveChangesAsync();
         await dbContextTransaction.CommitAsync();
-        return new IdentityUser(newUser.Id.ToString(), newUser.UserName ?? "");
+        return new AuthUser(newUser.Id.ToString(), newUser.UserName ?? "");
     }
 }

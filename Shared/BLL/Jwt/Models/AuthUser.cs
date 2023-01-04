@@ -1,6 +1,6 @@
 namespace Spotify.Shared.BLL.Jwt.Models;
 
-public record MyUser(string Id, string UserName)
+public record AuthUser(string Id, string UserName)
 {
     public string Id { get; set; } = Id;
     

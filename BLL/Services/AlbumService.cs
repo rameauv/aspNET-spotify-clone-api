@@ -68,7 +68,7 @@ public class AlbumService : IAlbumService
 
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
-        var validatedToken = _jwtService.GetSecurityAccessToken(accessToken);
+        var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
         var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null)
         {

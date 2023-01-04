@@ -3,9 +3,9 @@ using Spotify.Shared.BLL.MyIdentity.Models;
 
 namespace Spotify.Shared.BLL.MyIdentity;
 
-public interface IMyIdentityService
+public interface IAuthService
 {
-    public Task<MyResult> Register(RegisterUser user);
+    public Task Register(RegisterUser user);
 
     public Task<Token?> Login(LoginCredentials credentials);
     public Task Logout(string refreshToken);

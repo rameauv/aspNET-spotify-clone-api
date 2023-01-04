@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealSpotifyDAL", "RealSpotifyDAL\RealSpotifyDAL.csproj", "{22739DE2-3941-419C-9479-C27059626F00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL_UnitTests", "BLL_UnitTests\BLL_UnitTests.csproj", "{1EFFE487-0977-45E6-8244-D4D8572FFD98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.UnitTests", "BLL.UnitTests\BLL.UnitTests.csproj", "{1EFFE487-0977-45E6-8244-D4D8572FFD98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

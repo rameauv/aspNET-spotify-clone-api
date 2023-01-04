@@ -19,14 +19,15 @@ public class JwtService : IJwtService
         _jwtConfig = jwtConfig;
     }
 
-    public JwtTokenContent ReadJwtToken(string token)
+    /// <exception cref="InvalidOperationException">Could not extract the user id</exception>
+    public JwtTokenContent GetJwtTokenContent(string token)
     {
         var securityToken = _tokenHandler.ReadJwtToken(token);
         var userId = _getUserIdFromSecurityToken(securityToken);
         return new JwtTokenContent(userId);
     }
 
-    public ValidatedToken GetSecurityAccessToken(string token)
+    public ValidatedToken GetValidatedAccessToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = GetRefreshTokenValidationParameters();
@@ -34,23 +35,23 @@ public class JwtService : IJwtService
         return new ValidatedToken(principal, validatedToken);
     }
 
-    public string GenerateAccessToken(MyUser user)
+    public string GenerateAccessToken(AuthUser user)
     {
         var signingCredentials = GetAccessTokenSigningCredentials();
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            new Claim(ClaimTypes.NameIdentifier, user.Id)
         };
         var tokenOptions = GenerateAccessTokenOptions(signingCredentials, claims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         return token;
     }
 
-    public string GenerateRefreshToken(MyUser user)
+    public string GenerateRefreshToken(AuthUser user)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
         };
         var signingCredentials = GetRefreshTokenSigningCredentials();
         var tokenOptions = GenerateRefreshTokenOptions(signingCredentials, claims);
@@ -63,10 +64,16 @@ public class JwtService : IJwtService
         var validationParameters = GetRefreshTokenValidationParameters();
         _tokenHandler.ValidateToken(token, validationParameters, out _);
     }
-    
+
+    /// <exception cref="InvalidOperationException">Could not extract the user id</exception>
     private string _getUserIdFromSecurityToken(JwtSecurityToken token)
     {
-        return token.Claims.Single(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+        var res = token.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (res == null)
+        {
+            throw new InvalidOperationException("Could not extract the user id");
+        }
+        return res;
     }
 
     private TokenValidationParameters GetRefreshTokenValidationParameters()
@@ -79,7 +86,7 @@ public class JwtService : IJwtService
                 (Encoding.UTF8.GetBytes(_jwtConfig.RefreshTokenKey)),
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
         };
     }
