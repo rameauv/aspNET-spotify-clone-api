@@ -14,6 +14,7 @@ using Spotify.Shared.BLL.Artist;
 using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.Like;
 using Spotify.Shared.BLL.MyIdentity;
+using Spotify.Shared.BLL.Password;
 using Spotify.Shared.BLL.Search;
 using Spotify.Shared.BLL.Track;
 using Spotify.Shared.BLL.User;
@@ -107,8 +108,8 @@ var jwtConfig = new JwtConfig(
     jwtAudience,
     jwtAccessTokenKey,
     jwtRefreshTokenKey,
-    jwtAccessTokenExpiryInMinutes,
-    jwtRefreshTokenExpiryInMinutes
+    double.Parse(jwtAccessTokenExpiryInMinutes),
+    double.Parse(jwtRefreshTokenExpiryInMinutes)
 );
 
 
@@ -137,7 +138,7 @@ builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<ILikeRepository, LikeRepository>();
 
 // BLL Dependencies
-builder.Services.AddSingleton<IMyIdentityService, MyIdentityService>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<ISearchService, SearchService>();
 builder.Services.AddSingleton<ITrackService, TrackService>();
 builder.Services.AddSingleton<IArtistService, ArtistService>();
@@ -145,6 +146,7 @@ builder.Services.AddSingleton<IAlbumService, AlbumService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<ILikeService, LikeService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddSingleton<IPasswordService, PasswordService>();
 
 // JWT config
 builder.Services.AddSingleton(jwtConfig);
@@ -164,7 +166,7 @@ builder.Services.AddAuthentication(options =>
             (Encoding.UTF8.GetBytes(jwtConfig.AccessTokenKey)),
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = false,
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
     };
 });

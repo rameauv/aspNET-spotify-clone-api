@@ -1,43 +1,48 @@
 using Microsoft.IdentityModel.Tokens;
-using Spotify.Shared;
 using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.Jwt.Models;
 using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.MyIdentity.Models;
+using Spotify.Shared.BLL.Password;
 using Spotify.Shared.DAL.IdentityUser;
 using Spotify.Shared.DAL.IdentityUser.Models;
 using Spotify.Shared.DAL.RefreshToken;
 using Spotify.Shared.DAL.RefreshToken.Models;
 using Spotify.Shared.tools;
+using AuthUser = Spotify.Shared.BLL.Jwt.Models.AuthUser;
 
 namespace Spotify.BLL.Services;
 
 /// <summary>
 /// Provides methods for handling user authentication and authorization.
 /// </summary>
-public class MyIdentityService : IMyIdentityService
+public class AuthService : IAuthService
 {
     private readonly IIdentityUserRepository _identityUserRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IJwtService _jwtService;
+    private readonly IPasswordService _passwordService;
 
     /// <summary>
     /// Initializes a new instance of the MyIdentityService class.
     /// </summary>
     /// <param name="identityUserRepository">An interface that provides methods for accessing user data in a database.</param>
     /// <param name="refreshTokenRepository">An interface that provides methods for accessing refresh token data in a database.</param>
+    /// <param name="passwordService">An interface that provides methods password hashing and hash verification.</param>
     /// <param name="jwtService">An interface that provides methods for generating and validating JSON Web Tokens (JWTs).</param>
-    public MyIdentityService(
+    public AuthService(
         IIdentityUserRepository identityUserRepository,
         IRefreshTokenRepository refreshTokenRepository,
-        IJwtService jwtService
+        IJwtService jwtService,
+        IPasswordService passwordService
     )
     {
         this._identityUserRepository = identityUserRepository;
         this._refreshTokenRepository = refreshTokenRepository;
         this._jwtService = jwtService;
+        this._passwordService = passwordService;
     }
-    
+
     /// <summary>
     /// Registers a new user with the provided username and password.
     /// </summary>
@@ -46,15 +51,13 @@ public class MyIdentityService : IMyIdentityService
     /// <remarks> 
     /// Many of the exceptions listed above are not thrown directly from this method. See <see cref="Validators"/> to examine the call graph.
     /// </remarks>
-    public async Task<MyResult> Register(RegisterUser user)
+    public async Task Register(RegisterUser user)
     {
-        var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password, 11, true);
-        var result = await _identityUserRepository.CreateAsync(new CreateUser(
+        var passwordHash = _passwordService.Hash(user.Password);
+        await _identityUserRepository.CreateAsync(new CreateUser(
             user.Username,
             passwordHash
         ));
-
-        return MyResult.Success;
     }
 
     /// <summary>
@@ -72,12 +75,17 @@ public class MyIdentityService : IMyIdentityService
             return null;
         }
 
-        var user = new MyUser(userDal.Id, userDal.UserName)
+        var user = new AuthUser(userDal.Id, userDal.UserName)
         {
             PasswordHash = userDal.PasswordHash
         };
 
-        var passwordVerified = BCrypt.Net.BCrypt.EnhancedVerify(credentials.Password, user.PasswordHash);
+        if (user.PasswordHash == null)
+        {
+            return null;
+        }
+
+        var passwordVerified = _passwordService.Verify(credentials.Password, user.PasswordHash);
 
         if (!passwordVerified)
         {
@@ -112,7 +120,7 @@ public class MyIdentityService : IMyIdentityService
     /// <returns>A Token object containing a new access token and refresh token, or null if the provided refresh token is invalid.</returns>
     public async Task<Token?> RefreshAccessToken(string refreshToken)
     {
-        var tokenContent = _jwtService.ReadJwtToken(refreshToken);
+        var tokenContent = _jwtService.GetJwtTokenContent(refreshToken);
         var userId = tokenContent.UserId;
         Exception? validationException = null;
         try
@@ -163,8 +171,8 @@ public class MyIdentityService : IMyIdentityService
         }
 
         // generate a new access token and a new refresh token
-        var newAccessToken = _jwtService.GenerateAccessToken(new MyUser(user.Id, user.UserName));
-        var newRefreshToken = _jwtService.GenerateRefreshToken(new MyUser(user.Id, user.UserName));
+        var newAccessToken = _jwtService.GenerateAccessToken(new AuthUser(user.Id, user.UserName));
+        var newRefreshToken = _jwtService.GenerateRefreshToken(new AuthUser(user.Id, user.UserName));
 
         // update the db with the new refresh token to invalidate the precedent token 
         await _refreshTokenRepository.UpdateAsync(savedRefreshToken.Id, new UpdateRefreshToken

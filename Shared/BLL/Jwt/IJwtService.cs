@@ -7,11 +7,11 @@ namespace Spotify.Shared.BLL.Jwt;
 
 public interface IJwtService
 {
-    public JwtTokenContent ReadJwtToken(string token);
+    public JwtTokenContent GetJwtTokenContent(string token);
 
-    public ValidatedToken GetSecurityAccessToken(string token);
-    public string GenerateAccessToken(MyUser user);
-    public string GenerateRefreshToken(MyUser user);
+    public ValidatedToken GetValidatedAccessToken(string token);
+    public string GenerateAccessToken(AuthUser user);
+    public string GenerateRefreshToken(AuthUser user);
 
     /// <summary>
     /// validates a 'JSON Web Token' (JWT) encoded as a JWS or JWE in Compact Serialized Format.
