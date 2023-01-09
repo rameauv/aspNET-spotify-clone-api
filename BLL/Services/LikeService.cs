@@ -18,12 +18,7 @@ public class LikeService : ILikeService
     {
         this._likeRepository = likeRepository;
     }
-
-    /// <summary>
-    /// Deletes a like.
-    /// </summary>
-    /// <param name="id">The ID of the like to delete.</param>
-    /// <returns>A task that represents the asynchronous delete operation.</returns>
+    
     public async Task DeleteAsync(string id)
     {
         await _likeRepository.DeleteAsync(id);

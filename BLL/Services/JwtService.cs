@@ -25,25 +25,14 @@ public class JwtService : IJwtService
         _tokenHandler = new JwtSecurityTokenHandler();
         _jwtConfig = jwtConfig;
     }
-
-    /// <summary>
-    /// Extracts the user ID from a JWT.
-    /// </summary>
-    /// <param name="token">The JWT to extract the user ID from.</param>
-    /// <returns>The content of the JWT, including the user ID.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the user ID could not be extracted from the JWT.</exception>
+    
     public JwtTokenContent GetJwtTokenContent(string token)
     {
         var securityToken = _tokenHandler.ReadJwtToken(token);
         var userId = _getUserIdFromSecurityToken(securityToken);
         return new JwtTokenContent(userId);
     }
-
-    /// <summary>
-    /// Validates an access token.
-    /// </summary>
-    /// <param name="token">The access token to validate.</param>
-    /// <returns>A validated token object containing the principal and token.</returns>
+    
     public ValidatedToken GetValidatedAccessToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -51,12 +40,7 @@ public class JwtService : IJwtService
         var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
         return new ValidatedToken(principal, validatedToken);
     }
-
-    /// <summary>
-    /// Generates an access token for a given user.
-    /// </summary>
-    /// <param name="user">The user to generate the access token for.</param>
-    /// <returns>The generated access token as a string.</returns>
+    
     public string GenerateAccessToken(AuthUser user)
     {
         var signingCredentials = GetAccessTokenSigningCredentials();
@@ -68,12 +52,7 @@ public class JwtService : IJwtService
         var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         return token;
     }
-
-    /// <summary>
-    /// Generates a refresh token for a given user.
-    /// </summary>
-    /// <param name="user">The user to generate the refresh token for.</param>
-    /// <returns>The generated refresh token as a string.</returns>
+    
     public string GenerateRefreshToken(AuthUser user)
     {
         var claims = new List<Claim>
@@ -85,11 +64,7 @@ public class JwtService : IJwtService
         var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         return token;
     }
-
-    /// <summary>
-    /// Validates a refresh token.
-    /// </summary>
-    /// <param name="token">The refresh token to validate.</param>
+    
     public void ValidateRefreshTokenToken(string token)
     {
         var validationParameters = GetRefreshTokenValidationParameters();

@@ -29,12 +29,7 @@ public class ArtistService : IArtistService
         this._jwtService = jwtService;
         this._likeRepository = likeRepository;
     }
-
-    /// <summary>
-    /// Retrieves an artist and its associated like, if one exists.
-    /// </summary>
-    /// <param name="id">The ID of the artist to retrieve.</param>
-    /// <returns>The retrieved artist.</returns>
+    
     public async Task<Artist> GetAsync(string id)
     {
         var artistTask = _artistRepository.GetAsync(id);
@@ -52,13 +47,6 @@ public class ArtistService : IArtistService
         );
     }
     
-    /// <summary>
-    /// Sets a like for an artist for the user identified by an access token.
-    /// </summary>
-    /// <param name="id">The ID of the artist to like.</param>
-    /// <param name="accessToken">The access token identifying the user who is liking the artist.</param>
-    /// <returns>The like that was set.</returns>
-    /// <exception cref="Exception">Thrown if the access token does not contain a user ID.</exception>
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

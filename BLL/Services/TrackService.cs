@@ -32,12 +32,7 @@ public class TrackService : ITrackService
         this._jwtService = jwtService;
         this._likeRepository = likeRepository;
     }
-
-    /// <summary>
-    /// Gets a track by its identifier.
-    /// </summary>
-    /// <param name="id">The identifier of the track to get.</param>
-    /// <returns>The track with the specified identifier.</returns>
+    
     public async Task<Track> GetAsync(string id)
     {
         var trackTask = _trackRepository.GetAsync(id);
@@ -54,14 +49,7 @@ public class TrackService : ITrackService
             like?.Id
         );
     }
-
-    /// <summary>
-    /// Sets a like on a track with the specified identifier.
-    /// </summary>
-    /// <param name="id">The identifier of the track to like.</param>
-    /// <param name="accessToken">The access token of the user performing the like action.</param>
-    /// <returns>The created like.</returns>
-    /// <exception cref="Exception">Thrown if the user id could not be extracted from the access token.</exception>
+    
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

@@ -23,12 +23,7 @@ public class SearchService : ISearchService
         this._searchRepository = searchRepository;
         this._mapper = mapper;
     }
-
-    /// <summary>
-    /// Searches for music.
-    /// </summary>
-    /// <param name="search">The search parameters.</param>
-    /// <returns>The search results.</returns>
+    
     public async Task<SearchResult> SearchAsync(Search search)
     {
         var res = await _searchRepository.SearchAsync(new DAL.Search.Models.Search(

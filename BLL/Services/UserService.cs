@@ -25,24 +25,13 @@ public class UserService : IUserService
         this._userRepository = userRepository;
         this._jwtService = jwtService;
     }
-
-    /// <summary>
-    /// Gets a user with the specified identifier.
-    /// </summary>
-    /// <param name="id">The identifier of the user to get.</param>
-    /// <returns>The user with the specified identifier.</returns>
+    
     public async Task<User> GetAsync(string id)
     {
         var res = await _userRepository.GetAsync(id);
         return new User(res.Id, res.Username, res.Name);
     }
-
-    /// <summary>
-    /// Gets the user associated with the specified access token.
-    /// </summary>
-    /// <param name="accessToken">The access token to get the associated user for.</param>
-    /// <returns>The user associated with the specified access token.</returns>
-    /// <exception cref="Exception">Thrown if the access token does not contain a user identifier.</exception>
+    
     public Task<User> CurrentUserAsync(string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
@@ -54,13 +43,7 @@ public class UserService : IUserService
 
         return GetAsync(userId);
     }
-
-    /// <summary>
-    /// Sets the name of the user associated with the specified access token.
-    /// </summary>
-    /// <param name="accessToken">The access token of the user to set the name for.</param>
-    /// <param name="name">The new name of the user.</param>
-    /// <exception cref="Exception">Thrown if the access token does not contain a user identifier.</exception>
+    
     public async Task SetName(string accessToken, string name)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
