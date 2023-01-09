@@ -8,12 +8,21 @@ using Spotify.Shared.DAL.Track;
 
 namespace Spotify.BLL.Services;
 
+/// <summary>
+/// A service for interacting with tracks.
+/// </summary>
 public class TrackService : ITrackService
 {
     private readonly ITrackRepository _trackRepository;
     private readonly ILikeRepository _likeRepository;
     private readonly IJwtService _jwtService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TrackService"/> class.
+    /// </summary>
+    /// <param name="trackRepository">The repository for interacting with tracks.</param>
+    /// <param name="jwtService">The service for validating and generating JWT tokens.</param>
+    /// <param name="likeRepository">The repository for interacting with likes.</param>
     public TrackService(
         ITrackRepository trackRepository,
         IJwtService jwtService,
@@ -23,8 +32,7 @@ public class TrackService : ITrackService
         this._jwtService = jwtService;
         this._likeRepository = likeRepository;
     }
-
-
+    
     public async Task<Track> GetAsync(string id)
     {
         var trackTask = _trackRepository.GetAsync(id);
@@ -41,7 +49,7 @@ public class TrackService : ITrackService
             like?.Id
         );
     }
-
+    
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

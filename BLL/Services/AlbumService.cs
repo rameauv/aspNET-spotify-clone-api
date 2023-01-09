@@ -8,12 +8,21 @@ using Spotify.Shared.DAL.Like;
 
 namespace Spotify.BLL.Services;
 
+/// <summary>
+/// A service for performing operations on albums.
+/// </summary>
 public class AlbumService : IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
     private readonly ILikeRepository _likeRepository;
     private readonly IJwtService _jwtService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AlbumService"/> class.
+    /// </summary>
+    /// <param name="albumRepository">The repository for accessing album data.</param>
+    /// <param name="likeRepository">The repository for accessing like data.</param>
+    /// <param name="jwtService">The service for validating and generating JWT access tokens.</param>
     public AlbumService(
         IAlbumRepository albumRepository,
         ILikeRepository likeRepository,
@@ -24,7 +33,7 @@ public class AlbumService : IAlbumService
         this._likeRepository = likeRepository;
         this._jwtService = jwtService;
     }
-
+    
     public async Task<Album> GetAsync(string id)
     {
         var albumTask = _albumRepository.GetAsync(id);
@@ -45,7 +54,7 @@ public class AlbumService : IAlbumService
             like?.Id
         );
     }
-
+    
     public async Task<AlbumTracks> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
     {
         var res = await _albumRepository.GetTracksAsync(id, new Shared.DAL.Album.Models.AlbumTracksRequest
@@ -65,7 +74,7 @@ public class AlbumService : IAlbumService
             res.Total
         );
     }
-
+    
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

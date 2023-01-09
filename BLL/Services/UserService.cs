@@ -7,24 +7,31 @@ using User = Spotify.Shared.BLL.User.Models.User;
 
 namespace Spotify.BLL.Services;
 
+/// <summary>
+/// Service class for managing user data.
+/// </summary>
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtService _jwtService;
 
-
+    /// <summary>
+    /// Initializes a new instance of the `UserService` class.
+    /// </summary>
+    /// <param name="userRepository">The repository for interacting with user data.</param>
+    /// <param name="jwtService">The service for handling JSON Web Tokens (JWTs).</param>
     public UserService(IUserRepository userRepository, IJwtService jwtService)
     {
         this._userRepository = userRepository;
         this._jwtService = jwtService;
     }
-
+    
     public async Task<User> GetAsync(string id)
     {
         var res = await _userRepository.GetAsync(id);
         return new User(res.Id, res.Username, res.Name);
     }
-
+    
     public Task<User> CurrentUserAsync(string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
@@ -36,7 +43,7 @@ public class UserService : IUserService
 
         return GetAsync(userId);
     }
-
+    
     public async Task SetName(string accessToken, string name)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

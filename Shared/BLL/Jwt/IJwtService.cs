@@ -5,12 +5,38 @@ using Spotify.Shared.BLL.Jwt.Models;
 
 namespace Spotify.Shared.BLL.Jwt;
 
+/// <summary>
+/// Provides methods for performing operations on JSON Web Tokens (JWTs).
+/// </summary>
 public interface IJwtService
 {
+    /// <summary>
+    /// Extracts the user ID from a JWT.
+    /// </summary>
+    /// <param name="token">The JWT to extract the user ID from.</param>
+    /// <returns>The content of the JWT, including the user ID.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the user ID could not be extracted from the JWT.</exception>
     public JwtTokenContent GetJwtTokenContent(string token);
 
+    /// <summary>
+    /// Validates an access token.
+    /// </summary>
+    /// <param name="token">The access token to validate.</param>
+    /// <returns>A validated token object containing the principal and token.</returns>
     public ValidatedToken GetValidatedAccessToken(string token);
+
+    /// <summary>
+    /// Generates an access token for a given user.
+    /// </summary>
+    /// <param name="user">The user to generate the access token for.</param>
+    /// <returns>The generated access token as a string.</returns>
     public string GenerateAccessToken(AuthUser user);
+
+    /// <summary>
+    /// Generates a refresh token for a given user.
+    /// </summary>
+    /// <param name="user">The user to generate the refresh token for.</param>
+    /// <returns>The generated refresh token as a string.</returns>
     public string GenerateRefreshToken(AuthUser user);
 
     /// <summary>
