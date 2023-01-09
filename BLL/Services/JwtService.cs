@@ -8,18 +8,30 @@ using Spotify.Shared.BLL.Jwt.Models;
 
 namespace Spotify.BLL.Services;
 
+/// <summary>
+/// A service for performing operations on JSON Web Tokens (JWTs).
+/// </summary>
 public class JwtService : IJwtService
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly JwtConfig _jwtConfig;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JwtService"/> class.
+    /// </summary>
+    /// <param name="jwtConfig">The configuration for JWTs.</param>
     public JwtService(JwtConfig jwtConfig)
     {
         _tokenHandler = new JwtSecurityTokenHandler();
         _jwtConfig = jwtConfig;
     }
 
-    /// <exception cref="InvalidOperationException">Could not extract the user id</exception>
+    /// <summary>
+    /// Extracts the user ID from a JWT.
+    /// </summary>
+    /// <param name="token">The JWT to extract the user ID from.</param>
+    /// <returns>The content of the JWT, including the user ID.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the user ID could not be extracted from the JWT.</exception>
     public JwtTokenContent GetJwtTokenContent(string token)
     {
         var securityToken = _tokenHandler.ReadJwtToken(token);
@@ -27,6 +39,11 @@ public class JwtService : IJwtService
         return new JwtTokenContent(userId);
     }
 
+    /// <summary>
+    /// Validates an access token.
+    /// </summary>
+    /// <param name="token">The access token to validate.</param>
+    /// <returns>A validated token object containing the principal and token.</returns>
     public ValidatedToken GetValidatedAccessToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -35,6 +52,11 @@ public class JwtService : IJwtService
         return new ValidatedToken(principal, validatedToken);
     }
 
+    /// <summary>
+    /// Generates an access token for a given user.
+    /// </summary>
+    /// <param name="user">The user to generate the access token for.</param>
+    /// <returns>The generated access token as a string.</returns>
     public string GenerateAccessToken(AuthUser user)
     {
         var signingCredentials = GetAccessTokenSigningCredentials();
@@ -47,6 +69,11 @@ public class JwtService : IJwtService
         return token;
     }
 
+    /// <summary>
+    /// Generates a refresh token for a given user.
+    /// </summary>
+    /// <param name="user">The user to generate the refresh token for.</param>
+    /// <returns>The generated refresh token as a string.</returns>
     public string GenerateRefreshToken(AuthUser user)
     {
         var claims = new List<Claim>
@@ -59,13 +86,22 @@ public class JwtService : IJwtService
         return token;
     }
 
+    /// <summary>
+    /// Validates a refresh token.
+    /// </summary>
+    /// <param name="token">The refresh token to validate.</param>
     public void ValidateRefreshTokenToken(string token)
     {
         var validationParameters = GetRefreshTokenValidationParameters();
         _tokenHandler.ValidateToken(token, validationParameters, out _);
     }
 
-    /// <exception cref="InvalidOperationException">Could not extract the user id</exception>
+    /// <summary>
+    /// Extracts the user ID from a JWT security token.
+    /// </summary>
+    /// <param name="token">The JWT security token to extract the user ID from.</param>
+    /// <returns>The user ID extracted from the token.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the user ID could not be extracted from the JWT security token.</exception>
     private string _getUserIdFromSecurityToken(JwtSecurityToken token)
     {
         var res = token.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -76,6 +112,10 @@ public class JwtService : IJwtService
         return res;
     }
 
+    /// <summary>
+    /// Gets the token validation parameters for validating refresh tokens.
+    /// </summary>
+    /// <returns>The token validation parameters for validating refresh tokens.</returns>
     private TokenValidationParameters GetRefreshTokenValidationParameters()
     {
         return new TokenValidationParameters
@@ -90,8 +130,11 @@ public class JwtService : IJwtService
             ValidateIssuerSigningKey = true,
         };
     }
-
-
+    
+    /// <summary>
+    /// Gets the signing credentials for generating access tokens.
+    /// </summary>
+    /// <returns>The signing credentials for generating access tokens.</returns>
     private SigningCredentials GetAccessTokenSigningCredentials()
     {
         var key = Encoding.UTF8.GetBytes(_jwtConfig.AccessTokenKey);
@@ -99,6 +142,10 @@ public class JwtService : IJwtService
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
+    /// <summary>
+    /// Gets the signing credentials for generating refresh tokens.
+    /// </summary>
+    /// <returns>The signing credentials for generating refresh tokens.</returns>
     private SigningCredentials GetRefreshTokenSigningCredentials()
     {
         var key = Encoding.UTF8.GetBytes(_jwtConfig.RefreshTokenKey);
@@ -106,6 +153,12 @@ public class JwtService : IJwtService
         return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
     }
 
+    /// <summary>
+    /// Generates the options for an access token.
+    /// </summary>
+    /// <param name="signingCredentials">The signing credentials to use for the token.</param>
+    /// <param name="claims">The claims to include in the token.</param>
+    /// <returns>The options for generating an access token.</returns>
     private JwtSecurityToken GenerateAccessTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
         var tokenOptions = new JwtSecurityToken(
@@ -117,6 +170,12 @@ public class JwtService : IJwtService
         return tokenOptions;
     }
 
+    /// <summary>
+    /// Generates the options for a refresh token.
+    /// </summary>
+    /// <param name="signingCredentials">The signing credentials to use for the token.</param>
+    /// <param name="claims">The claims to include in the token.</param>
+    /// <returns>The options for generating a refresh token.</returns>
     private JwtSecurityToken GenerateRefreshTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
     {
         var tokenOptions = new JwtSecurityToken(

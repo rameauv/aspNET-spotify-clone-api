@@ -8,12 +8,21 @@ using Spotify.Shared.DAL.Track;
 
 namespace Spotify.BLL.Services;
 
+/// <summary>
+/// A service for interacting with tracks.
+/// </summary>
 public class TrackService : ITrackService
 {
     private readonly ITrackRepository _trackRepository;
     private readonly ILikeRepository _likeRepository;
     private readonly IJwtService _jwtService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TrackService"/> class.
+    /// </summary>
+    /// <param name="trackRepository">The repository for interacting with tracks.</param>
+    /// <param name="jwtService">The service for validating and generating JWT tokens.</param>
+    /// <param name="likeRepository">The repository for interacting with likes.</param>
     public TrackService(
         ITrackRepository trackRepository,
         IJwtService jwtService,
@@ -24,7 +33,11 @@ public class TrackService : ITrackService
         this._likeRepository = likeRepository;
     }
 
-
+    /// <summary>
+    /// Gets a track by its identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the track to get.</param>
+    /// <returns>The track with the specified identifier.</returns>
     public async Task<Track> GetAsync(string id)
     {
         var trackTask = _trackRepository.GetAsync(id);
@@ -42,6 +55,13 @@ public class TrackService : ITrackService
         );
     }
 
+    /// <summary>
+    /// Sets a like on a track with the specified identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the track to like.</param>
+    /// <param name="accessToken">The access token of the user performing the like action.</param>
+    /// <returns>The created like.</returns>
+    /// <exception cref="Exception">Thrown if the user id could not be extracted from the access token.</exception>
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
