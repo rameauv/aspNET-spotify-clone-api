@@ -1,5 +1,7 @@
 using System.Text;
+using System.Text.Json;
 using Api.AutoMapper;
+using Api.ExceptionFilters;
 using Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -54,7 +56,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -169,9 +171,29 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
     };
+    o.Events = new JwtBearerEvents
+    {
+        OnChallenge = async (context) =>
+        {
+            context.HandleResponse();
+
+            var status = StatusCodes.Status401Unauthorized;
+            context.Response.StatusCode = status;
+            await context.Response.HttpContext.Response.WriteAsJsonAsync(
+                new ErrorsDto(new ErrorDto(
+                    "unauthorized",
+                    status,
+                    ""
+                )),
+                null as JsonSerializerOptions,
+                "application/problem+json"
+            );
+        }
+    };
 });
 builder.Services.AddAuthorization();
 
+builder.Services.AddControllers(options => { options.Filters.Add<GlobalExceptionFilterAttribute>(); });
 
 var app = builder.Build();
 
@@ -194,8 +216,6 @@ app.UseAuthorization();
 
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class AlbumDto
@@ -25,13 +27,22 @@ public class AlbumDto
         LikeId = likeId;
     }
 
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string ReleaseDate { get; set; }
-    public string? ThumbnailUrl { get; set; }
-    public string ArtistId { get; set; }
-    public string ArtistName { get; set; }
-    public string? ArtistThumbnailUrl { get; set; }
-    public string AlbumType { get; set; }
-    public string? LikeId { get; set; }
+    [Required]
+    public string Id { get; }
+    [Required]
+    public string Title { get; }
+    [Required]
+    public string ReleaseDate { get; }
+    [Required]
+    public string? ThumbnailUrl { get; }
+    [Required]
+    public string ArtistId { get; }
+    [Required]
+    public string ArtistName { get; }
+    [Required]
+    public string? ArtistThumbnailUrl { get; }
+    [Required]
+    public string AlbumType { get; }
+    [Required]
+    public string? LikeId { get; }
 }

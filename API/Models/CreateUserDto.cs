@@ -1,8 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class CreateUserDto
 {
-    public string Username { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    public string Data { get; set; } = null!;
+    public CreateUserDto(string username, string password, string data)
+    {
+        Username = username;
+        Password = password;
+        Data = data;
+    }
+
+    public string Username { get; }
+    public string Password { get; }
+    public string Data { get; }
 }

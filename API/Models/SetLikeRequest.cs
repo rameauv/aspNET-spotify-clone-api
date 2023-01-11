@@ -9,6 +9,5 @@ public class SetLikeRequest
         AssociatedId = associatedId;
     }
 
-    [Required]
-    public string AssociatedId { get; set; }
+    public string AssociatedId { get; }
 }

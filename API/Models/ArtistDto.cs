@@ -13,10 +13,9 @@ public class ArtistDto
         MonthlyListeners = monthlyListeners;
     }
 
-    [Required] public string Id { get; set; }
-    public string Name { get; set; }
-    public string? ThumbnailUrl { get; set; }
-    public string? LikeId { get; set; }
-
-    public int MonthlyListeners { get; set; }
+    [Required] public string Id { get; }
+    [Required] public string Name { get; }
+    [Required] public string? ThumbnailUrl { get; }
+    [Required] public string? LikeId { get; }
+    [Required] public int MonthlyListeners { get; }
 }

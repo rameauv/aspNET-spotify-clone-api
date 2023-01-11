@@ -11,7 +11,7 @@ public class CurrentUserDto
         Name = name;
     }
 
-    [Required] public string Id { get; set; }
-    [Required] public string Username { get; set; }
-    [Required] public string Name { get; set; }
+    [Required] public string Id { get; }
+    [Required] public string Username { get; }
+    [Required] public string Name { get; }
 }
