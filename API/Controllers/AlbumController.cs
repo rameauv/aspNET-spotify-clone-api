@@ -14,7 +14,7 @@ namespace Api.Controllers;
 [Produces(MediaTypeNames.Application.Json, "application/problem+json")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
 [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorsDto))]
-public class AlbumController : ControllerBase
+public class AlbumController : MyControllerBase
 {
     private readonly IAlbumService _albumService;
 

@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 using System.Net.Mime;
-using Api.ExceptionFilters;
 using Api.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;

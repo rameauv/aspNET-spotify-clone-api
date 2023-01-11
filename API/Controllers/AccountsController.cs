@@ -13,7 +13,7 @@ namespace Api.Controllers;
 [Consumes(MediaTypeNames.Application.Json)]
 [Produces(MediaTypeNames.Application.Json, "application/problem+json")]
 [ProducesResponseType(typeof(ErrorsDto), StatusCodes.Status500InternalServerError)]
-public class AccountsController : ControllerBase
+public class AccountsController : MyControllerBase
 {
     private readonly IAuthService _identityService;
     private readonly ILogger<AccountsController> _logger;
@@ -45,39 +45,35 @@ public class AccountsController : ControllerBase
     [HttpPost("RefreshAccessToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
-    public async Task<ActionResult<NewAccessTokenDto>> RefreshAccessToken()
+    public async Task<IActionResult> RefreshAccessToken()
     {
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         if (refreshToken == null)
         {
-            Response.ContentType = "application/problem+json";
-            return new ErrorResult(new ErrorDto(
+            return Error(new ErrorDto(
                 "Invalid Authentication",
                 StatusCodes.Status401Unauthorized,
-                ""
-            ));
+                ""));
         }
 
         var newToken = await _identityService.RefreshAccessToken(refreshToken);
         if (newToken == null)
         {
             _removeRefreshTokenCookie();
-            Response.ContentType = "application/problem+json";
-            return new ErrorResult(new ErrorDto(
+            return Error(new ErrorDto(
                 "Invalid Authentication",
                 StatusCodes.Status401Unauthorized,
-                ""
-            ));
+                ""));
         }
 
         _addRefreshTokenCookie(newToken.RefreshToken);
-        return new NewAccessTokenDto(newToken.AccessToken);
+        return Ok(new NewAccessTokenDto(newToken.AccessToken));
     }
 
     [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
-    public async Task<ActionResult<NewAccessTokenDto>> Login(LoginCredentialsDto credentialsModel)
+    public async Task<IActionResult> Login(LoginCredentialsDto credentialsModel)
     {
         var token = await this._identityService.Login(new LoginCredentials(
             credentialsModel.Username,
@@ -85,12 +81,10 @@ public class AccountsController : ControllerBase
         ));
         if (token == null)
         {
-            Response.ContentType = "application/problem+json";
-            return new ErrorResult(new ErrorDto(
+            return Error(new ErrorDto(
                 "Invalid Authentication",
                 StatusCodes.Status401Unauthorized,
-                ""
-            ));
+                ""));
         }
 
         _addRefreshTokenCookie(token.RefreshToken);
@@ -103,17 +97,15 @@ public class AccountsController : ControllerBase
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
-    public async Task<ActionResult<NewAccessTokenDto>> Logout()
+    public async Task<IActionResult> Logout()
     {
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         if (refreshToken == null)
         {
-            Response.ContentType = "application/problem+json";
-            return new ErrorResult(new ErrorDto(
+            return Error(new ErrorDto(
                 "Invalid Authentication",
                 StatusCodes.Status401Unauthorized,
-                ""
-            ));
+                ""));
         }
 
         await _identityService.Logout(refreshToken);
