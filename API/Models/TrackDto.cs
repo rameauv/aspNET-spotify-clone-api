@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class TrackDto
@@ -11,9 +13,14 @@ public class TrackDto
         ThumbnailUrl = thumbnailUrl;
     }
 
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string ArtistName { get; set; }
-    public string? ThumbnailUrl { get; set; }
-    public string? LikeId { get; set; }
+    [Required]
+    public string Id { get; }
+    [Required]
+    public string Title { get; }
+    [Required]
+    public string ArtistName { get; }
+    [Required]
+    public string? ThumbnailUrl { get; }
+    [Required]
+    public string? LikeId { get; }
 }

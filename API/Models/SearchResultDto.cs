@@ -1,53 +1,65 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
-public record SearchResultDto(ReleaseResultDto[] ReleaseResults, SongResultDto[] SongResult, ArtistResultDto[] ArtistResult)
+public record SearchResultDto(ReleaseSearchResultDto[] ReleaseResults, SongSearchResultDto[] SongResult, ArtistSearchResultDto[] ArtistResult)
 {
-    public ReleaseResultDto[] ReleaseResults { get; set; } = ReleaseResults;
-    public SongResultDto[] SongResult { get; set; } = SongResult;
-    public ArtistResultDto[] ArtistResult { get; set; } = ArtistResult;
+    [Required]
+    public ReleaseSearchResultDto[] ReleaseResults { get; set; } = ReleaseResults;
+    [Required]
+    public SongSearchResultDto[] SongResult { get; set; } = SongResult;
+    [Required]
+    public ArtistSearchResultDto[] ArtistResult { get; set; } = ArtistResult;
 }
 
-public class BaseResultDto
+public class BaseSearchResultDto
 {
-    public BaseResultDto(string id, string? thumbnailUrl)
+    public BaseSearchResultDto(string id, string? thumbnailUrl)
     {
         Id = id;
         ThumbnailUrl = thumbnailUrl;
     }
 
+    [Required]
     public string Id { get; set; }
+    [Required]
     public string? ThumbnailUrl { get; set; }
 }
 
-public class ReleaseResultDto : BaseResultDto
+public class ReleaseSearchResultDto : BaseSearchResultDto
 {
+    [Required]
     public string Title { get; set; }
+    [Required]
     public string ArtistName { get; set; }
 
-    public ReleaseResultDto(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
+    public ReleaseSearchResultDto(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
     {
         Title = title;
         ArtistName = artistName;
     }
 }
 
-public class SongResultDto : BaseResultDto
+public class SongSearchResultDto : BaseSearchResultDto
 {
+    [Required]
     public string Title { get; set; }
+    [Required]
     public string ArtistName { get; set; }
 
-    public SongResultDto(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
+    public SongSearchResultDto(string id, string? thumbnailUrl, string title, string artistName) : base(id, thumbnailUrl)
     {
         Title = title;
         ArtistName = artistName;
     }
 }
 
-public class ArtistResultDto : BaseResultDto
+public class ArtistSearchResultDto : BaseSearchResultDto
 {
+    [Required]
     public string Name { get; set; }
 
-    public ArtistResultDto(string id, string? thumbnailUrl, string name) : base(id, thumbnailUrl)
+    public ArtistSearchResultDto(string id, string? thumbnailUrl, string name) : base(id, thumbnailUrl)
     {
         Name = name;
     }

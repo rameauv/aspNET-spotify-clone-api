@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class UserDataDto
@@ -7,5 +9,6 @@ public class UserDataDto
         Name = name;
     }
 
-    public string Name { get; set; }
+    [Required]
+    public string Name { get; }
 }

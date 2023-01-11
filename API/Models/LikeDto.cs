@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class LikeDto
@@ -7,5 +9,6 @@ public class LikeDto
         Id = id;
     }
 
-    public string Id { get; set; }
+    [Required]
+    public string Id { get; }
 }

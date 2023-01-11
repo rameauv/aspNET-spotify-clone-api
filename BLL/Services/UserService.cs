@@ -34,11 +34,12 @@ public class UserService : IUserService
     
     public Task<User> CurrentUserAsync(string accessToken)
     {
+        var a = new List<string>();
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
         var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null)
         {
-            throw new Exception("no userid in this access token");
+            throw new ArgumentException("no userid in this access token");
         }
 
         return GetAsync(userId);
@@ -50,7 +51,7 @@ public class UserService : IUserService
         var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null)
         {
-            throw new Exception("no userid in this access token");
+            throw new ArgumentException("no userid in this access token");
         }
 
         await _userRepository.SetUser(userId, new SetUserRequest

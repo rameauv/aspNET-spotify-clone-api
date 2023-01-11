@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class SimpleTrackDto
@@ -9,7 +11,10 @@ public class SimpleTrackDto
         ArtistName = artistName;
     }
 
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string ArtistName { get; set; }
+    [Required]
+    public string Id { get; }
+    [Required]
+    public string Title { get; }
+    [Required]
+    public string ArtistName { get; }
 }
