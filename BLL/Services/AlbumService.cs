@@ -72,7 +72,7 @@ public class AlbumService : IAlbumService
         var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null)
         {
-            throw new Exception("no userid in this access token");
+            throw new ArgumentException("no userid in this access token");
         }
 
         var like = await _likeRepository.SetAsync(id, "album", userId);

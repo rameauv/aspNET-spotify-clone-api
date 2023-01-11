@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.Net.Mime;
 using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,9 @@ namespace Api.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[Consumes(MediaTypeNames.Application.Json)]
+[Produces(MediaTypeNames.Application.Json, "application/problem+json")]
+[ProducesResponseType(typeof(ErrorsDto), StatusCodes.Status500InternalServerError)]
 public class AccountsController : ControllerBase
 {
     private readonly IAuthService _identityService;
@@ -41,27 +44,30 @@ public class AccountsController : ControllerBase
 
     [HttpPost("RefreshAccessToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
     public async Task<ActionResult<NewAccessTokenDto>> RefreshAccessToken()
     {
-        var cookieInThePast = new CookieOptions()
-        {
-            HttpOnly = true,
-            SameSite = SameSiteMode.Strict,
-            Secure = false,
-            Expires = DateTimeOffset.Now.Subtract(TimeSpan.FromDays(365))
-        };
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         if (refreshToken == null)
         {
-            return Unauthorized("Invalid Authentication");
+            Response.ContentType = "application/problem+json";
+            return new ErrorResult(new ErrorDto(
+                "Invalid Authentication",
+                StatusCodes.Status401Unauthorized,
+                ""
+            ));
         }
 
         var newToken = await _identityService.RefreshAccessToken(refreshToken);
         if (newToken == null)
         {
             _removeRefreshTokenCookie();
-            return Unauthorized("Invalid Authentication");
+            Response.ContentType = "application/problem+json";
+            return new ErrorResult(new ErrorDto(
+                "Invalid Authentication",
+                StatusCodes.Status401Unauthorized,
+                ""
+            ));
         }
 
         _addRefreshTokenCookie(newToken.RefreshToken);
@@ -70,14 +76,23 @@ public class AccountsController : ControllerBase
 
     [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
     public async Task<ActionResult<NewAccessTokenDto>> Login(LoginCredentialsDto credentialsModel)
     {
         var token = await this._identityService.Login(new LoginCredentials(
             credentialsModel.Username,
             credentialsModel.Password
         ));
-        if (token == null) return Unauthorized("Invalid Authentication");
+        if (token == null)
+        {
+            Response.ContentType = "application/problem+json";
+            return new ErrorResult(new ErrorDto(
+                "Invalid Authentication",
+                StatusCodes.Status401Unauthorized,
+                ""
+            ));
+        }
+
         _addRefreshTokenCookie(token.RefreshToken);
 
         return Ok(new NewAccessTokenDto(token.AccessToken));
@@ -87,12 +102,18 @@ public class AccountsController : ControllerBase
     [HttpPost("Logout")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
     public async Task<ActionResult<NewAccessTokenDto>> Logout()
     {
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         if (refreshToken == null)
         {
-            return Unauthorized("Invalid Authentication");
+            Response.ContentType = "application/problem+json";
+            return new ErrorResult(new ErrorDto(
+                "Invalid Authentication",
+                StatusCodes.Status401Unauthorized,
+                ""
+            ));
         }
 
         await _identityService.Logout(refreshToken);

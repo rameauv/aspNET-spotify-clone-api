@@ -9,9 +9,9 @@ public class ApiProfile : Profile
     public ApiProfile()
     {
         CreateMap<SearchResult, SearchResultDto>();
-        CreateMap<ReleaseResult, ReleaseResultDto>();
-        CreateMap<ArtistResult, ArtistResultDto>();
-        CreateMap<SongResult, SongResultDto>();
-        CreateMap<BaseResult, BaseResultDto>();
+        CreateMap<ReleaseResult, ReleaseSearchResultDto>();
+        CreateMap<ArtistResult, ArtistSearchResultDto>();
+        CreateMap<SongResult, SongSearchResultDto>();
+        CreateMap<BaseResult, BaseSearchResultDto>();
     }
 }

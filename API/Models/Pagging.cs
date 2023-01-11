@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class PaggingDto<T>
@@ -10,8 +12,12 @@ public class PaggingDto<T>
         Total = total;
     }
 
-    public IEnumerable<T> Items { get; set; }
-    public int Limit { get; set; }
-    public int Offset { get; set; }
-    public int Total { get; set; }
+    [Required]
+    public IEnumerable<T> Items { get; }
+    [Required]
+    public int Limit { get; }
+    [Required]
+    public int Offset { get; }
+    [Required]
+    public int Total { get; }
 }

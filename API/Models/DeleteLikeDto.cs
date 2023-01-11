@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Api.Models;
 
 public class DeleteLikeDto
@@ -7,5 +9,5 @@ public class DeleteLikeDto
         Id = id;
     }
 
-    public string Id { get; set; }
+    public string Id { get; }
 }
