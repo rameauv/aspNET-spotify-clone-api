@@ -19,10 +19,8 @@
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b22885ff_002D2b81_002D479d_002Da62d_002Dcc68ec6fd233/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="RefreshAccessToken" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::1EFFE487-0977-45E6-8244-D4D8572FFD98::net7.0::BLL_UnitTests.Identity.RefreshAccessToken&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b22885ff_002D2b81_002D479d_002Da62d_002Dcc68ec6fd233/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="RefreshAccessToken" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bc803efd_002Ddc8f_002D43a1_002D96ae_002D11d0b422e448/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ShouldGetAValidTokenContent" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
