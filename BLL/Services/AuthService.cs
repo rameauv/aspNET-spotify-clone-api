@@ -1,6 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
 using Spotify.Shared.BLL.Jwt;
-using Spotify.Shared.BLL.Jwt.Models;
 using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.MyIdentity.Models;
 using Spotify.Shared.BLL.Password;
@@ -8,6 +7,7 @@ using Spotify.Shared.DAL.IdentityUser;
 using Spotify.Shared.DAL.IdentityUser.Models;
 using Spotify.Shared.DAL.RefreshToken;
 using Spotify.Shared.DAL.RefreshToken.Models;
+using Spotify.Shared.DAL.User.Models;
 using Spotify.Shared.tools;
 using AuthUser = Spotify.Shared.BLL.Jwt.Models.AuthUser;
 
@@ -42,16 +42,17 @@ public class AuthService : IAuthService
         this._jwtService = jwtService;
         this._passwordService = passwordService;
     }
-    
+
     public async Task Register(RegisterUser user)
     {
         var passwordHash = _passwordService.Hash(user.Password);
         await _identityUserRepository.CreateAsync(new CreateUser(
             user.Username,
-            passwordHash
+            passwordHash,
+            new UserData(user.Username)
         ));
     }
-    
+
     public async Task<Token?> Login(LoginCredentials credentials)
     {
         var userDal = await _identityUserRepository.FindByUserNameWithHashedPasswordAsync(credentials.Username);
@@ -86,7 +87,7 @@ public class AuthService : IAuthService
 
         return new Token(accessToken, refreshToken);
     }
-    
+
     public async Task Logout(string refreshToken)
     {
         await _refreshTokenRepository.Delete(refreshToken);

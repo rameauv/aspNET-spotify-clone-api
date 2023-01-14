@@ -1,11 +1,6 @@
 namespace Spotify.Shared.DAL.User.Models;
 
-public class UserData
+public record UserData(string Name)
 {
-    public UserData(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; set; }
+    public string Name { get; set; } = Name;
 }
