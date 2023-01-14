@@ -6,6 +6,7 @@ using Spotify.Shared.BLL.Password;
 using Spotify.Shared.DAL.IdentityUser;
 using Spotify.Shared.DAL.IdentityUser.Models;
 using Spotify.Shared.DAL.RefreshToken;
+using Spotify.Shared.DAL.User.Models;
 using Spotify.Shared.tools;
 
 namespace BLL.UnitTests.Auth;
@@ -21,7 +22,7 @@ public class Register
         var passwordHash = "some fake hash";
         var data = "some data";
         var registrationUser = new RegisterUser(username, password, data);
-        var createUser = new CreateUser(username, passwordHash);
+        var createUser = new CreateUser(username, passwordHash, new UserData(username));
         var identityUser = new AuthUser(userId, username)
         {
             PasswordHash = passwordHash
@@ -44,8 +45,10 @@ public class Register
         );
 
         await authService.Register(registrationUser);
-        
+
         passwordServiceMock.Verify(service => service.Hash(password), Times.Once);
-        identityUserRepositoryMock.Verify(service => service.CreateAsync(createUser), Times.Once);
+        identityUserRepositoryMock
+            .Verify(service => service.CreateAsync(createUser),
+                Times.Once);
     }
 }
