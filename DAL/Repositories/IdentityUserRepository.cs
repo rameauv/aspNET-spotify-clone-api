@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Repositories.Contexts;
@@ -100,6 +101,7 @@ public class IdentityUserRepository : IIdentityUserRepository
         {
             UserName = user.UserName,
             PasswordHash = user.Password,
+            Data = JsonSerializer.Serialize(user.Data)
         })).Entity;
         await this.Context.SaveChangesAsync();
         await dbContextTransaction.CommitAsync();
