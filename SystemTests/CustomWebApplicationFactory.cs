@@ -8,7 +8,5 @@ public class CustomWebApplicationFactory<TProgram>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var env = new BuildEnvProvider();
-        builder.UseEnvironment(env.Env);
     }
 }

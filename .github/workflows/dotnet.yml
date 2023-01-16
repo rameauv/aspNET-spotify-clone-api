@@ -31,6 +31,9 @@ jobs:
 
     runs-on: ubuntu-latest
     
+    env:
+      ASPNETCORE_ENVIRONMENT: Ci
+      
     services:
       db:
         image: postgres
