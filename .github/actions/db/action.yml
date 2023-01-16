@@ -1,7 +1,6 @@
 # action.yml
 name: 'Db'
 description: 'spin-up a postgres db'
-inputs:
 runs:
   using: 'docker'
   image: 'postgres'
