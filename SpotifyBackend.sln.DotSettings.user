@@ -37,6 +37,7 @@
     &lt;TestId&gt;xUnit::1EFFE487-0977-45E6-8244-D4D8572FFD98::net7.0::BLLTests.Identity.RefreshAccessToken&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestRunner/EnvironmentVariablesIndexed/=ASPNETCORE_005FENVIRONMENT/@EntryIndexedValue">Tests</s:String>
 	
 	
 	
