@@ -50,3 +50,4 @@ jobs:
         run: ./.github/workflows/initDb.sh
       - name: Test
         run: dotnet test --filter "FullyQualifiedName~SystemTests." --no-build --verbosity normal
+        
