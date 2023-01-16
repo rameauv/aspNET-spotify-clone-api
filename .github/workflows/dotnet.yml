@@ -46,6 +46,11 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
+      - name:
+        run: |
+          apt-get update
+          sudo apt-get -y install postgresql
+          psql
       - name: Test
         run: dotnet test --filter "FullyQualifiedName~SystemTests." --no-build --verbosity normal
 
