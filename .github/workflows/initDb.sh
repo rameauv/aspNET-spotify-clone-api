@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo apt-get update
 sudo apt-get -y install postgresql
-psql postgresql://postgres:postgres@postgres:5432/postgres << EOF
+psql postgresql://postgres:postgres@db:5432/postgres << EOF
        create table "Users"
        (
        	"Id" uuid default gen_random_uuid() not null
