@@ -12,7 +12,7 @@
     &lt;TestId&gt;xUnit::1EFFE487-0977-45E6-8244-D4D8572FFD98::net7.0::BLL.UnitTests.Auth.Login.ShouldReturnANotEmptyNewAccessAndRefreshTokens&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=635ce303_002D36a7_002D4ad5_002Da65d_002Df817e556aa09/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=635ce303_002D36a7_002D4ad5_002Da65d_002Df817e556aa09/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=873185b9_002Dbec8_002D485d_002D9be6_002D74d8e3997218/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="2" Name="ShouldReturnNullIfTheUserIsNotFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
@@ -25,6 +25,11 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bc803efd_002Ddc8f_002D43a1_002D96ae_002D11d0b422e448/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ShouldGetAValidTokenContent" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::1EFFE487-0977-45E6-8244-D4D8572FFD98::net7.0::BLL.UnitTests.Auth.Login&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=db2d713c_002D28ea_002D48f9_002Da66b_002Dc7cee82754e5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1 #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::7B9A070E-C168-4E5A-9025-47BEE40FD3CA::net7.0::SystemTests.Album.UnitTest1.Test1&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	

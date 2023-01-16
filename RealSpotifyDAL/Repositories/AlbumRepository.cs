@@ -1,3 +1,4 @@
+using System.Net;
 using Spotify.Shared.DAL.Album;
 using Spotify.Shared.DAL.Album.Models;
 using SpotifyAPI.Web;
@@ -16,26 +17,38 @@ public class AlbumRepository : IAlbumRepository
         this._spotifyClient = spotifyClient.SpotifyClient;
     }
 
-    public async Task<Album> GetAsync(string id)
+    public async Task<Album?> GetAsync(string id)
     {
-        var resAlbum = await _spotifyClient.Albums.Get(id, new AlbumRequest());
-        var artistId = resAlbum.Artists.FirstOrDefault()?.Id;
-        if (artistId == null)
+        try
         {
-            throw new Exception("could not get the artist id for this album");
-        }
+            var resAlbum = await _spotifyClient.Albums.Get(id, new AlbumRequest());
+            var artistId = resAlbum.Artists.FirstOrDefault()?.Id;
+            if (artistId == null)
+            {
+                throw new Exception("could not get the artist id for this album");
+            }
 
-        var resArtist = await _spotifyClient.Artists.Get(artistId);
-        return new Album(
-            resAlbum.Id,
-            resAlbum.Name,
-            resAlbum.ReleaseDate,
-            resAlbum.Images.FirstOrDefault()?.Url,
-            resArtist.Id,
-            resArtist.Name,
-            resArtist.Images.FirstOrDefault()?.Url,
-            resAlbum.AlbumType
-        );
+            var resArtist = await _spotifyClient.Artists.Get(artistId);
+            return new Album(
+                resAlbum.Id,
+                resAlbum.Name,
+                resAlbum.ReleaseDate,
+                resAlbum.Images.FirstOrDefault()?.Url,
+                resArtist.Id,
+                resArtist.Name,
+                resArtist.Images.FirstOrDefault()?.Url,
+                resAlbum.AlbumType
+            );
+        }
+        catch (APIException e)
+        {
+            if (e.Message == "invalid id")
+            {
+                return null;
+            }
+
+            throw;
+        }
     }
 
     public async Task<AlbumTracks> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)

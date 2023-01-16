@@ -25,11 +25,20 @@ public class AlbumController : MyControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AlbumDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorsDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorsDto))]
     public async Task<IActionResult> Get(string id)
     {
         var res = await _albumService.GetAsync(id);
-        
+
+        if (res == null)
+        {
+            return Error(new ErrorDto(
+                "bad request",
+                StatusCodes.Status400BadRequest,
+                "invalid id"
+            ));
+        }
+
         var result = new AlbumDto(
             res.Id,
             res.Title,

@@ -34,7 +34,7 @@ public class AlbumService : IAlbumService
         this._jwtService = jwtService;
     }
     
-    public async Task<Album> GetAsync(string id)
+    public async Task<Album?> GetAsync(string id)
     {
         var albumTask = _albumRepository.GetAsync(id);
         var likeTask = _likeRepository.GetByAssociatedIdAsync(id);
@@ -42,6 +42,11 @@ public class AlbumService : IAlbumService
         var album = await albumTask;
         var like = await likeTask;
 
+        if (album == null)
+        {
+            return null;
+        }
+        
         return new Album(
             album.Id,
             album.Title,

@@ -12,7 +12,7 @@ public interface IAlbumService
     /// </summary>
     /// <param name="id">The identifier of the album to get.</param>
     /// <returns>The album with the specified identifier.</returns>
-    Task<Models.Album> GetAsync(string id);
+    Task<Models.Album?> GetAsync(string id);
     /// <summary>
     /// Retrieves a list of tracks for a given album.
     /// </summary>
