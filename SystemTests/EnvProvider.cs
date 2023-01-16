@@ -2,5 +2,5 @@ namespace SystemTests;
 
 public class BuildEnvProvider
 {
-    public string Env { get; } = "Tests";
+    public string Env => "Tests";
 }
