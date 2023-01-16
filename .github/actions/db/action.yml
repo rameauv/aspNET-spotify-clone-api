@@ -5,4 +5,4 @@ runs:
   using: 'docker'
   image: 'postgres'
   args:
-    - 'POSTGRES_PASSWORD:hello'
+    - 'POSTGRES_PASSWORD=mysecretpassword'
