@@ -46,8 +46,6 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-      - name: spin-up db
-        uses: ./.github/actions/db
       - name: Test
         run: dotnet test --filter "FullyQualifiedName~SystemTests." --no-build --verbosity normal
 
