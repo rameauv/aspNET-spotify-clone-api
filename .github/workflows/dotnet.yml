@@ -47,6 +47,6 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: init db
-        run: ./iniDb.sh
+        run: ./github/workflows/iniDb.sh
       - name: Test
         run: dotnet test --filter "FullyQualifiedName~SystemTests." --no-build --verbosity normal
