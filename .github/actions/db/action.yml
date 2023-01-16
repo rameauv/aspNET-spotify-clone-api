@@ -4,5 +4,5 @@ description: 'spin-up a postgres db'
 runs:
   using: 'docker'
   image: 'postgres'
-  args:
-    - 'POSTGRES_PASSWORD=mysecretpassword'
+  env:
+    POSTGRES_PASSWORD: mysecretpassword
