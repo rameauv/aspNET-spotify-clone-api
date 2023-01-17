@@ -51,23 +51,35 @@ public class AlbumRepository : IAlbumRepository
         }
     }
 
-    public async Task<AlbumTracks> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
+    public async Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
     {
-        var res = await _spotifyClient.Albums.GetTracks(id, new RealSpotify.AlbumTracksRequest()
+        try
         {
-            Limit = albumTracksRequest?.Limit,
-            Offset = albumTracksRequest?.Offset
-        });
-        if (res.Items == null)
-        {
-            return new AlbumTracks(Array.Empty<SimpleTrack>());
-        }
+            var res = await _spotifyClient.Albums.GetTracks(id, new RealSpotify.AlbumTracksRequest()
+            {
+                Limit = albumTracksRequest?.Limit,
+                Offset = albumTracksRequest?.Offset
+            });
+            if (res.Items == null)
+            {
+                return new AlbumTracks(Array.Empty<SimpleTrack>());
+            }
 
-        var mappedTracks = res.Items.Select(track => new SimpleTrack(
-            track.Id,
-            track.Name,
-            track.Artists.FirstOrDefault()?.Name ?? "")
-        ).ToArray();
-        return new AlbumTracks(mappedTracks, res.Limit ?? 0, res.Offset ?? 0, res.Total ?? 0);
+            var mappedTracks = res.Items.Select(track => new SimpleTrack(
+                track.Id,
+                track.Name,
+                track.Artists.FirstOrDefault()?.Name ?? "")
+            ).ToArray();
+            return new AlbumTracks(mappedTracks, res.Limit ?? 0, res.Offset ?? 0, res.Total ?? 0);
+        }
+        catch (APIException e)
+        {
+            if (e.Message == "invalid id")
+            {
+                return null;
+            }
+
+            throw;
+        }
     }
 }

@@ -55,13 +55,22 @@ public class AlbumController : MyControllerBase
 
     [HttpGet("{id}/Tracks")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AlbumTracksDto))]
-    public async Task<ActionResult<BaseSearchResultDto>> Tracks(string id, int? limit, int? offset)
+    public async Task<IActionResult> Tracks(string id, int? limit, int? offset)
     {
         var res = await _albumService.GetTracksAsync(id, new AlbumTracksRequest
         {
             Limit = limit,
             Offset = offset
         });
+        if (res == null)
+        {
+            return Error(new ErrorDto(
+                "bad request",
+                StatusCodes.Status400BadRequest,
+                "invalid id"
+            ));
+        }
+
         var mappedTracks = res.Items.Select(track => new SimpleTrackDto(
             track.Id,
             track.Title,

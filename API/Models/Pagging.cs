@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Api.Models;
 
@@ -13,11 +14,15 @@ public class PaggingDto<T>
     }
 
     [Required]
+    [JsonPropertyName("id")]
     public IEnumerable<T> Items { get; }
     [Required]
+    [JsonPropertyName("limit")]
     public int Limit { get; }
     [Required]
+    [JsonPropertyName("offset")]
     public int Offset { get; }
     [Required]
+    [JsonPropertyName("total")]
     public int Total { get; }
 }

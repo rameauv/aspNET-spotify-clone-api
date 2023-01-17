@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Api.Models;
 
@@ -12,9 +13,12 @@ public class SimpleTrackDto
     }
 
     [Required]
+    [JsonPropertyName("id")]
     public string Id { get; }
     [Required]
+    [JsonPropertyName("title")]
     public string Title { get; }
     [Required]
+    [JsonPropertyName("artistName")]
     public string ArtistName { get; }
 }

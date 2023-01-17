@@ -33,7 +33,7 @@ public class AlbumService : IAlbumService
         this._likeRepository = likeRepository;
         this._jwtService = jwtService;
     }
-    
+
     public async Task<Album?> GetAsync(string id)
     {
         var albumTask = _albumRepository.GetAsync(id);
@@ -46,7 +46,7 @@ public class AlbumService : IAlbumService
         {
             return null;
         }
-        
+
         return new Album(
             album.Id,
             album.Title,
@@ -59,14 +59,20 @@ public class AlbumService : IAlbumService
             like?.Id
         );
     }
-    
-    public async Task<AlbumTracks> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
+
+    public async Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
     {
         var res = await _albumRepository.GetTracksAsync(id, new Shared.DAL.Album.Models.AlbumTracksRequest
         {
             Limit = albumTracksRequest?.Limit,
             Offset = albumTracksRequest?.Offset
         });
+
+        if (res == null)
+        {
+            return null;
+        }
+
         var mappedTracks = res.Items.Select(track => new SimpleTrack(
             track.Id,
             track.Title,
@@ -79,7 +85,7 @@ public class AlbumService : IAlbumService
             res.Total
         );
     }
-    
+
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

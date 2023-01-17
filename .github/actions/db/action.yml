@@ -1,8 +1,0 @@
-# action.yml
-name: 'Db'
-description: 'spin-up a postgres db'
-runs:
-  using: 'docker'
-  image: 'postgres'
-  env:
-    POSTGRES_PASSWORD: mysecretpassword
