@@ -8,6 +8,9 @@ using Spotify.Shared.BLL.MyIdentity.Models;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for handling account-related requests
+/// </summary>
 [Route("[controller]")]
 [ApiController]
 [Consumes(MediaTypeNames.Application.Json)]
@@ -19,6 +22,12 @@ public class AccountsController : MyControllerBase
     private readonly ILogger<AccountsController> _logger;
     private readonly JwtConfig _jwtConfig;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AccountsController"/> class.
+    /// </summary>
+    /// <param name="identityService">Identity service object</param>
+    /// <param name="logger">Logger object</param>
+    /// <param name="jwtConfig">JWT Configuration object</param>
     public AccountsController(
         IAuthService identityService,
         ILogger<AccountsController> logger,
@@ -29,6 +38,9 @@ public class AccountsController : MyControllerBase
         this._jwtConfig = jwtConfig;
     }
 
+    /// <summary>
+    /// Registers a new user
+    /// </summary>
     [HttpPost("Register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Register(CreateUserDto userModel)
@@ -42,6 +54,9 @@ public class AccountsController : MyControllerBase
         return StatusCode(201);
     }
 
+    /// <summary>
+    /// Refreshes the access token
+    /// </summary>
     [HttpPost("RefreshAccessToken")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
@@ -70,6 +85,9 @@ public class AccountsController : MyControllerBase
         return Ok(new NewAccessTokenDto(newToken.AccessToken));
     }
 
+    /// <summary>
+    /// Logs in a user
+    /// </summary>
     [HttpPost("Login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewAccessTokenDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
@@ -92,7 +110,9 @@ public class AccountsController : MyControllerBase
         return Ok(new NewAccessTokenDto(token.AccessToken));
     }
 
-
+    /// <summary>
+    /// Logs out the current user
+    /// </summary>
     [HttpPost("Logout")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]

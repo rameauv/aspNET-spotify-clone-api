@@ -6,6 +6,9 @@ using Spotify.Shared.BLL.Track;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for handling track-related requests
+/// </summary>
 [Route("[controller]")]
 [Authorize]
 [ApiController]
@@ -17,11 +20,18 @@ public class TrackController : MyControllerBase
 {
     private readonly ITrackService _trackRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TrackController"/> class.
+    /// </summary>
+    /// <param name="trackService">Track service object</param>
     public TrackController(ITrackService trackService)
     {
         _trackRepository = trackService;
     }
 
+    /// <summary>
+    /// Get the track by its id
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrackDto))]
     public async Task<IActionResult> Search(string id)
@@ -45,12 +55,14 @@ public class TrackController : MyControllerBase
         ));
     }
 
+    /// <summary>
+    /// Set a like for the track
+    /// </summary>
     [HttpPatch("{id}/Like")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
     public async Task<ActionResult> SetLike(string id)
     {
-        // Remove "Bearer "
-        var accessToken = Request.Headers.Authorization.ToString()[7..];
+        var accessToken = GetAccessToken();
         if (accessToken == null)
         {
             throw new Exception("no access token provided");

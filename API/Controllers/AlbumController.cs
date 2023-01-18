@@ -8,7 +8,7 @@ using Spotify.Shared.BLL.Album.Models;
 namespace Api.Controllers;
 
 /// <summary>
-/// The AlbumController class is an ASP.NET Core Web API controller that handles requests related to albums.
+/// Controller for handling album-related requests
 /// </summary>
 [Route("[controller]")]
 [Authorize]

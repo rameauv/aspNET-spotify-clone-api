@@ -6,6 +6,9 @@ using Spotify.Shared.BLL.Artist;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for handling artist-related requests
+/// </summary>
 [Route("[controller]")]
 [Authorize]
 [ApiController]
@@ -17,11 +20,18 @@ public class ArtistController : MyControllerBase
 {
     private readonly IArtistService _artistService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArtistController"/> class.
+    /// </summary>
+    /// <param name="artistService">The artist service.</param>
     public ArtistController(IArtistService artistService)
     {
         _artistService = artistService;
     }
 
+    /// <summary>
+    /// Get the artist by its id
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArtistDto))]
     public async Task<IActionResult> Search(string id)
@@ -45,6 +55,9 @@ public class ArtistController : MyControllerBase
         ));
     }
 
+    /// <summary>
+    /// Set a like for the artist
+    /// </summary>
     [HttpPatch("{id}/Like")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
     public async Task<ActionResult> SetLike(string id)
