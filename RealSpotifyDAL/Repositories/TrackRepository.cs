@@ -13,15 +13,27 @@ public class TrackRepository : ITrackRepository
         this._client = client.SpotifyClient;
     }
 
-    public async Task<Track> GetAsync(string id)
+    public async Task<Track?> GetAsync(string id)
     {
-        var res = await _client.Tracks.Get(id, new TrackRequest());
+        try
+        {
+            var res = await _client.Tracks.Get(id, new TrackRequest());
 
-        return new Track(
-            res.Id,
-            res.Name,
-            res.Artists.FirstOrDefault()?.Name ?? "",
-            res.Album.Images.FirstOrDefault()?.Url
-        );
+            return new Track(
+                res.Id,
+                res.Name,
+                res.Artists.FirstOrDefault()?.Name ?? "",
+                res.Album.Images.FirstOrDefault()?.Url
+            );
+        }
+        catch (APIException e)
+        {
+            if (e.Message == "invalid id")
+            {
+                return null;
+            }
+
+            throw;
+        }
     }
 }

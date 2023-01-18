@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Api.AutoMapper;
@@ -28,6 +29,7 @@ using Spotify.Shared.DAL.RefreshToken;
 using Spotify.Shared.DAL.Search;
 using Spotify.Shared.DAL.Track;
 using Spotify.Shared.DAL.User;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,6 +120,9 @@ var jwtConfig = new JwtConfig(
 // Logger
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+
+// register your examples
+builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(ApiProfile), typeof(BllProfile));

@@ -14,7 +14,7 @@ public class PaggingDto<T>
     }
 
     [Required]
-    [JsonPropertyName("id")]
+    [JsonPropertyName("items")]
     public IEnumerable<T> Items { get; }
     [Required]
     [JsonPropertyName("limit")]

@@ -7,6 +7,9 @@ using Spotify.Shared.BLL.Album.Models;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// The AlbumController class is an ASP.NET Core Web API controller that handles requests related to albums.
+/// </summary>
 [Route("[controller]")]
 [Authorize]
 [ApiController]
@@ -18,11 +21,18 @@ public class AlbumController : MyControllerBase
 {
     private readonly IAlbumService _albumService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AlbumController"/> class.
+    /// </summary>
+    /// <param name="albumService">The album service.</param>
     public AlbumController(IAlbumService albumService)
     {
         this._albumService = albumService;
     }
 
+    /// <summary>
+    /// Get the album by its id
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AlbumDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorsDto))]
@@ -53,6 +63,9 @@ public class AlbumController : MyControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Get the associated tracks of an album
+    /// </summary>
     [HttpGet("{id}/Tracks")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AlbumTracksDto))]
     public async Task<IActionResult> Tracks(string id, int? limit, int? offset)
@@ -85,19 +98,22 @@ public class AlbumController : MyControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("Like")]
+
+    /// <summary>
+    /// Set the like status for the album
+    /// </summary>
+    [HttpPatch("{id}/Like")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
-    public async Task<ActionResult> SetLike(SetLikeRequest setLikeRequest)
+    public async Task<IActionResult> SetLike(string id)
     {
-        // Remove "Bearer "
-        var accessToken = Request.Headers.Authorization.ToString()[7..];
+        var accessToken = GetAccessToken();
         if (accessToken == null)
         {
             throw new Exception("no access token provided");
         }
 
-        var like = await _albumService.SetLikeAsync(setLikeRequest.AssociatedId, accessToken);
+        var like = await _albumService.SetLikeAsync(id, accessToken);
 
         return Ok(new LikeDto(like.Id));
     }

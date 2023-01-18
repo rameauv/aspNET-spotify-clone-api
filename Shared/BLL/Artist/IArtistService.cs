@@ -9,8 +9,8 @@ public interface IArtistService
     /// Retrieves an artist and its associated like, if one exists.
     /// </summary>
     /// <param name="id">The ID of the artist to retrieve.</param>
-    /// <returns>The retrieved artist.</returns>
-    Task<Models.Artist> GetAsync(string id);
+    /// <returns>The retrieved artist, or null if no such artist exists.</returns>
+    Task<Models.Artist?> GetAsync(string id);
     /// <summary>
     /// Sets a like for an artist for the user identified by an access token.
     /// </summary>

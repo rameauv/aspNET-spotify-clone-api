@@ -13,15 +13,27 @@ public class ArtistRepository : IArtistRepository
         this._client = spotifyClient.SpotifyClient;
     }
 
-    public async Task<Artist> GetAsync(string id)
+    public async Task<Artist?> GetAsync(string id)
     {
-        var res = await _client.Artists.Get(id);
+        try
+        {
+            var res = await _client.Artists.Get(id);
 
-        return new Artist(
-            res.Id,
-            res.Name,
-            res.Images.FirstOrDefault()?.Url,
-            res.Followers.Total
-        );
+            return new Artist(
+                res.Id,
+                res.Name,
+                res.Images.FirstOrDefault()?.Url,
+                res.Followers.Total
+            );
+        }
+        catch (APIException e)
+        {
+            if (e.Message == "invalid id")
+            {
+                return null;
+            }
+
+            throw;
+        }
     }
 }

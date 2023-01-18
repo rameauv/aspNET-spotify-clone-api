@@ -13,7 +13,7 @@ namespace Api.Controllers;
 [Produces(MediaTypeNames.Application.Json, "application/problem+json")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
 [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorsDto))]
-public class TrackController : ControllerBase
+public class TrackController : MyControllerBase
 {
     private readonly ITrackService _trackRepository;
 
@@ -24,9 +24,18 @@ public class TrackController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrackDto))]
-    public async Task<ActionResult<BaseSearchResultDto>> Search(string id)
+    public async Task<IActionResult> Search(string id)
     {
         var track = await _trackRepository.GetAsync(id);
+        if (track == null)
+        {
+            return Error(new ErrorDto(
+                "bad request",
+                StatusCodes.Status400BadRequest,
+                "invalid id"
+            ));
+        }
+
         return Ok(new TrackDto(
             track.Id,
             track.Title,
@@ -36,9 +45,9 @@ public class TrackController : ControllerBase
         ));
     }
 
-    [HttpPatch("Like")]
+    [HttpPatch("{id}/Like")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
-    public async Task<ActionResult> SetLike(SetLikeRequest setLikeRequest)
+    public async Task<ActionResult> SetLike(string id)
     {
         // Remove "Bearer "
         var accessToken = Request.Headers.Authorization.ToString()[7..];
@@ -47,7 +56,7 @@ public class TrackController : ControllerBase
             throw new Exception("no access token provided");
         }
 
-        var like = await _trackRepository.SetLikeAsync(setLikeRequest.AssociatedId, accessToken);
+        var like = await _trackRepository.SetLikeAsync(id, accessToken);
         return Ok(new LikeDto(like.Id));
     }
 }
