@@ -8,6 +8,7 @@ namespace SystemTests.Album;
 /// <summary>
 /// Test class for testing the Track API.
 /// </summary>
+[Collection("system tests")]
 public class TrackTest : TestBase, IClassFixture<CustomWebApplicationFactory<Program>>
 {
     public TrackTest(CustomWebApplicationFactory<Program> applicationFactory) : base(applicationFactory)

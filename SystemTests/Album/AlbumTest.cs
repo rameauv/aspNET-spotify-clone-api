@@ -9,6 +9,7 @@ namespace SystemTests.Album;
 /// <summary>
 /// Test class for testing the Album API.
 /// </summary>
+[Collection("system tests")]
 public class AlbumTest : TestBase, IClassFixture<CustomWebApplicationFactory<Program>>
 {
     /// <summary>

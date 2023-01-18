@@ -8,6 +8,7 @@ namespace SystemTests.Album;
 /// <summary>
 /// Test class for testing the Artist API.
 /// </summary>
+[Collection("system tests")]
 public class ArtistTest : TestBase, IClassFixture<CustomWebApplicationFactory<Program>>
 {
     public ArtistTest(CustomWebApplicationFactory<Program> applicationFactory) : base(applicationFactory)
