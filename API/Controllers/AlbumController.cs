@@ -7,6 +7,9 @@ using Spotify.Shared.BLL.Album.Models;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for handling album-related requests
+/// </summary>
 [Route("[controller]")]
 [Authorize]
 [ApiController]
@@ -18,18 +21,34 @@ public class AlbumController : MyControllerBase
 {
     private readonly IAlbumService _albumService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AlbumController"/> class.
+    /// </summary>
+    /// <param name="albumService">The album service.</param>
     public AlbumController(IAlbumService albumService)
     {
         this._albumService = albumService;
     }
 
+    /// <summary>
+    /// Get the album by its id
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AlbumDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorsDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorsDto))]
     public async Task<IActionResult> Get(string id)
     {
         var res = await _albumService.GetAsync(id);
-        
+
+        if (res == null)
+        {
+            return Error(new ErrorDto(
+                "bad request",
+                StatusCodes.Status400BadRequest,
+                "invalid id"
+            ));
+        }
+
         var result = new AlbumDto(
             res.Id,
             res.Title,
@@ -44,15 +63,27 @@ public class AlbumController : MyControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Get the associated tracks of an album
+    /// </summary>
     [HttpGet("{id}/Tracks")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AlbumTracksDto))]
-    public async Task<ActionResult<BaseSearchResultDto>> Tracks(string id, int? limit, int? offset)
+    public async Task<IActionResult> Tracks(string id, int? limit, int? offset)
     {
         var res = await _albumService.GetTracksAsync(id, new AlbumTracksRequest
         {
             Limit = limit,
             Offset = offset
         });
+        if (res == null)
+        {
+            return Error(new ErrorDto(
+                "bad request",
+                StatusCodes.Status400BadRequest,
+                "invalid id"
+            ));
+        }
+
         var mappedTracks = res.Items.Select(track => new SimpleTrackDto(
             track.Id,
             track.Title,
@@ -67,19 +98,22 @@ public class AlbumController : MyControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("Like")]
+
+    /// <summary>
+    /// Set the like status for the album
+    /// </summary>
+    [HttpPatch("{id}/Like")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
-    public async Task<ActionResult> SetLike(SetLikeRequest setLikeRequest)
+    public async Task<IActionResult> SetLike(string id)
     {
-        // Remove "Bearer "
-        var accessToken = Request.Headers.Authorization.ToString()[7..];
+        var accessToken = GetAccessToken();
         if (accessToken == null)
         {
             throw new Exception("no access token provided");
         }
 
-        var like = await _albumService.SetLikeAsync(setLikeRequest.AssociatedId, accessToken);
+        var like = await _albumService.SetLikeAsync(id, accessToken);
 
         return Ok(new LikeDto(like.Id));
     }

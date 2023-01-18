@@ -29,13 +29,19 @@ public class ArtistService : IArtistService
         this._jwtService = jwtService;
         this._likeRepository = likeRepository;
     }
-    
-    public async Task<Artist> GetAsync(string id)
+
+    public async Task<Artist?> GetAsync(string id)
     {
         var artistTask = _artistRepository.GetAsync(id);
         var likeTask = _likeRepository.GetByAssociatedIdAsync(id);
         await Task.WhenAll(artistTask, likeTask);
         var artist = await artistTask;
+
+        if (artist == null)
+        {
+            return null;
+        }
+
         var like = await likeTask;
 
         return new Artist(
@@ -46,7 +52,7 @@ public class ArtistService : IArtistService
             artist.MonthlyListeners
         );
     }
-    
+
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

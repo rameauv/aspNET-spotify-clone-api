@@ -4,24 +4,43 @@ using SpotifyAPI.Web;
 
 namespace RealSpotifyDAL.Repositories;
 
+/// <summary>
+/// Repository for fetching artist information from the Spotify API
+/// </summary>
 public class ArtistRepository : IArtistRepository
 {
     private readonly SpotifyClient _client;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArtistRepository"/> class.
+    /// </summary>
+    /// <param name="spotifyClient">Spotify client object</param>
     public ArtistRepository(MySpotifyClient spotifyClient)
     {
         this._client = spotifyClient.SpotifyClient;
     }
 
-    public async Task<Artist> GetAsync(string id)
+    public async Task<Artist?> GetAsync(string id)
     {
-        var res = await _client.Artists.Get(id);
+        try
+        {
+            var res = await _client.Artists.Get(id);
 
-        return new Artist(
-            res.Id,
-            res.Name,
-            res.Images.FirstOrDefault()?.Url,
-            res.Followers.Total
-        );
+            return new Artist(
+                res.Id,
+                res.Name,
+                res.Images.FirstOrDefault()?.Url,
+                res.Followers.Total
+            );
+        }
+        catch (APIException e)
+        {
+            if (e.Message == "invalid id")
+            {
+                return null;
+            }
+
+            throw;
+        }
     }
 }
