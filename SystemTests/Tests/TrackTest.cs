@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using Api.Models;
 using Newtonsoft.Json;
 
-namespace SystemTests.Album;
+namespace SystemTests.Tests;
 
 /// <summary>
 /// Test class for testing the Track API.
@@ -11,10 +11,17 @@ namespace SystemTests.Album;
 [Collection("system tests")]
 public class TrackTest : TestBase, IClassFixture<CustomWebApplicationFactory<Program>>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TrackTest"/> class.
+    /// </summary>
+    /// <param name="applicationFactory">The application factory.</param>
     public TrackTest(CustomWebApplicationFactory<Program> applicationFactory) : base(applicationFactory)
     {
     }
 
+    /// <summary>
+    /// Tests that the API returns an track when provided a valid track ID.
+    /// </summary>
     [Fact]
     public async Task ShouldGetAnTrackById()
     {
@@ -33,6 +40,9 @@ public class TrackTest : TestBase, IClassFixture<CustomWebApplicationFactory<Pro
         Assert.NotNull(trackDto?.Id);
     }
 
+    /// <summary>
+    /// Tests that the API returns a bad request error when provided an invalid track ID.
+    /// </summary>
     [Fact]
     public async Task ShouldGetABadRequestErrorWhenGettingAnTrackByProvidingAnInvalidId()
     {
@@ -49,6 +59,9 @@ public class TrackTest : TestBase, IClassFixture<CustomWebApplicationFactory<Pro
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
+    /// <summary>
+    /// Tests the scenario where the API should set the like status for the track when provided a valid track ID.
+    /// </summary>
     [Fact]
     public async Task ShouldSetTheLikeStatusForTheTrack()
     {

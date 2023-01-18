@@ -1,10 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using Api.Models;
-using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json;
 
-namespace SystemTests.Album;
+namespace SystemTests.Tests;
 
 /// <summary>
 /// Test class for testing the Album API.
