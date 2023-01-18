@@ -32,13 +32,18 @@ public class TrackService : ITrackService
         this._jwtService = jwtService;
         this._likeRepository = likeRepository;
     }
-    
-    public async Task<Track> GetAsync(string id)
+
+    public async Task<Track?> GetAsync(string id)
     {
         var trackTask = _trackRepository.GetAsync(id);
         var likeTask = _likeRepository.GetByAssociatedIdAsync(id);
         await Task.WhenAll(trackTask, likeTask);
         var track = await trackTask;
+        if (track == null)
+        {
+            return null;
+        }
+
         var like = await likeTask;
 
         return new Track(
@@ -49,7 +54,7 @@ public class TrackService : ITrackService
             like?.Id
         );
     }
-    
+
     public async Task<Like> SetLikeAsync(string id, string accessToken)
     {
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);

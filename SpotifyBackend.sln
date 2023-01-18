@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealSpotifyDAL", "RealSpoti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.UnitTests", "BLL.UnitTests\BLL.UnitTests.csproj", "{1EFFE487-0977-45E6-8244-D4D8572FFD98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTests", "SystemTests\SystemTests.csproj", "{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{1EFFE487-0977-45E6-8244-D4D8572FFD98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EFFE487-0977-45E6-8244-D4D8572FFD98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EFFE487-0977-45E6-8244-D4D8572FFD98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

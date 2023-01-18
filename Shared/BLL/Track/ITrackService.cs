@@ -9,8 +9,8 @@ public interface ITrackService
     /// Gets a track by its identifier.
     /// </summary>
     /// <param name="id">The identifier of the track to get.</param>
-    /// <returns>The track with the specified identifier.</returns>
-    Task<Models.Track> GetAsync(string id);
+    /// <returns>The track with the specified identifier, or null if no such track exists.</returns>
+    Task<Models.Track?> GetAsync(string id);
 
     /// <summary>
     /// Sets a like on a track with the specified identifier.

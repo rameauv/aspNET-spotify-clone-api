@@ -9,6 +9,9 @@ using Spotify.Shared.BLL.Search.Models;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for handling search-related requests
+/// </summary>
 [Route("[controller]")]
 [Authorize]
 [ApiController]
@@ -16,17 +19,25 @@ namespace Api.Controllers;
 [Produces(MediaTypeNames.Application.Json, "application/problem+json")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
 [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorsDto))]
-public class SearchController : ControllerBase
+public class SearchController : MyControllerBase
 {
     private readonly ISearchService _searchService;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SearchController"/> class.
+    /// </summary>
+    /// <param name="searchService">Search service object</param>
+    /// <param name="mapper">Mapper service object</param>
     public SearchController(ISearchService searchService, IMapper mapper)
     {
         this._searchService = searchService;
         this._mapper = mapper;
     }
 
+    /// <summary>
+    /// Search
+    /// </summary>
     [HttpGet("Search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResultDto))]
     public async Task<ActionResult<BaseSearchResultDto>> Search([Required] string q, int? offset, int? limit)
