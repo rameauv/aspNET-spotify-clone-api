@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Api.Models;
 
@@ -28,21 +29,30 @@ public class AlbumDto
     }
 
     [Required]
+    [JsonPropertyName("id")]
     public string Id { get; }
     [Required]
+    [JsonPropertyName("title")]
     public string Title { get; }
     [Required]
+    [JsonPropertyName("releaseDate")]
     public string ReleaseDate { get; }
     [Required]
+    [JsonPropertyName("thumbnailUrl")]
     public string? ThumbnailUrl { get; }
     [Required]
+    [JsonPropertyName("artistId")]
     public string ArtistId { get; }
     [Required]
+    [JsonPropertyName("artistName")]
     public string ArtistName { get; }
     [Required]
+    [JsonPropertyName("artistThumbnailUrl")]
     public string? ArtistThumbnailUrl { get; }
     [Required]
+    [JsonPropertyName("albumType")]
     public string AlbumType { get; }
     [Required]
+    [JsonPropertyName("likeId")]
     public string? LikeId { get; }
 }
