@@ -1,5 +1,8 @@
 namespace Spotify.Shared.DAL.Artist;
 
+/// <summary>
+/// Repository for fetching artist information
+/// </summary>
 public interface IArtistRepository
 {
     /// <summary>

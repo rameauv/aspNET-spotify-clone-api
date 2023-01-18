@@ -2,6 +2,9 @@ using Spotify.Shared.DAL.Album.Models;
 
 namespace Spotify.Shared.DAL.Album;
 
+/// <summary>
+/// Repository for fetching album information
+/// </summary>
 public interface IAlbumRepository
 {
     /// <summary>

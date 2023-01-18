@@ -4,10 +4,17 @@ using SpotifyAPI.Web;
 
 namespace RealSpotifyDAL.Repositories;
 
+/// <summary>
+/// Repository for fetching artist information from the Spotify API
+/// </summary>
 public class ArtistRepository : IArtistRepository
 {
     private readonly SpotifyClient _client;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArtistRepository"/> class.
+    /// </summary>
+    /// <param name="spotifyClient">Spotify client object</param>
     public ArtistRepository(MySpotifyClient spotifyClient)
     {
         this._client = spotifyClient.SpotifyClient;

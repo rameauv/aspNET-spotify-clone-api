@@ -1,5 +1,8 @@
 namespace Spotify.Shared.DAL.Track;
 
+/// <summary>
+/// Repository for fetching track information
+/// </summary>
 public interface ITrackRepository
 {
     /// <summary>

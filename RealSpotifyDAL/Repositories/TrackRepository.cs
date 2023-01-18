@@ -4,13 +4,20 @@ using SpotifyAPI.Web;
 
 namespace RealSpotifyDAL.Repositories;
 
+/// <summary>
+/// Repository for fetching track information from the Spotify API
+/// </summary>
 public class TrackRepository : ITrackRepository
 {
     private readonly SpotifyClient _client;
 
-    public TrackRepository(MySpotifyClient client)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TrackRepository"/> class.
+    /// </summary>
+    /// <param name="spotifyClient">Spotify client object</param>
+    public TrackRepository(MySpotifyClient spotifyClient)
     {
-        this._client = client.SpotifyClient;
+        this._client = spotifyClient.SpotifyClient;
     }
 
     public async Task<Track?> GetAsync(string id)

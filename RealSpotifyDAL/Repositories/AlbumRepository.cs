@@ -8,10 +8,17 @@ using RealSpotify = SpotifyAPI.Web;
 
 namespace RealSpotifyDAL.Repositories;
 
+/// <summary>
+/// Repository for fetching album information from the Spotify API
+/// </summary>
 public class AlbumRepository : IAlbumRepository
 {
     private readonly SpotifyClient _spotifyClient;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AlbumRepository"/> class.
+    /// </summary>
+    /// <param name="spotifyClient">Spotify client object</param>
     public AlbumRepository(MySpotifyClient spotifyClient)
     {
         this._spotifyClient = spotifyClient.SpotifyClient;
