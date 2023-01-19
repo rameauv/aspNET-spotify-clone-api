@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Spotify.BLL.Services;
 using Spotify.Shared.BLL.Jwt;
@@ -32,6 +33,7 @@ public class Register
         var identityUserRepositoryMock = new MyMock<IIdentityUserRepository>();
         var refreshTokenRepositoryMock = new MyMock<IRefreshTokenRepository>();
         var passwordServiceMock = new MyMock<IPasswordService>();
+        var loggerServiceMock = new Mock<ILogger<AuthService>>();
 
         passwordServiceMock.Setup(service => service.Hash(password)).Returns(passwordHash);
         identityUserRepositoryMock.Setup(service => service.CreateAsync(createUser))
@@ -41,7 +43,8 @@ public class Register
             identityUserRepositoryMock.Object,
             refreshTokenRepositoryMock.Object,
             jwtServiceMock.Object,
-            passwordServiceMock.Object
+            passwordServiceMock.Object,
+            loggerServiceMock.Object
         );
 
         await authService.Register(registrationUser);
