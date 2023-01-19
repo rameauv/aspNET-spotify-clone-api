@@ -89,7 +89,6 @@ public class IdentityUserRepository : IIdentityUserRepository
     {
         using var dbContextTransaction = this.Context.Database.BeginTransaction();
         var entity = this.Context.Users.First(a => a.Id.ToString() == id);
-        Console.WriteLine(Context.Users.Remove(entity));
         this.Context.SaveChanges();
         dbContextTransaction.Commit();
     }

@@ -134,29 +134,26 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddSingleton(jwtConfig);
 
 // DAL Dependencies
-builder.Services.AddSingleton<IIdentityUserRepository, IdentityUserRepository>();
-builder.Services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IIdentityUserRepository, IdentityUserRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddSingleton<ISearchRepository, SearchRepository>();
 builder.Services.AddSingleton<MySpotifyClient, MySpotifyClient>();
 builder.Services.AddSingleton<ITrackRepository, TrackRepository>();
 builder.Services.AddSingleton<IArtistRepository, ArtistRepository>();
 builder.Services.AddSingleton<IAlbumRepository, AlbumRepository>();
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<ILikeRepository, LikeRepository>();
 
 // BLL Dependencies
-builder.Services.AddSingleton<IAuthService, AuthService>();
-builder.Services.AddSingleton<ISearchService, SearchService>();
-builder.Services.AddSingleton<ITrackService, TrackService>();
-builder.Services.AddSingleton<IArtistService, ArtistService>();
-builder.Services.AddSingleton<IAlbumService, AlbumService>();
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<ILikeService, LikeService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.AddSingleton<IPasswordService, PasswordService>();
-
-// JWT config
-builder.Services.AddSingleton(jwtConfig);
+builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<ITrackService, TrackService>();
+builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<IAlbumService, AlbumService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
 
 builder.Services.AddAuthentication(options =>
 {

@@ -45,7 +45,6 @@ public class AccountsController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Register(CreateUserDto userModel)
     {
-        Console.WriteLine(userModel);
         await this._identityService.Register(new RegisterUser(
             userModel.Username,
             userModel.Password,
