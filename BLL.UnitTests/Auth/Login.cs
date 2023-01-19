@@ -1,11 +1,10 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Spotify.BLL.Services;
 using Spotify.Shared.BLL.Jwt;
-using Spotify.Shared.BLL.Jwt.Models;
 using Spotify.Shared.BLL.MyIdentity.Models;
 using Spotify.Shared.BLL.Password;
 using Spotify.Shared.DAL.IdentityUser;
-using Spotify.Shared.DAL.IdentityUser.Models;
 using Spotify.Shared.DAL.RefreshToken;
 using Spotify.Shared.DAL.RefreshToken.Models;
 using Spotify.Shared.tools;
@@ -33,6 +32,7 @@ public class Login
         var identityUserRepositoryMock = new MyMock<IIdentityUserRepository>();
         var refreshTokenRepositoryMock = new MyMock<IRefreshTokenRepository>();
         var passwordServiceMock = new MyMock<IPasswordService>();
+        var loggerServiceMock = new Mock<ILogger<AuthService>>();
 
         identityUserRepositoryMock.Setup(service => service.FindByUserNameWithHashedPasswordAsync(username))
             .ReturnsAsync(new AuthUser(userId, username) { PasswordHash = passwordHash });
@@ -46,7 +46,8 @@ public class Login
             identityUserRepositoryMock.Object,
             refreshTokenRepositoryMock.Object,
             jwtServiceMock.Object,
-            passwordServiceMock.Object
+            passwordServiceMock.Object,
+            loggerServiceMock.Object
         );
 
         var res = await authService.Login(credentials);
@@ -83,6 +84,7 @@ public class Login
         var identityUserRepositoryMock = new MyMock<IIdentityUserRepository>();
         var refreshTokenRepositoryMock = new MyMock<IRefreshTokenRepository>();
         var passwordServiceMock = new MyMock<IPasswordService>();
+        var loggerServiceMock = new Mock<ILogger<AuthService>>();
 
         identityUserRepositoryMock.Setup(service => service.FindByUserNameWithHashedPasswordAsync(username))
             .ReturnsAsync(new AuthUser(userId, username) { PasswordHash = passwordHash });
@@ -97,7 +99,8 @@ public class Login
             identityUserRepositoryMock.Object,
             refreshTokenRepositoryMock.Object,
             jwtServiceMock.Object,
-            passwordServiceMock.Object
+            passwordServiceMock.Object,
+            loggerServiceMock.Object
         );
 
         var res = await authService.Login(credentials);
@@ -132,6 +135,7 @@ public class Login
         var identityUserRepository = new MyMock<IIdentityUserRepository>();
         var refreshTokenRepository = new MyMock<IRefreshTokenRepository>();
         var passwordServiceMock = new MyMock<IPasswordService>();
+        var loggerServiceMock = new Mock<ILogger<AuthService>>();
 
         identityUserRepository.Setup(service => service.FindByUserNameWithHashedPasswordAsync(username))
             .ReturnsAsync((AuthUser?)null);
@@ -140,7 +144,8 @@ public class Login
             identityUserRepository.Object,
             refreshTokenRepository.Object,
             jwtServiceMock.Object,
-            passwordServiceMock.Object
+            passwordServiceMock.Object,
+            loggerServiceMock.Object
         );
 
         var res = await authService.Login(credentials);
@@ -162,6 +167,7 @@ public class Login
         var identityUserRepository = new MyMock<IIdentityUserRepository>();
         var refreshTokenRepository = new MyMock<IRefreshTokenRepository>();
         var passwordServiceMock = new MyMock<IPasswordService>();
+        var loggerServiceMock = new Mock<ILogger<AuthService>>();
 
         identityUserRepository.Setup(service => service.FindByUserNameWithHashedPasswordAsync(username))
             .ReturnsAsync(new AuthUser(userId, username) { PasswordHash = passwordHash });
@@ -171,7 +177,8 @@ public class Login
             identityUserRepository.Object,
             refreshTokenRepository.Object,
             jwtServiceMock.Object,
-            passwordServiceMock.Object
+            passwordServiceMock.Object,
+            loggerServiceMock.Object
         );
 
         var res = await authService.Login(credentials);
