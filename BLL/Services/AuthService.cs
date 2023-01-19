@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.MyIdentity;
@@ -22,6 +23,7 @@ public class AuthService : IAuthService
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IJwtService _jwtService;
     private readonly IPasswordService _passwordService;
+    private readonly ILogger<AuthService> _logger;
 
     /// <summary>
     /// Initializes a new instance of the MyIdentityService class.
@@ -30,17 +32,20 @@ public class AuthService : IAuthService
     /// <param name="refreshTokenRepository">An interface that provides methods for accessing refresh token data in a database.</param>
     /// <param name="passwordService">An interface that provides methods password hashing and hash verification.</param>
     /// <param name="jwtService">An interface that provides methods for generating and validating JSON Web Tokens (JWTs).</param>
+    /// <param name="logger">An interface that provides methods for logging.</param>
     public AuthService(
         IIdentityUserRepository identityUserRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IJwtService jwtService,
-        IPasswordService passwordService
+        IPasswordService passwordService,
+        ILogger<AuthService> logger
     )
     {
         this._identityUserRepository = identityUserRepository;
         this._refreshTokenRepository = refreshTokenRepository;
         this._jwtService = jwtService;
         this._passwordService = passwordService;
+        this._logger = logger;
     }
 
     public async Task Register(RegisterUser user)
@@ -105,14 +110,14 @@ public class AuthService : IAuthService
         }
         catch (SecurityTokenReplayDetectedException e)
         {
-            Console.Error.WriteLine(e);
+            _logger.LogError(e, "replay detected with the cache");
             // remove all tokens associated to the userId to force a login when the user's access tokens will be expired
             await _refreshTokenRepository.DeleteAllTokensByUserId(userId);
             return null;
         }
         catch (Exception e)
         {
-            Console.Error.WriteLine(e);
+            _logger.LogError(e, "An error happened during a token validation");
             validationException = e;
         }
 
