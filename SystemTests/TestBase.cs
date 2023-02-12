@@ -2,8 +2,11 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Api.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Net.Http.Headers;
 using Npgsql;
+using SystemTests.Context;
 using SystemTests.Models;
 
 namespace SystemTests;
@@ -18,6 +21,8 @@ public class TestBase
     /// </summary>
     protected readonly CustomWebApplicationFactory<Program> Factory;
 
+    private readonly string _connectionString;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TestBase"/> class.
     /// </summary>
@@ -25,6 +30,18 @@ public class TestBase
     protected TestBase(CustomWebApplicationFactory<Program> applicationFactory)
     {
         Factory = applicationFactory;
+        if (Factory.Services.GetService(typeof(IConfiguration)) is not IConfiguration config)
+        {
+            throw new NullReferenceException("could not get the config");
+        }
+
+        var connectionString = config.GetConnectionString("DBContext");
+        if (connectionString == null)
+        {
+            throw new NullReferenceException("could not get the db's connection string");
+        }
+
+        _connectionString = connectionString;
     }
 
     /// <summary>
@@ -32,12 +49,7 @@ public class TestBase
     /// </summary>
     protected async Task InitDb()
     {
-        if (Factory.Services.GetService(typeof(IConfiguration)) is not IConfiguration config)
-        {
-            throw new NullReferenceException("could not get the config");
-        }
-        var connectionString = config.GetConnectionString("DBContext");
-        await using var db = new NpgsqlConnection(connectionString);
+        await using var db = CreateDbConnection();
         db.Open();
         await using var cmd = new NpgsqlCommand("TRUNCATE \"Likes\", \"RefreshTokens\", \"Users\";", db);
         cmd.ExecuteNonQuery();
@@ -63,21 +75,46 @@ public class TestBase
         return credentials;
     }
 
-    
+
     /// <summary>
     /// Logs in with the given credentials and adds the Bearer token to the headers for further request
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="password">The password.</param>
     /// <param name="client">The client.</param>
-    protected async Task Login(string username, string password, HttpClient client)
+    /// <returns>the refresh token</returns>
+    protected async Task<string> Login(string username, string password, HttpClient client)
     {
         var credentials = new LoginCredentialsDto(username, password);
 
         var loginResponse = await client.PostAsJsonAsync("/Accounts/Login", credentials);
-        var loginResponseString = await loginResponse.Content.ReadAsStringAsync();
-        var accessToken = JsonSerializer.Deserialize<NewAccessTokenDto>(loginResponseString);
+        var serializedNewAccessTokenDto = await loginResponse.Content.ReadAsStringAsync();
+        var accessToken = JsonSerializer.Deserialize<NewAccessTokenDto>(serializedNewAccessTokenDto);
         Assert.NotNull(accessToken);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.AccessToken);
+        return _extractRefreshToken(loginResponse);
+    }
+
+    protected NpgsqlConnection CreateDbConnection()
+    {
+        return new NpgsqlConnection(_connectionString);
+    }
+
+    protected TestDbContext CreateDbContext()
+    {
+        var options = new DbContextOptionsBuilder<TestDbContext>().UseNpgsql(
+            _connectionString);
+
+        return new TestDbContext(options.Options);
+    }
+
+    private string _extractRefreshToken(HttpResponseMessage response)
+    {
+        var cookieNameAndAssignmentSign = "X-Refresh-Token=";
+        var setCookies = response.Headers.GetValues(HeaderNames.SetCookie);
+        var refreshToken = setCookies.First(setCookie => setCookie.Contains(cookieNameAndAssignmentSign));
+        var tokens = refreshToken.Split("; ");
+        var expiresToken = tokens.First();
+        return expiresToken[cookieNameAndAssignmentSign.Length..];
     }
 }
