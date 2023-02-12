@@ -40,7 +40,7 @@ public class SearchController : MyControllerBase
     /// </summary>
     [HttpGet("Search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResultDto))]
-    public async Task<ActionResult<BaseSearchResultDto>> Search([Required] string q, int? offset, int? limit)
+    public async Task<IActionResult> Search([Required] string q, int? offset, int? limit)
     {
         var res = await _searchService.SearchAsync(new Search(q)
         {
