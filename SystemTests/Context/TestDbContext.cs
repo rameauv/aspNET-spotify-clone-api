@@ -4,10 +4,6 @@ namespace SystemTests.Context;
 
 public partial class TestDbContext : DbContext
 {
-    public TestDbContext()
-    {
-    }
-
     public TestDbContext(DbContextOptions<TestDbContext> options)
         : base(options)
     {
@@ -37,7 +33,6 @@ public partial class TestDbContext : DbContext
             entity.HasIndex(e => e.Id, "refreshtokens_id_uindex").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.Data).HasColumnType("jsonb");
         });
 
         modelBuilder.Entity<User>(entity =>
