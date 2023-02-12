@@ -32,9 +32,9 @@ public class LikeController : MyControllerBase
     /// <summary>
     /// Delete the like by its id
     /// </summary>
-    [HttpDelete("Delete")]
+    [HttpDelete("{id}/Delete")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> Delete(DeleteLikeDto deleteLikeDto)
+    public async Task<ActionResult> Delete(string id)
     {
         var accessToken = GetAccessToken();
         if (accessToken == null)
@@ -42,7 +42,7 @@ public class LikeController : MyControllerBase
             throw new Exception("no access token provided");
         }
 
-        await _likeService.DeleteAsync(deleteLikeDto.Id);
+        await _likeService.DeleteAsync(id);
         return Ok();
     }
 }
