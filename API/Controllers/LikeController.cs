@@ -2,6 +2,7 @@ using System.Net.Mime;
 using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.Like;
 
 namespace Api.Controllers;
@@ -24,25 +25,22 @@ public class LikeController : MyControllerBase
     /// Initializes a new instance of the <see cref="LikeController"/> class.
     /// </summary>
     /// <param name="likesService">Like service object</param>
-    public LikeController(ILikeService likesService)
+    /// <param name="jwtService">Jwt service object</param>
+    public LikeController(ILikeService likesService, IJwtService jwtService): base(jwtService)
     {
         this._likeService = likesService;
     }
 
     /// <summary>
-    /// Delete the like by its id
+    /// Delete a like of the current user by its id
     /// </summary>
     [HttpDelete("{id}/Delete")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Delete(string id)
     {
-        var accessToken = GetAccessToken();
-        if (accessToken == null)
-        {
-            throw new Exception("no access token provided");
-        }
+        var userId = GetCurrentUserId();
 
-        await _likeService.DeleteAsync(id);
+        await _likeService.DeleteAsync(id, userId);
         return Ok();
     }
 }

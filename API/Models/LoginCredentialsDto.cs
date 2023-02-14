@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Api.Models;
 
 public record LoginCredentialsDto(string Username, string Password)

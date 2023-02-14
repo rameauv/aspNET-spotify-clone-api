@@ -3,6 +3,7 @@ using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spotify.Shared;
+using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.MyIdentity.Models;
 
@@ -28,10 +29,13 @@ public class AccountsController : MyControllerBase
     /// <param name="identityService">Identity service object</param>
     /// <param name="logger">Logger object</param>
     /// <param name="jwtConfig">JWT Configuration object</param>
+    /// <param name="jwtService">JWT service object</param>
     public AccountsController(
         IAuthService identityService,
         ILogger<AccountsController> logger,
-        JwtConfig jwtConfig)
+        JwtConfig jwtConfig,
+        IJwtService jwtService
+    ) : base(jwtService)
     {
         this._identityService = identityService;
         this._logger = logger;

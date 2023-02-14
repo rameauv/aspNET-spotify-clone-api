@@ -6,18 +6,18 @@ namespace Spotify.Shared.BLL.Track;
 public interface ITrackService
 {
     /// <summary>
-    /// Gets a track by its identifier.
+    /// Gets a track by its identifier, if one exists..
     /// </summary>
     /// <param name="id">The identifier of the track to get.</param>
+    /// <param name="userId">The associated user id.</param>
     /// <returns>The track with the specified identifier, or null if no such track exists.</returns>
-    Task<Models.Track?> GetAsync(string id);
+    Task<Models.Track?> GetAsync(string id, string userId);
 
     /// <summary>
-    /// Sets a like on a track with the specified identifier.
+    /// Sets a like on a track with the specified track id and user id.
     /// </summary>
     /// <param name="id">The identifier of the track to like.</param>
-    /// <param name="accessToken">The access token of the user performing the like action.</param>
+    /// <param name="userId">The associated user id.</param>
     /// <returns>The created like.</returns>
-    /// <exception cref="Exception">Thrown if the user id could not be extracted from the access token.</exception>
-    Task<Like.Models.Like> SetLikeAsync(string id, string accessToken);
+    Task<Like.Models.Like> SetLikeAsync(string id, string userId);
 }

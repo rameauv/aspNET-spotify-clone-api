@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Album.Models;
+using Spotify.Shared.BLL.Jwt;
 
 namespace Api.Controllers;
 
@@ -25,7 +26,8 @@ public class AlbumController : MyControllerBase
     /// Initializes a new instance of the <see cref="AlbumController"/> class.
     /// </summary>
     /// <param name="albumService">The album service.</param>
-    public AlbumController(IAlbumService albumService)
+    /// <param name="jwtService">The jwt service.</param>
+    public AlbumController(IAlbumService albumService, IJwtService jwtService) : base(jwtService)
     {
         this._albumService = albumService;
     }
@@ -38,7 +40,8 @@ public class AlbumController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorsDto))]
     public async Task<IActionResult> Get(string id)
     {
-        var res = await _albumService.GetAsync(id);
+        var userId = GetCurrentUserId();
+        var res = await _albumService.GetAsync(id, userId);
 
         if (res == null)
         {
@@ -107,13 +110,9 @@ public class AlbumController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
     public async Task<IActionResult> SetLike(string id)
     {
-        var accessToken = GetAccessToken();
-        if (accessToken == null)
-        {
-            throw new Exception("no access token provided");
-        }
+        var userId = GetCurrentUserId();
 
-        var like = await _albumService.SetLikeAsync(id, accessToken);
+        var like = await _albumService.SetLikeAsync(id, userId);
 
         return Ok(new LikeDto(like.Id));
     }
