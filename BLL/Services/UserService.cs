@@ -34,7 +34,6 @@ public class UserService : IUserService
     
     public Task<User> CurrentUserAsync(string accessToken)
     {
-        var a = new List<string>();
         var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
         var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null)
