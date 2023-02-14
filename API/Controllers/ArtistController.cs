@@ -3,6 +3,7 @@ using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spotify.Shared.BLL.Artist;
+using Spotify.Shared.BLL.Jwt;
 
 namespace Api.Controllers;
 
@@ -24,7 +25,8 @@ public class ArtistController : MyControllerBase
     /// Initializes a new instance of the <see cref="ArtistController"/> class.
     /// </summary>
     /// <param name="artistService">The artist service.</param>
-    public ArtistController(IArtistService artistService)
+    /// <param name="jwtService">The jwt service</param>
+    public ArtistController(IArtistService artistService, IJwtService jwtService) : base(jwtService)
     {
         _artistService = artistService;
     }
@@ -34,9 +36,10 @@ public class ArtistController : MyControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArtistDto))]
-    public async Task<IActionResult> Search(string id)
+    public async Task<IActionResult> Get(string id)
     {
-        var res = await _artistService.GetAsync(id);
+        var userId = GetCurrentUserId();
+        var res = await _artistService.GetAsync(id, userId);
         if (res == null)
         {
             return Error(new ErrorDto(
@@ -62,13 +65,9 @@ public class ArtistController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
     public async Task<ActionResult> SetLike(string id)
     {
-        var accessToken = GetAccessToken();
-        if (accessToken == null)
-        {
-            throw new Exception("no access token provided");
-        }
+        var userId = GetCurrentUserId();
 
-        var like = await _artistService.SetLikeAsync(id, accessToken);
+        var like = await _artistService.SetLikeAsync(id, userId);
 
         return Ok(new LikeDto(like.Id));
     }

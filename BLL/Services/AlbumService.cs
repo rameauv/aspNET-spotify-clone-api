@@ -1,7 +1,5 @@
-using System.Security.Claims;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Album.Models;
-using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.Like.Models;
 using Spotify.Shared.DAL.Album;
 using Spotify.Shared.DAL.Like;
@@ -15,29 +13,25 @@ public class AlbumService : IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
     private readonly ILikeRepository _likeRepository;
-    private readonly IJwtService _jwtService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AlbumService"/> class.
     /// </summary>
     /// <param name="albumRepository">The repository for accessing album data.</param>
     /// <param name="likeRepository">The repository for accessing like data.</param>
-    /// <param name="jwtService">The service for validating and generating JWT access tokens.</param>
     public AlbumService(
         IAlbumRepository albumRepository,
-        ILikeRepository likeRepository,
-        IJwtService jwtService
+        ILikeRepository likeRepository
     )
     {
         this._albumRepository = albumRepository;
         this._likeRepository = likeRepository;
-        this._jwtService = jwtService;
     }
 
-    public async Task<Album?> GetAsync(string id)
+    public async Task<Album?> GetAsync(string id, string userId)
     {
         var albumTask = _albumRepository.GetAsync(id);
-        var likeTask = _likeRepository.GetByAssociatedIdAsync(id);
+        var likeTask = _likeRepository.GetByAssociatedUserIdAsync(id, userId);
         await Task.WhenAll(albumTask, likeTask);
         var album = await albumTask;
         var like = await likeTask;
@@ -86,15 +80,8 @@ public class AlbumService : IAlbumService
         );
     }
 
-    public async Task<Like> SetLikeAsync(string id, string accessToken)
+    public async Task<Like> SetLikeAsync(string id, string userId)
     {
-        var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
-        var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-        {
-            throw new ArgumentException("no userid in this access token");
-        }
-
         var like = await _likeRepository.SetAsync(id, "album", userId);
         return new Like(like.Id, like.AssociatedId, like.AssociatedUser, like.AssociatedType);
     }

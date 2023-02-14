@@ -43,7 +43,7 @@ public class LikeRepository : ILikeRepository
             AssociatedUser = associatedUser
         });
         await Context.SaveChangesAsync();
-        
+
         return new DALModels.Like(
             res.Entity.Id.ToString(),
             res.Entity.AssociatedId,
@@ -52,9 +52,10 @@ public class LikeRepository : ILikeRepository
         );
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task DeleteAsync(string id, string associatedUserId)
     {
-        var res = await Context.Likes.FindAsync(new Guid(id));
+        var res = await Context.Likes.Where(like => like.Id == new Guid(id) && like.AssociatedUser == associatedUserId)
+            .FirstOrDefaultAsync();
         if (res == null)
         {
             return;
@@ -64,9 +65,10 @@ public class LikeRepository : ILikeRepository
         await Context.SaveChangesAsync();
     }
 
-    public async Task<DALModels.Like?> GetByAssociatedIdAsync(string id)
+    public async Task<DALModels.Like?> GetByAssociatedUserIdAsync(string id, string associatedUserId)
     {
-        var res = await Context.Likes.Where(like => like.AssociatedId == id)
+        var res = await Context.Likes.Where(
+                like => like.AssociatedId == id && like.AssociatedUser == associatedUserId)
             .FirstOrDefaultAsync();
         if (res == null)
         {
@@ -79,27 +81,5 @@ public class LikeRepository : ILikeRepository
             res.AssociatedUser,
             res.AssociatedType
         );
-    }
-
-    public async Task<DALModels.UserLikes> GetByAssociatedUserId(string id,
-        DALModels.UserLikesRequest? userLikesRequest = null)
-    {
-        var limit = userLikesRequest?.Limit ?? 10;
-        var offset = userLikesRequest?.Offset ?? 0;
-        var baseQuery = Context.Likes
-            .Where(like => like.Id == new Guid(id));
-        var likesQueryTask = baseQuery
-            .Skip(offset)
-            .Take(limit)
-            .ToListAsync();
-        var totalTask = baseQuery
-            .CountAsync();
-        await Task.WhenAll(likesQueryTask, totalTask);
-        var likes = await likesQueryTask;
-        var total = await totalTask;
-        var mappedLikes = likes.Select(like =>
-            new DALModels.Like(like.Id.ToString(), like.AssociatedId, like.AssociatedUser, like.AssociatedType)
-        ).ToArray();
-        return new DALModels.UserLikes(mappedLikes, limit, offset, total);
     }
 }

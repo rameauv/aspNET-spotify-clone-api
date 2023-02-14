@@ -1,5 +1,3 @@
-using System.Security.Claims;
-using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.User;
 using Spotify.Shared.DAL.User;
 using Spotify.Shared.DAL.User.Models;
@@ -13,46 +11,29 @@ namespace Spotify.BLL.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IJwtService _jwtService;
 
     /// <summary>
     /// Initializes a new instance of the `UserService` class.
     /// </summary>
     /// <param name="userRepository">The repository for interacting with user data.</param>
-    /// <param name="jwtService">The service for handling JSON Web Tokens (JWTs).</param>
-    public UserService(IUserRepository userRepository, IJwtService jwtService)
+    public UserService(IUserRepository userRepository)
     {
         this._userRepository = userRepository;
-        this._jwtService = jwtService;
     }
-    
+
     public async Task<User> GetAsync(string id)
     {
         var res = await _userRepository.GetAsync(id);
         return new User(res.Id, res.Username, res.Name);
     }
-    
-    public Task<User> CurrentUserAsync(string accessToken)
-    {
-        var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
-        var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-        {
-            throw new ArgumentException("no userid in this access token");
-        }
 
+    public Task<User> CurrentUserAsync(string userId)
+    {
         return GetAsync(userId);
     }
-    
-    public async Task SetName(string accessToken, string name)
-    {
-        var validatedToken = _jwtService.GetValidatedAccessToken(accessToken);
-        var userId = validatedToken.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null)
-        {
-            throw new ArgumentException("no userid in this access token");
-        }
 
+    public async Task SetName(string userId, string name)
+    {
         await _userRepository.SetUser(userId, new SetUserRequest
         {
             Name = name

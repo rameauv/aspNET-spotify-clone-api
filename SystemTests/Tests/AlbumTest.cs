@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Api.Models;
 using Newtonsoft.Json;
+using SystemTests.Models;
 
 namespace SystemTests.Tests;
 
@@ -119,5 +120,35 @@ public class AlbumTest : TestBase, IClassFixture<CustomWebApplicationFactory<Pro
         Assert.NotNull(likeDto?.Id);
         Assert.NotNull(albumDto?.LikeId);
         Assert.Equal(albumDto.LikeId, likeDto.Id);
+    }
+
+    /// <summary>
+    /// Tests the scenario where the API should set the like status for the album when provided a valid album ID only for the current user.
+    /// </summary>
+    [Fact]
+    public async Task ShouldSetAndRetrieveTheLikeStatusOfAnAlbumOnlyForTheCurrentUser()
+    {
+        const string id = "2noRn2Aes5aoNVsU6iWThc";
+
+        var client = Factory.CreateClient();
+        await InitDb();
+        var currentUserTestUserCredentials = new TestUserCredentials("currentUser", "currentUserPassword");
+        var secondUserTestUserCredentials = new TestUserCredentials("secondUser", "secondUserPassword");
+        await CreateTestUser(currentUserTestUserCredentials);
+        await CreateTestUser(secondUserTestUserCredentials);
+
+        await Login(currentUserTestUserCredentials.Username, currentUserTestUserCredentials.Password, client);
+        var setLikeResponse = await client.PatchAsJsonAsync($"Album/{id}/Like", "");
+        setLikeResponse.EnsureSuccessStatusCode();
+        var logoutResponse = await client.PostAsJsonAsync("Accounts/Logout", "");
+        logoutResponse.EnsureSuccessStatusCode();
+        await Login(secondUserTestUserCredentials.Username, secondUserTestUserCredentials.Password, client);
+        var albumResponse = await client.GetAsync($"Album/{id}");
+        albumResponse.EnsureSuccessStatusCode();
+        var serializedAlbumDto = await albumResponse.Content.ReadAsStringAsync();
+        var albumDto = JsonConvert.DeserializeObject<AlbumDto>(serializedAlbumDto);
+
+        Assert.NotNull(albumDto);
+        Assert.Null(albumDto.LikeId);
     }
 }
