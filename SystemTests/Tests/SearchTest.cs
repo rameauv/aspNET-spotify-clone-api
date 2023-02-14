@@ -1,6 +1,5 @@
 using Api.Models;
 using Newtonsoft.Json;
-using SystemTests.Models;
 
 namespace SystemTests.Tests;
 

@@ -1,4 +1,3 @@
-using System.Net;
 using Spotify.Shared.DAL.Album;
 using Spotify.Shared.DAL.Album.Models;
 using SpotifyAPI.Web;

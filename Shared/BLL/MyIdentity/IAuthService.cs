@@ -1,4 +1,3 @@
-using Spotify.Shared.BLL.Jwt.Models;
 using Spotify.Shared.BLL.MyIdentity.Models;
 
 namespace Spotify.Shared.BLL.MyIdentity;

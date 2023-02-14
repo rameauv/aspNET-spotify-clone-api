@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Api.Models;
 using Newtonsoft.Json;
+using SystemTests.Models;
 
 namespace SystemTests.Tests;
 
@@ -84,5 +85,35 @@ public class TrackTest : TestBase, IClassFixture<CustomWebApplicationFactory<Pro
         Assert.NotNull(likeDto?.Id);
         Assert.NotNull(trackDto?.Id);
         Assert.Equal(likeDto.Id, trackDto.LikeId);
+    }
+    
+    /// <summary>
+    /// Tests the scenario where the API should set the like status for the track when provided a valid track ID only for the current user.
+    /// </summary>
+    [Fact]
+    public async Task ShouldSetAndRetrieveTheLikeStatusOfAnTrackOnlyForTheCurrentUser()
+    {
+        const string id = "5W3cjX2J3tjhG8zb6u0qHn";
+
+        var client = Factory.CreateClient();
+        await InitDb();
+        var currentUserTestUserCredentials = new TestUserCredentials("currentUser", "currentUserPassword");
+        var secondUserTestUserCredentials = new TestUserCredentials("secondUser", "secondUserPassword");
+        await CreateTestUser(currentUserTestUserCredentials);
+        await CreateTestUser(secondUserTestUserCredentials);
+
+        await Login(currentUserTestUserCredentials.Username, currentUserTestUserCredentials.Password, client);
+        var setLikeResponse = await client.PatchAsJsonAsync($"Track/{id}/Like", "");
+        setLikeResponse.EnsureSuccessStatusCode();
+        var logoutResponse = await client.PostAsJsonAsync("Accounts/Logout", "");
+        logoutResponse.EnsureSuccessStatusCode();
+        await Login(secondUserTestUserCredentials.Username, secondUserTestUserCredentials.Password, client);
+        var trackResponse = await client.GetAsync($"Track/{id}");
+        trackResponse.EnsureSuccessStatusCode();
+        var serializedTrackDto = await trackResponse.Content.ReadAsStringAsync();
+        var trackDto = JsonConvert.DeserializeObject<TrackDto>(serializedTrackDto);
+
+        Assert.NotNull(trackDto);
+        Assert.Null(trackDto.LikeId);
     }
 }

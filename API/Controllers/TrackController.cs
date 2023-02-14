@@ -2,6 +2,7 @@ using System.Net.Mime;
 using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.Track;
 
 namespace Api.Controllers;
@@ -24,7 +25,8 @@ public class TrackController : MyControllerBase
     /// Initializes a new instance of the <see cref="TrackController"/> class.
     /// </summary>
     /// <param name="trackService">Track service object</param>
-    public TrackController(ITrackService trackService)
+    /// <param name="jwtService">The jwt service</param>
+    public TrackController(ITrackService trackService, IJwtService jwtService): base(jwtService)
     {
         _trackRepository = trackService;
     }
@@ -34,9 +36,10 @@ public class TrackController : MyControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrackDto))]
-    public async Task<IActionResult> Search(string id)
+    public async Task<IActionResult> Get(string id)
     {
-        var track = await _trackRepository.GetAsync(id);
+        var userId = GetCurrentUserId();
+        var track = await _trackRepository.GetAsync(id, userId);
         if (track == null)
         {
             return Error(new ErrorDto(
@@ -62,13 +65,9 @@ public class TrackController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LikeDto))]
     public async Task<ActionResult> SetLike(string id)
     {
-        var accessToken = GetAccessToken();
-        if (accessToken == null)
-        {
-            throw new Exception("no access token provided");
-        }
+        var userId = GetCurrentUserId();
 
-        var like = await _trackRepository.SetLikeAsync(id, accessToken);
+        var like = await _trackRepository.SetLikeAsync(id, userId);
         return Ok(new LikeDto(like.Id));
     }
 }

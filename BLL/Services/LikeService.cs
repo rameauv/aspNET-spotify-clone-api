@@ -19,8 +19,8 @@ public class LikeService : ILikeService
         this._likeRepository = likeRepository;
     }
     
-    public async Task DeleteAsync(string id)
+    public async Task DeleteAsync(string id, string userId)
     {
-        await _likeRepository.DeleteAsync(id);
+        await _likeRepository.DeleteAsync(id, userId);
     }
 }
