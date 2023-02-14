@@ -2,6 +2,7 @@ using System.Net.Mime;
 using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Spotify.Shared.BLL.Jwt;
 using Spotify.Shared.BLL.User;
 
 namespace Api.Controllers;
@@ -24,7 +25,8 @@ public class UserController : MyControllerBase
     /// Initializes a new instance of the <see cref="UserController"/> class.
     /// </summary>
     /// <param name="userService">User service object</param>
-    public UserController(IUserService userService)
+    /// <param name="jwtService">Jwt service object</param>
+    public UserController(IUserService userService, IJwtService jwtService): base(jwtService)
     {
         _userService = userService;
     }
@@ -36,14 +38,9 @@ public class UserController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentUserDto))]
     public async Task<ActionResult> CurrentUser()
     {
-        // Remove "Bearer "
-        var accessToken = Request.Headers.Authorization.ToString()[7..];
-        if (accessToken == null)
-        {
-            throw new Exception("no access token provided");
-        }
+        var userId = GetCurrentUserId();
 
-        var user = await _userService.CurrentUserAsync(accessToken);
+        var user = await _userService.CurrentUserAsync(userId);
         return Ok(new CurrentUserDto(
             user.Id,
             user.Username,
@@ -58,13 +55,9 @@ public class UserController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> SetName(SetNameRequestDto setNameRequestDto)
     {
-        var accessToken = GetAccessToken();
-        if (accessToken == null)
-        {
-            throw new Exception("no access token provided");
-        }
+        var userId = GetCurrentUserId();
 
-        await _userService.SetName(accessToken, setNameRequestDto.Name);
+        await _userService.SetName(userId, setNameRequestDto.Name);
         return Ok();
     }
 }

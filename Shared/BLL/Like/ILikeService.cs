@@ -9,6 +9,7 @@ public interface ILikeService
     /// Deletes a like.
     /// </summary>
     /// <param name="id">The ID of the like to delete.</param>
+    /// <param name="userId">The ID of user associated with the like to delete.</param>
     /// <returns>A task that represents the asynchronous delete operation.</returns>
-    Task DeleteAsync(string id);
+    Task DeleteAsync(string id, string userId);
 }

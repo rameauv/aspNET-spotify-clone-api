@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Spotify.Shared.BLL.Jwt.Exceptions;
 

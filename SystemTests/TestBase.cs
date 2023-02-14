@@ -59,12 +59,22 @@ public class TestBase
     /// Creates a new test user.
     /// </summary>
     /// <returns>The test user credentials.</returns>
-    protected async Task<TestUserCredentials> CreateTestUser()
+    protected Task<TestUserCredentials> CreateTestUser()
     {
         var credentials = new TestUserCredentials(
             "testUsername",
             "testPassword"
         );
+        return CreateTestUser(credentials);
+    }
+
+    /// <summary>
+    /// Creates a new test user.
+    /// </summary>
+    /// <param name="credentials">Credential of the user to create</param>
+    /// <returns>The test user credentials.</returns>
+    protected async Task<TestUserCredentials> CreateTestUser(TestUserCredentials credentials)
+    {
         var client = Factory.CreateClient();
         var newUser = new CreateUserDto(
             credentials.Username,
@@ -74,7 +84,6 @@ public class TestBase
         await client.PostAsJsonAsync("/Accounts/Register", newUser);
         return credentials;
     }
-
 
     /// <summary>
     /// Logs in with the given credentials and adds the Bearer token to the headers for further request

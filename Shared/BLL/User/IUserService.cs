@@ -13,18 +13,18 @@ public interface IUserService
     Task<Models.User> GetAsync(string id);
 
     /// <summary>
-    /// Gets the user associated with the specified access token.
+    /// Gets the user associated with the specified user id.
     /// </summary>
-    /// <param name="accessToken">The access token to get the associated user for.</param>
+    /// <param name="userId">The id to get the associated user for.</param>
     /// <returns>The user associated with the specified access token.</returns>
     /// <exception cref="Exception">Thrown if the access token does not contain a user identifier.</exception>
-    Task<Models.User> CurrentUserAsync(string accessToken);
+    Task<Models.User> CurrentUserAsync(string userId);
 
     /// <summary>
-    /// Sets the name of the user associated with the specified access token.
+    /// Sets the name of the user associated with the specified user id.
     /// </summary>
-    /// <param name="accessToken">The access token of the user to set the name for.</param>
+    /// <param name="userId">The id of the user to set the name for.</param>
     /// <param name="name">The new name of the user.</param>
     /// <exception cref="Exception">Thrown if the access token does not contain a user identifier.</exception>
-    Task SetName(string accessToken, string name);
+    Task SetName(string userId, string name);
 }
