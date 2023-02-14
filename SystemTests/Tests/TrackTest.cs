@@ -93,7 +93,7 @@ public class TrackTest : TestBase, IClassFixture<CustomWebApplicationFactory<Pro
     [Fact]
     public async Task ShouldSetAndRetrieveTheLikeStatusOfAnTrackOnlyForTheCurrentUser()
     {
-        const string id = "2noRn2Aes5aoNVsU6iWThc";
+        const string id = "5W3cjX2J3tjhG8zb6u0qHn";
 
         var client = Factory.CreateClient();
         await InitDb();
