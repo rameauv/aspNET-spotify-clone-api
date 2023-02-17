@@ -56,6 +56,37 @@ public class SearchRepository : ISearchRepository
         );
     }
 
+    private class SortableResultItem : IComparable<SortableResultItem>
+    {
+        private readonly int _weight;
+
+        public SortableResultItem(BaseResult item, Action<int> callback)
+        {
+            _weight = item.Popularity;
+            Callback = callback;
+        }
+
+        public Action<int> Callback { get; }
+
+        public int CompareTo(SortableResultItem? other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+
+            return other._weight - _weight;
+        }
+    }
+
+    private static class SortableItemFactoryProvider<T> where T : BaseResult
+    {
+        public static IEnumerable<SortableResultItem> Get(IEnumerable<T> items, Action<T, int> callback)
+        {
+            return items.Select(item => { return new SortableResultItem(item, (order) => callback(item, order)); });
+        }
+    }
+
     private SearchRequest.Types MapSearchType(SearchOptions.SearchTypes? types)
     {
         if (types == null)
@@ -86,79 +117,36 @@ public class SearchRepository : ISearchRepository
             });
     }
 
-    private class SortableResultItem : IComparable<SortableResultItem>
+    private static SearchResult OrderResults(SearchResult result, int offset)
     {
-        public SortableResultItem(BaseResult item, Action<int> callback)
-        {
-            Weight = item.Popularity;
-            Callback = callback;
-        }
-
-        public int Weight { get; }
-        public Action<int> Callback { get; }
-
-        public int CompareTo(SortableResultItem? other)
-        {
-            if (other == null)
-            {
-                return -1;
-            }
-
-            return other.Weight - Weight;
-        }
-    }
-
-    private static class SortableItemFactoryBuilder<T> where T : BaseResult
-    {
-        public static Func<int, SortableResultItem?> TryGet(IReadOnlyList<T> array, Action<T, int> callback)
-        {
-            return index =>
-            {
-                var item = index < array.Count ? array[index] : default;
-                if (item != null)
-                {
-                    return new SortableResultItem(item, (order) => callback(item, order));
-                }
-
-                return null;
-            };
-        }
-
-        public static IEnumerable<SortableResultItem> TryGetArray(IEnumerable<T> items, Action<T, int> callback)
-        {
-            return items.Select(item => { return new SortableResultItem(item, (order) => callback(item, order)); });
-        }
-    }
-
-    private SearchResult OrderResults(SearchResult result, int offset)
-    {
+        var listCount = 3;
         var newTracks = new List<SongResult>();
         var newAlbums = new List<AlbumResult>();
         var newArtists = new List<ArtistResult>();
 
-        var tracks = SortableItemFactoryBuilder<SongResult>.TryGetArray(result.SongResult, (item, order) =>
+        var tracks = SortableItemFactoryProvider<SongResult>.Get(result.SongResult, (item, order) =>
             newTracks.Add(new SongResult(item)
             {
                 Order = order
             }));
-        var albums = SortableItemFactoryBuilder<AlbumResult>.TryGetArray(result.AlbumResult, (item, order) =>
+        var albums = SortableItemFactoryProvider<AlbumResult>.Get(result.AlbumResult, (item, order) =>
             newAlbums.Add(new AlbumResult(item)
             {
                 Order = order
             }));
-        var artists = SortableItemFactoryBuilder<ArtistResult>.TryGetArray(result.ArtistResult, (item, order) =>
+        var artists = SortableItemFactoryProvider<ArtistResult>.Get(result.ArtistResult, (item, order) =>
             newArtists.Add(
                 new ArtistResult(item)
                 {
                     Order = order
                 }));
 
+        var computedOffset = offset * listCount;
         var sortableResultList = tracks.Concat(albums).Concat(artists).ToList();
-
         sortableResultList.Sort();
         for (int i = 0; i < sortableResultList.Count; i++)
         {
-            sortableResultList[i].Callback(offset + i);
+            sortableResultList[i].Callback(computedOffset + i);
         }
 
         return new SearchResult(newAlbums, newTracks, newArtists);
