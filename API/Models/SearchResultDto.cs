@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Models;
 
-public record SearchResultDto(ReleaseSearchResultDto[] ReleaseResults, SongSearchResultDto[] SongResult, ArtistSearchResultDto[] ArtistResult)
+public record SearchResultDto(ReleaseSearchResultDto[] AlbumResult, SongSearchResultDto[] SongResult, ArtistSearchResultDto[] ArtistResult)
 {
     [Required]
-    public ReleaseSearchResultDto[] ReleaseResults { get; set; } = ReleaseResults;
+    public ReleaseSearchResultDto[] AlbumResult { get; set; } = AlbumResult;
     [Required]
     public SongSearchResultDto[] SongResult { get; set; } = SongResult;
     [Required]

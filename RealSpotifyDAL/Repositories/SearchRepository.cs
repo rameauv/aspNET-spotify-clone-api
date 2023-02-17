@@ -13,31 +13,31 @@ public class SearchRepository : ISearchRepository
         this._client = client.SpotifyClient;
     }
 
-    public async Task<SearchResult> SearchAsync(Search search)
+    public async Task<SearchResult> SearchAsync(SearchOptions searchOptions)
     {
+        var types = MapSearchType(searchOptions.Types);
         var searchRes = await _client.Search.Item(
             new SearchRequest(
-                SpotifyAPI.Web.SearchRequest.Types.Album | SpotifyAPI.Web.SearchRequest.Types.Artist |
-                SpotifyAPI.Web.SearchRequest.Types.Track,
-                search.Query
+                types,
+                searchOptions.Q
             )
             {
-                Limit = search.Limit,
-                Offset = search.Offset
+                Limit = searchOptions.Limit,
+                Offset = searchOptions.Offset
             });
-        var mappedAlbums = searchRes.Albums.Items?.Select(album => new ReleaseResult(
+        var mappedAlbums = searchRes.Albums?.Items?.Select(album => new ReleaseResult(
             album.Id,
             album.Images.FirstOrDefault()?.Url,
             album.Name,
             album.Artists.FirstOrDefault()?.Name ?? ""
         )).ToArray();
-        var mappedTracks = searchRes.Tracks.Items?.Select(track => new SongResult(
+        var mappedTracks = searchRes.Tracks?.Items?.Select(track => new SongResult(
             track.Id,
             track.Album.Images.FirstOrDefault()?.Url,
             track.Name,
             track.Artists.FirstOrDefault()?.Name ?? ""
         )).ToArray();
-        var mappedArtists = searchRes.Artists.Items?.Select(artist => new ArtistResult(
+        var mappedArtists = searchRes.Artists?.Items?.Select(artist => new ArtistResult(
             artist.Id,
             artist.Images.FirstOrDefault()?.Url,
             artist.Name
@@ -47,5 +47,34 @@ public class SearchRepository : ISearchRepository
             mappedTracks ?? Array.Empty<SongResult>(),
             mappedArtists ?? Array.Empty<ArtistResult>()
         );
+    }
+
+    private SearchRequest.Types MapSearchType(SearchOptions.SearchTypes? types)
+    {
+        if (types == null)
+        {
+            return SearchRequest.Types.Track | SearchRequest.Types.Album | SearchRequest.Types.Artist;
+        }
+
+        var notNullableTypes = types.Value;
+        var allowedSearchTypes = new[]
+            { SearchOptions.SearchTypes.Album, SearchOptions.SearchTypes.Artist, SearchOptions.SearchTypes.Track };
+        return allowedSearchTypes.Aggregate<SearchOptions.SearchTypes, SearchRequest.Types>(0, (i, allowedSearchType) =>
+        {
+            if (notNullableTypes.HasFlag(allowedSearchType))
+            {
+                switch (allowedSearchType)
+                {
+                    case SearchOptions.SearchTypes.Album:
+                        return i | SearchRequest.Types.Album;
+                    case SearchOptions.SearchTypes.Artist:
+                        return i | SearchRequest.Types.Artist;
+                    case SearchOptions.SearchTypes.Track:
+                        return i | SearchRequest.Types.Track;
+                }
+            }
+
+            return i;
+        });
     }
 }

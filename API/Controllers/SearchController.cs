@@ -1,9 +1,9 @@
-using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using Api.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 using Spotify.Shared.BLL.Search;
 using Spotify.Shared.BLL.Search.Models;
 
@@ -19,7 +19,7 @@ namespace Api.Controllers;
 [Produces(MediaTypeNames.Application.Json, "application/problem+json")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorsDto))]
 [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorsDto))]
-public class SearchController: ControllerBase
+public class SearchController : ControllerBase
 {
     private readonly ISearchService _searchService;
     private readonly IMapper _mapper;
@@ -35,19 +35,39 @@ public class SearchController: ControllerBase
         this._mapper = mapper;
     }
 
-    /// <summary>
-    /// Search
-    /// </summary>
     [HttpGet("Search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResultDto))]
-    public async Task<IActionResult> Search([Required] string q, int? offset, int? limit)
+    public async Task<IActionResult> Search([FromQuery] SearchQueryOptionalParams queryOptionalParams)
     {
-        var res = await _searchService.SearchAsync(new Search(q)
-        {
-            Limit = limit,
-            Offset = offset
-        });
+        var searchOption = MapSearchQueryParams(queryOptionalParams);
+        var res = await _searchService.SearchAsync(searchOption);
         var searchResultDto = _mapper.Map<SearchResultDto>(res);
         return Ok(searchResultDto);
+    }
+
+    private SearchOptions MapSearchQueryParams(SearchQueryOptionalParams queryOptionalParams)
+    {
+        var convertedType = queryOptionalParams.Types?.Split(",").Aggregate<string, SearchOptions.SearchTypes>(0, (acc, type) =>
+        {
+            switch (type)
+            {
+                case "artist":
+                    return acc | SearchOptions.SearchTypes.Artist;
+                case "album":
+                    return acc | SearchOptions.SearchTypes.Album;
+                case "track":
+                    return acc | SearchOptions.SearchTypes.Track;
+            }
+
+            return acc;
+        });
+        var type = convertedType == 0 ? null : convertedType;
+
+        return new SearchOptions(queryOptionalParams.Q)
+        {
+            Types = type,
+            Limit = queryOptionalParams.Limit,
+            Offset = queryOptionalParams.Offset
+        };
     }
 }

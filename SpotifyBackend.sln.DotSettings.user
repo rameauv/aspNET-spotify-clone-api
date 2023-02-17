@@ -12,6 +12,9 @@
     &lt;TestId&gt;xUnit::1EFFE487-0977-45E6-8244-D4D8572FFD98::net7.0::BLL.UnitTests.Auth.Login.ShouldReturnANotEmptyNewAccessAndRefreshTokens&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3518e26f_002D6f8c_002D4d54_002D94f8_002D426a167b0c3a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ShouldGetArtistResults" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=635ce303_002D36a7_002D4ad5_002Da65d_002Df817e556aa09/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
@@ -27,7 +30,7 @@
     &lt;TestId&gt;xUnit::1EFFE487-0977-45E6-8244-D4D8572FFD98::net7.0::BLL.UnitTests.Auth.Login&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=db2d713c_002D28ea_002D48f9_002Da66b_002Dc7cee82754e5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1 #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=db2d713c_002D28ea_002D48f9_002Da66b_002Dc7cee82754e5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Test1 #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	

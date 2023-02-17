@@ -4,5 +4,5 @@ namespace Spotify.Shared.DAL.Search;
 
 public interface ISearchRepository
 {
-    Task<SearchResult> SearchAsync(Models.Search search);
+    Task<SearchResult> SearchAsync(Models.SearchOptions searchOptions);
 }

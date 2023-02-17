@@ -1,8 +1,8 @@
 namespace Spotify.Shared.DAL.Search.Models;
 
-public record SearchResult(IEnumerable<ReleaseResult> ReleaseResults, IEnumerable<SongResult> SongResult, IEnumerable<ArtistResult> ArtistResult)
+public record SearchResult(IEnumerable<ReleaseResult> AlbumResult, IEnumerable<SongResult> SongResult, IEnumerable<ArtistResult> ArtistResult)
 {
-    public IEnumerable<ReleaseResult> ReleaseResults { get; set; } = ReleaseResults;
+    public IEnumerable<ReleaseResult> AlbumResult { get; set; } = AlbumResult;
     public IEnumerable<SongResult> SongResult { get; set; } = SongResult;
     public IEnumerable<ArtistResult> ArtistResult { get; set; } = ArtistResult;
 }

@@ -4,6 +4,7 @@ using System.Text.Json;
 using Api.AutoMapper;
 using Api.ExceptionFilters;
 using Api.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -86,6 +87,8 @@ builder.Services.AddSwaggerGen(c =>
             new List<string>()
         }
     });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 
