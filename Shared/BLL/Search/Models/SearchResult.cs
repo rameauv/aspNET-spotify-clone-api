@@ -17,6 +17,7 @@ public class BaseResult
 
     public string Id { get; set; }
     public string? ThumbnailUrl { get; set; }
+    public int Order { get; set; }
 }
 
 public class ReleaseResult : BaseResult
