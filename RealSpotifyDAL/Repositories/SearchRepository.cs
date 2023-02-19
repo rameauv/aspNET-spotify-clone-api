@@ -117,6 +117,12 @@ public class SearchRepository : ISearchRepository
             });
     }
 
+    /// <summary>
+    /// Orders the search result items according to their order and returns a new search result object.
+    /// </summary>
+    /// <param name="result">The original search result object.</param>
+    /// <param name="offset">The offset to use when computing the order of the search result items.</param>
+    /// <returns>A new search result object with ordered items.</returns>
     private static SearchResult OrderResults(SearchResult result, int offset)
     {
         var listCount = 3;
