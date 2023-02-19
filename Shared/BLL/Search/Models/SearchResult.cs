@@ -1,8 +1,8 @@
 namespace Spotify.Shared.BLL.Search.Models;
 
-public record SearchResult(ReleaseResult[] ReleaseResults, SongResult[] SongResult, ArtistResult[] ArtistResult)
+public record SearchResult(ReleaseResult[] AlbumResult, SongResult[] SongResult, ArtistResult[] ArtistResult)
 {
-    public ReleaseResult[] ReleaseResults { get; set; } = ReleaseResults;
+    public ReleaseResult[] AlbumResult { get; set; } = AlbumResult;
     public SongResult[] SongResult { get; set; } = SongResult;
     public ArtistResult[] ArtistResult { get; set; } = ArtistResult;
 }
@@ -17,6 +17,7 @@ public class BaseResult
 
     public string Id { get; set; }
     public string? ThumbnailUrl { get; set; }
+    public int Order { get; set; }
 }
 
 public class ReleaseResult : BaseResult

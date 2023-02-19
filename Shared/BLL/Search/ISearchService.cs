@@ -10,7 +10,7 @@ public interface ISearchService
     /// <summary>
     /// Searches for music.
     /// </summary>
-    /// <param name="search">The search parameters.</param>
+    /// <param name="searchOptions">The search parameters.</param>
     /// <returns>The search results.</returns>
-    Task<SearchResult> SearchAsync(Models.Search search);
+    Task<SearchResult> SearchAsync(Models.SearchOptions searchOptions);
 }

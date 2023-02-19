@@ -1,6 +1,7 @@
 using AutoMapper;
 using Spotify.Shared.BLL.Search;
 using Spotify.Shared.BLL.Search.Models;
+using Spotify.Shared.BLL.Search.tools;
 using DAL = Spotify.Shared.DAL;
 
 namespace Spotify.BLL.Services;
@@ -20,17 +21,14 @@ public class SearchService : ISearchService
     /// <param name="mapper">The object mapper to use for mapping between types.</param>
     public SearchService(DAL.Search.ISearchRepository searchRepository, IMapper mapper)
     {
-        this._searchRepository = searchRepository;
-        this._mapper = mapper;
+        _searchRepository = searchRepository;
+        _mapper = mapper;
     }
-    
-    public async Task<SearchResult> SearchAsync(Search search)
+
+    public async Task<SearchResult> SearchAsync(SearchOptions searchOptions)
     {
-        var res = await _searchRepository.SearchAsync(new DAL.Search.Models.Search(
-            search.Query,
-            search.Offset,
-            search.Limit
-        ));
+        var dalSearchOptions = searchOptions.ToDalSearchOptions();
+        var res = await _searchRepository.SearchAsync(dalSearchOptions);
         return _mapper.Map<SearchResult>(res);
     }
 }
