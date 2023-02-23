@@ -96,13 +96,13 @@ public class IdentityUserRepository : IIdentityUserRepository
     public async Task<AuthUser> CreateAsync(CreateUser user)
     {
         await using var dbContextTransaction = await this.Context.Database.BeginTransactionAsync();
-        var newUser = (await Context.Users.AddAsync(new User
+        var newUser = (await Context.Users.AddAsync(new Contexts.User
         {
             UserName = user.UserName,
             PasswordHash = user.Password,
             Data = JsonSerializer.Serialize(user.Data)
         })).Entity;
-        await this.Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         await dbContextTransaction.CommitAsync();
         return new AuthUser(newUser.Id.ToString(), newUser.UserName ?? "");
     }

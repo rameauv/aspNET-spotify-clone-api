@@ -4,13 +4,14 @@ using System.Text.Json;
 using Api.AutoMapper;
 using Api.ExceptionFilters;
 using Api.Models;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealSpotifyDAL;
 using RealSpotifyDAL.Repositories;
 using Repositories.Repositories;
+using Repositories.Repositories.Like;
+using Repositories.Repositories.User;
 using Spotify.BLL.Services;
 using Spotify.Shared;
 using Spotify.Shared.BLL.Album;
@@ -226,4 +227,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace Api
+{
+    public partial class Program { }
+}

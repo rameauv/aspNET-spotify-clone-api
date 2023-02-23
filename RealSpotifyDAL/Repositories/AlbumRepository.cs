@@ -1,9 +1,9 @@
+using RealSpotifyDAL.Repositories.Album.Extensions;
 using Spotify.Shared.DAL.Album;
 using Spotify.Shared.DAL.Album.Models;
 using SpotifyAPI.Web;
-using AlbumTracksRequest = Spotify.Shared.DAL.Album.Models.AlbumTracksRequest;
-using SimpleTrack = Spotify.Shared.DAL.Album.Models.SimpleTrack;
 using RealSpotify = SpotifyAPI.Web;
+using SharedDAL = Spotify.Shared.DAL;
 
 namespace RealSpotifyDAL.Repositories;
 
@@ -23,7 +23,7 @@ public class AlbumRepository : IAlbumRepository
         this._spotifyClient = spotifyClient.SpotifyClient;
     }
 
-    public async Task<Album?> GetAsync(string id)
+    public async Task<Spotify.Shared.DAL.Album.Models.Album?> GetAsync(string id)
     {
         try
         {
@@ -35,16 +35,7 @@ public class AlbumRepository : IAlbumRepository
             }
 
             var resArtist = await _spotifyClient.Artists.Get(artistId);
-            return new Album(
-                resAlbum.Id,
-                resAlbum.Name,
-                resAlbum.ReleaseDate,
-                resAlbum.Images.FirstOrDefault()?.Url,
-                resArtist.Id,
-                resArtist.Name,
-                resArtist.Images.FirstOrDefault()?.Url,
-                resAlbum.AlbumType
-            );
+            return resAlbum.ToAlbum();
         }
         catch (APIException e)
         {
@@ -57,7 +48,8 @@ public class AlbumRepository : IAlbumRepository
         }
     }
 
-    public async Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
+    public async Task<AlbumTracks?> GetTracksAsync(string id,
+        SharedDAL.Album.Models.AlbumTracksRequest? albumTracksRequest = null)
     {
         try
         {
@@ -68,10 +60,10 @@ public class AlbumRepository : IAlbumRepository
             });
             if (res.Items == null)
             {
-                return new AlbumTracks(Array.Empty<SimpleTrack>());
+                return new AlbumTracks(Array.Empty<SharedDAL.Album.Models.SimpleTrack>());
             }
 
-            var mappedTracks = res.Items.Select(track => new SimpleTrack(
+            var mappedTracks = res.Items.Select(track => new SharedDAL.Album.Models.SimpleTrack(
                 track.Id,
                 track.Name,
                 track.Artists.FirstOrDefault()?.Name ?? "")
@@ -87,5 +79,11 @@ public class AlbumRepository : IAlbumRepository
 
             throw;
         }
+    }
+
+    public async Task<IEnumerable<SharedDAL.Album.Models.Album>> GetAlbums(IEnumerable<string> albumIds)
+    {
+        var res = await _spotifyClient.Albums.GetSeveral(new AlbumsRequest(albumIds.ToList()));
+        return res.Albums.Select(album => album.ToAlbum());
     }
 }

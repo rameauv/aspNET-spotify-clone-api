@@ -1,4 +1,6 @@
+using Api;
 using Api.Models;
+using Api.Models.Search;
 using Newtonsoft.Json;
 
 namespace SystemTests.Tests;

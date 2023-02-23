@@ -4,10 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Repositories.Contexts;
 using Spotify.Shared.DAL.User;
 using Spotify.Shared.DAL.User.Models;
-using User = Spotify.Shared.DAL.User.Models.User;
-using UserData = Repositories.Models.UserData;
+using UserData = Repositories.Repositories.User.Models.UserData;
 
-namespace Repositories.Repositories;
+namespace Repositories.Repositories.User;
 
 public class UserRepository : IUserRepository
 {
@@ -26,7 +25,7 @@ public class UserRepository : IUserRepository
         Context.Dispose();
     }
 
-    public async Task<User> GetAsync(string id)
+    public async Task<Spotify.Shared.DAL.User.Models.User> GetAsync(string id)
     {
         var res = await Context.Users
             .Where(user => user.Id == new Guid(id))
@@ -35,7 +34,7 @@ public class UserRepository : IUserRepository
         var data = JsonSerializer.Deserialize<UserData>(res.data ?? "{}")
                    ?? new UserData("");
         
-        return new User(res.id, res.userName, data.Name);
+        return new Spotify.Shared.DAL.User.Models.User(res.id, res.userName, data.Name);
     }
 
     public async Task SetUser(string id, SetUserRequest userRequest)

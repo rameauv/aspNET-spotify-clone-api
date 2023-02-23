@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using Api.Models;
+using Api.Models.Search;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

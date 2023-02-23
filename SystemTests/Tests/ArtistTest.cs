@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Api;
 using Api.Models;
 using Newtonsoft.Json;
 using SystemTests.Models;

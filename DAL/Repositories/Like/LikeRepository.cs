@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Repositories.Contexts;
+using Repositories.Repositories.Like.Extensions;
+using Repositories.Repositories.Like.Models;
 using Spotify.Shared.DAL.Like;
 using DALModels = Spotify.Shared.DAL.Like.models;
 
-namespace Repositories.Repositories;
+namespace Repositories.Repositories.Like;
 
 public class LikeRepository : ILikeRepository
 {
@@ -36,7 +37,7 @@ public class LikeRepository : ILikeRepository
             );
         }
 
-        var res = await Context.Likes.AddAsync(new Like
+        var res = await Context.Likes.AddAsync(new Contexts.Like
         {
             AssociatedId = associatedId,
             AssociatedType = associatedType,
@@ -81,5 +82,41 @@ public class LikeRepository : ILikeRepository
             res.AssociatedUser,
             res.AssociatedType
         );
+    }
+
+    public async Task<DALModels.FindLikesByUserIdResult> FindLikesByUserId(
+        string userId,
+        DALModels.FindLikesByUserIdOptions options
+    )
+    {
+        var query = Context.Set<Models.Like>();
+        var associatedTypes = options.AssociatedTypes?.ToStringArray();
+        var res = await Context.Likes
+            .Where(like => like.AssociatedUser == userId)
+            .Where(like => associatedTypes == null || associatedTypes.Contains(like.AssociatedType))
+            .Skip(options.Pagination.Offset)
+            .Take(options.Pagination.Limit)
+            .GroupBy(like => new { Total = query.Count() })
+            .FirstAsync();
+        var likes = res.Select(like => new DALModels.Like(
+            like.Id.ToString(),
+            like.AssociatedId,
+            like.AssociatedUser,
+            like.AssociatedType
+        ));
+        return new DALModels.FindLikesByUserIdResult(
+            likes,
+            options.Pagination.Limit,
+            options.Pagination.Offset,
+            res.Key.Total
+        );
+    }
+
+    public async Task<int> GetLikedTracksCountByUserId(string userId)
+    {
+        var res = await Context.Likes
+            .Where(like => like.AssociatedUser == userId && like.AssociatedType == AssociatedTypes.Track)
+            .CountAsync();
+        return res;
     }
 }

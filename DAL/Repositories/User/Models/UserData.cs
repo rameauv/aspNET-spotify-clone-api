@@ -1,4 +1,4 @@
-namespace Repositories.Models;
+namespace Repositories.Repositories.User.Models;
 
 public class UserData
 {

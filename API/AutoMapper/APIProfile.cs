@@ -1,4 +1,5 @@
 using Api.Models;
+using Api.Models.Search;
 using AutoMapper;
 using Spotify.Shared.BLL.Search.Models;
 

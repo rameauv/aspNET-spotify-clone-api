@@ -1,4 +1,4 @@
-﻿namespace Repositories.Models;
+﻿namespace Repositories.Repositories.Like.Models;
 
 public class Like: Contexts.Like
 {

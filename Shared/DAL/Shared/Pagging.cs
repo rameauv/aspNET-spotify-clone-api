@@ -1,4 +1,4 @@
-namespace Spotify.Shared.DAL.Models;
+namespace Spotify.Shared.DAL.Shared;
 
 public class Pagging<T>
 {

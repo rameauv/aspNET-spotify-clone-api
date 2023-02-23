@@ -20,4 +20,6 @@ public interface IAlbumRepository
     /// <param name="albumTracksRequest">A request object for specifying pagination options for the track list. If null, default values will be used.</param>
     /// <returns>An object containing the retrieved tracks and track list metadata, or null if no such album exists.</returns>
     public Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null);
+
+    public Task<IEnumerable<Models.Album>> GetAlbums(IEnumerable<string> albumIds);
 }
