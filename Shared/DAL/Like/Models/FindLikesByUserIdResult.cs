@@ -1,6 +1,6 @@
 using Spotify.Shared.DAL.Shared;
 
-namespace Spotify.Shared.DAL.Like.models;
+namespace Spotify.Shared.DAL.Like.Models;
 
 public class FindLikesByUserIdResult : Pagging<Like>
 {

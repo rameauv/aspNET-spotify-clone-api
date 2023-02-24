@@ -35,7 +35,7 @@ public class AlbumRepository : IAlbumRepository
             }
 
             var resArtist = await _spotifyClient.Artists.Get(artistId);
-            return resAlbum.ToAlbum();
+            return resAlbum.ToDalAlbum();
         }
         catch (APIException e)
         {
@@ -81,9 +81,9 @@ public class AlbumRepository : IAlbumRepository
         }
     }
 
-    public async Task<IEnumerable<SharedDAL.Album.Models.Album>> GetAlbums(IEnumerable<string> albumIds)
+    public async Task<IEnumerable<SharedDAL.Album.Models.Album>> GetAlbumsAsync(IEnumerable<string> albumIds)
     {
         var res = await _spotifyClient.Albums.GetSeveral(new AlbumsRequest(albumIds.ToList()));
-        return res.Albums.Select(album => album.ToAlbum());
+        return res.Albums.Select(album => album.ToDalAlbum());
     }
 }

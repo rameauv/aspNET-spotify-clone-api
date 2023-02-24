@@ -21,5 +21,5 @@ public interface IAlbumRepository
     /// <returns>An object containing the retrieved tracks and track list metadata, or null if no such album exists.</returns>
     public Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null);
 
-    public Task<IEnumerable<Models.Album>> GetAlbums(IEnumerable<string> albumIds);
+    public Task<IEnumerable<Models.Album>> GetAlbumsAsync(IEnumerable<string> albumIds);
 }

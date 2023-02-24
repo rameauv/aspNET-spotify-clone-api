@@ -1,3 +1,4 @@
+using AutoMapper;
 using Spotify.Shared.BLL.Like.Models;
 using Spotify.Shared.BLL.Track;
 using Spotify.Shared.BLL.Track.Models;
@@ -13,6 +14,7 @@ public class TrackService : ITrackService
 {
     private readonly ITrackRepository _trackRepository;
     private readonly ILikeRepository _likeRepository;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TrackService"/> class.
@@ -21,10 +23,13 @@ public class TrackService : ITrackService
     /// <param name="likeRepository">The repository for interacting with likes.</param>
     public TrackService(
         ITrackRepository trackRepository,
-        ILikeRepository likeRepository)
+        ILikeRepository likeRepository,
+        IMapper mapper
+    )
     {
         _trackRepository = trackRepository;
-        this._likeRepository = likeRepository;
+        _likeRepository = likeRepository;
+        _mapper = mapper;
     }
 
     public async Task<Track?> GetAsync(string id, string userId)
@@ -52,6 +57,7 @@ public class TrackService : ITrackService
     public async Task<Like> SetLikeAsync(string id, string userId)
     {
         var like = await _likeRepository.SetAsync(id, "track", userId);
-        return new Like(like.Id, like.AssociatedId, like.AssociatedUser, like.AssociatedType);
+        var associatedType = _mapper.Map<AssociatedType>(like.AssociatedType);
+        return new Like(like.Id, like.AssociatedId, like.AssociatedUser, associatedType);
     }
 }

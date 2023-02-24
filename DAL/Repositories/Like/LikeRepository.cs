@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Repositories.Repositories.Like.Extensions;
 using Repositories.Repositories.Like.Models;
 using Spotify.Shared.DAL.Like;
-using DALModels = Spotify.Shared.DAL.Like.models;
+using DALModels = Spotify.Shared.DAL.Like.Models;
 
 namespace Repositories.Repositories.Like;
 
@@ -29,12 +29,7 @@ public class LikeRepository : ILikeRepository
         var likeInDb = await Context.Likes.Where(like => like.AssociatedId == associatedId).FirstOrDefaultAsync();
         if (likeInDb != null)
         {
-            return new DALModels.Like(
-                likeInDb.Id.ToString(),
-                likeInDb.AssociatedId,
-                likeInDb.AssociatedUser,
-                likeInDb.AssociatedType
-            );
+            return likeInDb.ToDalLike();
         }
 
         var res = await Context.Likes.AddAsync(new Contexts.Like
@@ -45,12 +40,7 @@ public class LikeRepository : ILikeRepository
         });
         await Context.SaveChangesAsync();
 
-        return new DALModels.Like(
-            res.Entity.Id.ToString(),
-            res.Entity.AssociatedId,
-            res.Entity.AssociatedUser,
-            res.Entity.AssociatedType
-        );
+        return res.Entity.ToDalLike();
     }
 
     public async Task DeleteAsync(string id, string associatedUserId)
@@ -76,12 +66,7 @@ public class LikeRepository : ILikeRepository
             return null;
         }
 
-        return new DALModels.Like(
-            res.Id.ToString(),
-            res.AssociatedId,
-            res.AssociatedUser,
-            res.AssociatedType
-        );
+        return res.ToDalLike();
     }
 
     public async Task<DALModels.FindLikesByUserIdResult> FindLikesByUserId(
@@ -98,12 +83,7 @@ public class LikeRepository : ILikeRepository
             .Take(options.Pagination.Limit)
             .GroupBy(like => new { Total = query.Count() })
             .FirstAsync();
-        var likes = res.Select(like => new DALModels.Like(
-            like.Id.ToString(),
-            like.AssociatedId,
-            like.AssociatedUser,
-            like.AssociatedType
-        ));
+        var likes = res.Select(like => like.ToDalLike());
         return new DALModels.FindLikesByUserIdResult(
             likes,
             options.Pagination.Limit,

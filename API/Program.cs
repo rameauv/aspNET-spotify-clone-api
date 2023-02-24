@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealSpotifyDAL;
 using RealSpotifyDAL.Repositories;
+using RealSpotifyDAL.Repositories.Artist;
+using RealSpotifyDAL.Repositories.Track;
 using Repositories.Repositories;
 using Repositories.Repositories.Like;
 using Repositories.Repositories.User;

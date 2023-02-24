@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Extensions.EnumMapping;
 
 namespace Api.AutoMapper;
 
@@ -11,5 +12,9 @@ public class BllProfile : Profile
         CreateMap<Spotify.Shared.DAL.Search.Models.ArtistResult, Spotify.Shared.BLL.Search.Models.ArtistResult>();
         CreateMap<Spotify.Shared.DAL.Search.Models.SongResult, Spotify.Shared.BLL.Search.Models.SongResult>();
         CreateMap<Spotify.Shared.DAL.Search.Models.BaseResult, Spotify.Shared.BLL.Search.Models.BaseResult>();
+        CreateMap<Spotify.Shared.DAL.Like.Models.AssociatedType, Spotify.Shared.BLL.Like.Models.AssociatedType>()
+            .ConvertUsingEnumMapping(opt => opt
+                .MapByName()
+            );
     }
 }

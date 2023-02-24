@@ -1,8 +1,8 @@
+using RealSpotifyDAL.Repositories.Artist.Extensions;
 using Spotify.Shared.DAL.Artist;
-using Spotify.Shared.DAL.Artist.Models;
 using SpotifyAPI.Web;
 
-namespace RealSpotifyDAL.Repositories;
+namespace RealSpotifyDAL.Repositories.Artist;
 
 /// <summary>
 /// Repository for fetching artist information from the Spotify API
@@ -20,18 +20,13 @@ public class ArtistRepository : IArtistRepository
         this._client = spotifyClient.SpotifyClient;
     }
 
-    public async Task<Artist?> GetAsync(string id)
+    public async Task<Spotify.Shared.DAL.Artist.Models.Artist?> GetAsync(string id)
     {
         try
         {
             var res = await _client.Artists.Get(id);
 
-            return new Artist(
-                res.Id,
-                res.Name,
-                res.Images.FirstOrDefault()?.Url,
-                res.Followers.Total
-            );
+            return res.ToDalArtist();
         }
         catch (APIException e)
         {
@@ -42,5 +37,11 @@ public class ArtistRepository : IArtistRepository
 
             throw;
         }
+    }
+
+    public async Task<IEnumerable<Spotify.Shared.DAL.Artist.Models.Artist>> GetArtistsAsync(IEnumerable<string> artistsIds)
+    {
+        var res = await _client.Artists.GetSeveral(new ArtistsRequest(artistsIds.ToList()));
+        return res.Artists.Select(artist => artist.ToDalArtist());
     }
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Album.Models;
 using Spotify.Shared.BLL.Like.Models;
@@ -13,6 +14,7 @@ public class AlbumService : IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
     private readonly ILikeRepository _likeRepository;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AlbumService"/> class.
@@ -21,11 +23,13 @@ public class AlbumService : IAlbumService
     /// <param name="likeRepository">The repository for accessing like data.</param>
     public AlbumService(
         IAlbumRepository albumRepository,
-        ILikeRepository likeRepository
+        ILikeRepository likeRepository,
+        IMapper mapper
     )
     {
-        this._albumRepository = albumRepository;
-        this._likeRepository = likeRepository;
+        _albumRepository = albumRepository;
+        _likeRepository = likeRepository;
+        _mapper = mapper;
     }
 
     public async Task<Album?> GetAsync(string id, string userId)
@@ -83,6 +87,7 @@ public class AlbumService : IAlbumService
     public async Task<Like> SetLikeAsync(string id, string userId)
     {
         var like = await _likeRepository.SetAsync(id, "album", userId);
-        return new Like(like.Id, like.AssociatedId, like.AssociatedUser, like.AssociatedType);
+        var associatedType = _mapper.Map<AssociatedType>(like.AssociatedType);
+        return new Like(like.Id, like.AssociatedId, like.AssociatedUser, associatedType);
     }
 }

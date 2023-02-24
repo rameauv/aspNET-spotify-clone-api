@@ -1,8 +1,8 @@
+using RealSpotifyDAL.Repositories.Track.Extensions;
 using Spotify.Shared.DAL.Track;
-using Spotify.Shared.DAL.Track.Models;
 using SpotifyAPI.Web;
 
-namespace RealSpotifyDAL.Repositories;
+namespace RealSpotifyDAL.Repositories.Track;
 
 /// <summary>
 /// Repository for fetching track information from the Spotify API
@@ -20,13 +20,13 @@ public class TrackRepository : ITrackRepository
         this._client = spotifyClient.SpotifyClient;
     }
 
-    public async Task<Track?> GetAsync(string id)
+    public async Task<Spotify.Shared.DAL.Track.Models.Track?> GetAsync(string id)
     {
         try
         {
             var res = await _client.Tracks.Get(id, new TrackRequest());
 
-            return new Track(
+            return new Spotify.Shared.DAL.Track.Models.Track(
                 res.Id,
                 res.Name,
                 res.Artists.FirstOrDefault()?.Name ?? "",
@@ -42,5 +42,11 @@ public class TrackRepository : ITrackRepository
 
             throw;
         }
+    }
+
+    public async Task<IEnumerable<Spotify.Shared.DAL.Track.Models.Track>> GetTracksAsync(IEnumerable<string> trackIds)
+    {
+        var res = await _client.Tracks.GetSeveral(new TracksRequest(trackIds.ToList()));
+        return res.Tracks.Select(track => track.ToDalTrack());
     }
 }

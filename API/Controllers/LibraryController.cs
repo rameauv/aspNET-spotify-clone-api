@@ -3,7 +3,13 @@ using Api.Models;
 using Api.Models.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Spotify.Shared.BLL.Album.Models;
+using Spotify.Shared.BLL.Artist.Models;
 using Spotify.Shared.BLL.Jwt;
+using Spotify.Shared.BLL.Library;
+using Spotify.Shared.BLL.Library.Models;
+using Spotify.Shared.BLL.Like.Models;
+using Spotify.Shared.BLL.Shared;
 
 namespace Api.Controllers;
 
@@ -19,8 +25,11 @@ namespace Api.Controllers;
 [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorsDto))]
 public class LibraryController : MyControllerBase
 {
-    public LibraryController(IJwtService jwtService) : base(jwtService)
+    private readonly ILibraryService _libraryService;
+
+    public LibraryController(IJwtService jwtService, ILibraryService libraryService) : base(jwtService)
     {
+        _libraryService = libraryService;
     }
 
     /// <summary>
@@ -31,7 +40,35 @@ public class LibraryController : MyControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LibraryDto))]
     public async Task<IActionResult> Get()
     {
-        var libraryDto = new LibraryDto();
+        var currentUserId = GetCurrentUserId();
+        var res = await _libraryService.GetAsync(currentUserId);
+        var libraryItemsDto = new LibraryItemsDto(
+            res.Items.Albums.Select(album => new Album(
+                album.Id,
+                album.Title,
+                album.ReleaseDate,
+                album.ThumbnailUrl,
+                album.ArtistId,
+                album.ArtistName,
+                album.ArtistThumbnailUrl,
+                album.AlbumType,
+                album.LikeId
+            )),
+            res.Items.Artists.Select(artist => new Artist(
+                artist.Id,
+                artist.Name,
+                artist.ThumbnailUrl,
+                artist.LikeId,
+                artist.MonthlyListeners
+            )),
+            res.Items.Total,
+            res.Items.Offset,
+            res.Items.Limit
+        );
+        var libraryDto = new LibraryDto(
+            res.LikedTracksCount,
+            libraryItemsDto
+        );
         return Ok(libraryDto);
     }
 
@@ -42,12 +79,58 @@ public class LibraryController : MyControllerBase
     [HttpGet("Find")]
     public async Task<IActionResult> FindLibraryItems([FromQuery] FindLibraryItemsQueryParams queryParams)
     {
-        var findLibraryItemsResultDto = new FindLibraryItemsResultDto();
-        return Ok(findLibraryItemsResultDto);
+        var currentUserId = GetCurrentUserId();
+        var paginationOptions = new PaginationOptions(queryParams.Limit, queryParams.Offset);
+        var findLikesByUserIdOptions = new FindLikesByUserIdOptions(paginationOptions);
+        var res = await _libraryService.FindLibraryItemsAsync(
+            currentUserId,
+            findLikesByUserIdOptions
+        );
+        var libraryItemsDto = new LibraryItemsDto(
+            res.Albums.Select(album => new Album(
+                album.Id,
+                album.Title,
+                album.ReleaseDate,
+                album.ThumbnailUrl,
+                album.ArtistId,
+                album.ArtistName,
+                album.ArtistThumbnailUrl,
+                album.AlbumType,
+                album.LikeId
+            )),
+            res.Artists.Select(artist => new Artist(
+                artist.Id,
+                artist.Name,
+                artist.ThumbnailUrl,
+                artist.LikeId,
+                artist.MonthlyListeners
+            )),
+            res.Total,
+            res.Offset,
+            res.Limit
+        );
+        return Ok(libraryItemsDto);
     }
 
     [HttpGet]
-    public async Task<IActionResult> FindLikeSongs()
+    public async Task<IActionResult> FindLikeTracks([FromQuery] FindLikeTracksQueryParams queryParams)
     {
+        var currentUserId = GetCurrentUserId();
+        var res = await _libraryService.FindLikedTracksAsync(
+            currentUserId,
+            new FindLikedTracksOptions(new PaginationOptions(queryParams.Limit, queryParams.Offset))
+        );
+        var itemsDto = res.Items.Select(track => new TrackLibraryItem(
+            track.Id,
+            track.ThumbnailUrl,
+            track.Title,
+            track.ArtistName
+        ));
+        return Ok(new FindLikedTracksResultDto(
+            itemsDto,
+            res.Limit,
+            res.Offset,
+            res.Total
+        ));
     }
 }

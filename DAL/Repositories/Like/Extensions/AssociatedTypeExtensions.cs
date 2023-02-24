@@ -1,5 +1,5 @@
 using Repositories.Repositories.Like.Models;
-using Spotify.Shared.DAL.Like.models;
+using Spotify.Shared.DAL.Like.Models;
 
 namespace Repositories.Repositories.Like.Extensions;
 
