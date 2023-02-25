@@ -1,28 +1,31 @@
-using Spotify.Shared.BLL.Album.Models;
-using Spotify.Shared.BLL.Artist.Models;
+using System.Collections.Immutable;
 using Spotify.Shared.BLL.Library;
 using Spotify.Shared.BLL.Library.Models;
 using Spotify.Shared.BLL.Like.Models;
 using Spotify.Shared.BLL.Models;
 using Spotify.Shared.BLL.Shared;
-using Spotify.Shared.BLL.Track.Models;
+using Spotify.Shared.BLL.Shared.Items;
+using Spotify.Shared.DAL.Album;
+using Spotify.Shared.DAL.Artist;
+using Spotify.Shared.DAL.Like;
 using Spotify.Shared.DAL.Track;
+using AssociatedType = Spotify.Shared.DAL.Like.Models.AssociatedType;
 using SharedDAL = Spotify.Shared.DAL;
 
 namespace Spotify.BLL.Services;
 
 public class LibraryService : ILibraryService
 {
-    private readonly SharedDAL.Like.ILikeRepository _likeRepository;
-    private readonly SharedDAL.Album.IAlbumRepository _albumRepository;
-    private readonly SharedDAL.Artist.IArtistRepository _artistRepository;
+    private readonly ILikeRepository _likeRepository;
+    private readonly IAlbumRepository _albumRepository;
+    private readonly IArtistRepository _artistRepository;
     private readonly ITrackRepository _trackRepository;
 
     public LibraryService(
-        SharedDAL.Like.ILikeRepository likeRepository,
-        SharedDAL.Album.IAlbumRepository albumRepository,
-        SharedDAL.Artist.IArtistRepository artistRepository,
-        SharedDAL.Track.ITrackRepository trackRepository
+        ILikeRepository likeRepository,
+        IAlbumRepository albumRepository,
+        IArtistRepository artistRepository,
+        ITrackRepository trackRepository
     )
     {
         _likeRepository = likeRepository;
@@ -41,50 +44,58 @@ public class LibraryService : ILibraryService
     public async Task<LibraryItems> FindLibraryItemsAsync(string userId, FindLikesByUserIdOptions options)
     {
         var findLikesOptions =
-            new SharedDAL.Like.Models.FindLikesByUserIdOptions(
-                new SharedDAL.Shared.PaginationOptions(options.Pagination.Limit, options.Pagination.Offset)
+            new Shared.DAL.Like.Models.FindLikesByUserIdOptions(
+                new Shared.DAL.Shared.PaginationOptions(options.Pagination.Limit, options.Pagination.Offset)
             )
             {
                 AssociatedTypes = new[]
-                    { SharedDAL.Like.Models.AssociatedType.Album, SharedDAL.Like.Models.AssociatedType.Artist }
+                    { AssociatedType.Album, AssociatedType.Artist }
             };
         var allLikes = await _likeRepository.FindLikesByUserId(userId, findLikesOptions);
         var itemIdLookupByAssociatedType =
             allLikes.Items.ToLookup(like => like.AssociatedType, like => like.AssociatedId);
-        var likeIdLookupByAssociatedId = allLikes.Items.ToLookup(like => like.AssociatedId, like => like.Id);
+        var likeLookupByAssociatedId = allLikes.Items.ToLookup(like => like.AssociatedId, like => like);
         var albums =
             await _albumRepository.GetAlbumsAsync(
-                itemIdLookupByAssociatedType[SharedDAL.Like.Models.AssociatedType.Album]);
+                itemIdLookupByAssociatedType[AssociatedType.Album]);
         var artists =
             await _artistRepository.GetArtistsAsync(
-                itemIdLookupByAssociatedType[SharedDAL.Like.Models.AssociatedType.Artist]);
+                itemIdLookupByAssociatedType[AssociatedType.Artist]);
 
         return new LibraryItems(
-            albums.Select(album => new Album(
-                album.Id,
-                album.Title,
-                album.ReleaseDate,
-                album.ThumbnailUrl,
-                album.ArtistId,
-                album.ArtistName,
-                album.ArtistThumbnailUrl,
-                album.AlbumType,
-                likeIdLookupByAssociatedId[album.Id].FirstOrDefault()
-            )),
-            artists.Select(artist => new Artist(
-                artist.Id,
-                artist.Name,
-                artist.ThumbnailUrl,
-                likeIdLookupByAssociatedId[artist.Id].FirstOrDefault(),
-                artist.MonthlyListeners
-            )),
+            albums.Select(album =>
+            {
+                var like = likeLookupByAssociatedId[album.Id].First();
+                return new LibraryItem<SimpleAlbum>(new SimpleAlbum(
+                        album.Id,
+                        album.ThumbnailUrl,
+                        album.Title,
+                        album.ArtistName
+                    ),
+                    like.CreatedAt,
+                    like.Id
+                );
+            }),
+            artists.Select(artist =>
+            {
+                var like = likeLookupByAssociatedId[artist.Id].First();
+                return new LibraryItem<SimpleArtist>(new SimpleArtist(
+                        artist.Id,
+                        artist.ThumbnailUrl,
+                        artist.Name
+                    ),
+                    like.CreatedAt,
+                    like.Id
+                );
+            }),
             allLikes.Total,
             allLikes.Offset,
             allLikes.Limit
         );
     }
 
-    public async Task<Pagging<Track>> FindLikedTracksAsync(string userId, FindLikedTracksOptions options)
+    public async Task<Pagging<LibraryItem<SimpleTrack>>> FindLikedTracksAsync(string userId,
+        FindLikedTracksOptions options)
     {
         var findLikeByUserIdOptions =
             new Shared.DAL.Like.Models.FindLikesByUserIdOptions(
@@ -94,20 +105,27 @@ public class LibraryService : ILibraryService
                 )
             )
             {
-                AssociatedTypes = new[] { SharedDAL.Like.Models.AssociatedType.Track }
+                AssociatedTypes = new[] { AssociatedType.Track }
             };
         var likes = await _likeRepository.FindLikesByUserId(userId, findLikeByUserIdOptions);
         var trackIds = likes.Items.Select(like => like.AssociatedId);
-        var likeIdLookupByAssociatedId = likes.Items.ToLookup(like => like.AssociatedId, like => like.Id);
+        var likeIdLookupByAssociatedId = likes.Items.ToLookup(like => like.AssociatedId, like => like);
         var tracks = await _trackRepository.GetTracksAsync(trackIds);
-        return new Pagging<Track>(
-            tracks.Select(track => new Track(
-                track.Id,
-                track.Title,
-                track.ArtistName,
-                track.ThumbnailUrl,
-                likeIdLookupByAssociatedId[track.Id].FirstOrDefault()
-            )),
+        return new Pagging<LibraryItem<SimpleTrack>>(
+            tracks.Select(track =>
+            {
+                var like = likeIdLookupByAssociatedId[track.Id].First();
+                return new LibraryItem<SimpleTrack>(
+                    new SimpleTrack(
+                        track.Id,
+                        track.ThumbnailUrl,
+                        track.Title,
+                        track.ArtistName
+                    ),
+                    like.CreatedAt,
+                    like.Id
+                );
+            }),
             likes.Limit,
             likes.Offset,
             likes.Total

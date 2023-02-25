@@ -1,18 +1,19 @@
 using System.ComponentModel.DataAnnotations;
+using Api.Models.Items;
 
 namespace Api.Models.Library;
 
 public class FindLibraryItemsResultDto
 {
     FindLibraryItemsResultDto(
-        AlbumLibraryItemDto[] albumResult,
-        ArtistLibraryItemDto[] artistResult
+        SimpleAlbumDto[] albumResult,
+        SimpleArtistDto[] artistResult
     )
     {
         AlbumResult = albumResult;
         ArtistResult = artistResult;
     }
 
-    [Required] public AlbumLibraryItemDto[] AlbumResult { get; set; }
-    [Required] public ArtistLibraryItemDto[] ArtistResult { get; set; }
+    [Required] public SimpleAlbumDto[] AlbumResult { get; set; }
+    [Required] public SimpleArtistDto[] ArtistResult { get; set; }
 }

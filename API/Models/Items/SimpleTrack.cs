@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models.Library;
+namespace Api.Models.Items;
 
-public class TrackLibraryItem: BaseLibraryItemDto
+public class SimpleTrack: SimpleItemBaseDto
 {
     [Required] public string Title { get; set; }
     [Required] public string ArtistName { get; set; }
 
-    public TrackLibraryItem(
+    public SimpleTrack(
         string id,
         string? thumbnailUrl,
         string title, string

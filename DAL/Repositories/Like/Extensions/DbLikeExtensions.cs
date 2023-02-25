@@ -11,7 +11,8 @@ public static class DbLikeExtensions
             like.Id.ToString(),
             like.AssociatedId,
             like.AssociatedUser,
-            MapDbAssociatedTypesToDalAssociatedTypes(like.AssociatedType)
+            MapDbAssociatedTypesToDalAssociatedTypes(like.AssociatedType),
+            like.CreatedAt
         );
     }
 

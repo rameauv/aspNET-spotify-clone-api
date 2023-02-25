@@ -5,7 +5,7 @@ namespace Api.Models.Search;
 
 public class SearchQueryOptionalParams
 {
-    [Required] [FromQuery(Name = "q")] public string Q { get; set; }
+    [Required] [FromQuery(Name = "q")] public string Q { get; set; } = null!;
     [FromQuery(Name = "offset")] public int? Offset { get; set; }
     [FromQuery(Name = "limit")] public int? Limit { get; set; }
 

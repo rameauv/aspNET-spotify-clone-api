@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models.Library;
+namespace Api.Models.Items;
 
-public class BaseLibraryItemDto
+public class SimpleItemBaseDto
 {
-    public BaseLibraryItemDto(string id, string? thumbnailUrl)
+    public SimpleItemBaseDto(string id, string? thumbnailUrl)
     {
         Id = id;
         ThumbnailUrl = thumbnailUrl;

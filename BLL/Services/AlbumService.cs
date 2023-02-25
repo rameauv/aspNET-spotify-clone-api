@@ -71,7 +71,7 @@ public class AlbumService : IAlbumService
             return null;
         }
 
-        var mappedTracks = res.Items.Select(track => new SimpleTrack(
+        var mappedTracks = res.Items.Select(track => new AlbumTrack(
             track.Id,
             track.Title,
             track.ArtistName
