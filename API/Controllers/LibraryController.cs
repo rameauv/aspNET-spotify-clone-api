@@ -112,6 +112,11 @@ public class LibraryController : MyControllerBase
         return Ok(libraryItemsDto);
     }
 
+    /// <summary>
+    /// Find the current user's liked tracks
+    /// </summary>
+    /// <param name="queryParams"></param>
+    /// <returns></returns>
     [HttpGet("FindLikedTracks")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FindLikedTracksResultDto))]
     public async Task<IActionResult> FindLikedTracks([FromQuery] FindLikedTracksQueryParams queryParams)
