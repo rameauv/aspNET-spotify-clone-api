@@ -26,6 +26,9 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=873185b9_002Dbec8_002D485d_002D9be6_002D74d8e3997218/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="2" Name="ShouldReturnNullIfTheUserIsNotFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9673fd3c_002Da643_002D47f8_002Dbe40_002Da4d5224af481/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;BLL.UnitTests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Project Location="/Users/valentinrameau/projects/SpotifyBackend/BLL.UnitTests" Presentation="&amp;lt;BLL.UnitTests&amp;gt;" /&gt;
+&lt;/SessionState&gt;</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b22885ff_002D2b81_002D479d_002Da62d_002Dcc68ec6fd233/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="RefreshAccessToken" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;

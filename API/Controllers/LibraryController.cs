@@ -46,7 +46,8 @@ public class LibraryController : MyControllerBase
                     album.Item.Id,
                     album.Item.ThumbnailUrl,
                     album.Item.Title,
-                    album.Item.ArtistName
+                    album.Item.ArtistName,
+                    album.Item.AlbumType
                 ),
                 album.LikeCreatedAt,
                 album.LikeId
@@ -75,6 +76,7 @@ public class LibraryController : MyControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("FindLibraryItems")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LibraryItemsDto))]
     public async Task<IActionResult> FindLibraryItems([FromQuery] FindLibraryItemsQueryParams queryParams)
     {
         var currentUserId = GetCurrentUserId();
@@ -89,7 +91,8 @@ public class LibraryController : MyControllerBase
                     album.Item.Id,
                     album.Item.ThumbnailUrl,
                     album.Item.Title,
-                    album.Item.ArtistName
+                    album.Item.ArtistName,
+                    album.Item.AlbumType
                 ),
                 album.LikeCreatedAt,
                 album.LikeId
@@ -110,6 +113,7 @@ public class LibraryController : MyControllerBase
     }
 
     [HttpGet("FindLikedTracks")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FindLikedTracksResultDto))]
     public async Task<IActionResult> FindLikedTracks([FromQuery] FindLikedTracksQueryParams queryParams)
     {
         var currentUserId = GetCurrentUserId();

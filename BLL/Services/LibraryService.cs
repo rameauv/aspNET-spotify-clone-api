@@ -70,7 +70,8 @@ public class LibraryService : ILibraryService
                         album.Id,
                         album.ThumbnailUrl,
                         album.Title,
-                        album.ArtistName
+                        album.ArtistName,
+                        album.AlbumType
                     ),
                     like.CreatedAt,
                     like.Id
