@@ -74,21 +74,23 @@ public class LikeRepository : ILikeRepository
         DALModels.FindLikesByUserIdOptions options
     )
     {
-        var query = Context.Set<Models.Like>();
         var associatedTypes = options.AssociatedTypes?.ToStringArray();
+        var total = await Context.Likes
+            .Where(like => like.AssociatedUser == userId)
+            .Where(like => associatedTypes == null || associatedTypes.Contains(like.AssociatedType))
+            .CountAsync();
         var res = await Context.Likes
             .Where(like => like.AssociatedUser == userId)
             .Where(like => associatedTypes == null || associatedTypes.Contains(like.AssociatedType))
             .Skip(options.Pagination.Offset)
             .Take(options.Pagination.Limit)
-            .GroupBy(like => new { Total = query.Count() })
-            .FirstAsync();
+            .ToArrayAsync();
         var likes = res.Select(like => like.ToDalLike());
         return new DALModels.FindLikesByUserIdResult(
             likes,
             options.Pagination.Limit,
             options.Pagination.Offset,
-            res.Key.Total
+            total
         );
     }
 

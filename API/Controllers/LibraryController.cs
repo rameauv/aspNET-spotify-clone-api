@@ -112,8 +112,8 @@ public class LibraryController : MyControllerBase
         return Ok(libraryItemsDto);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> FindLikeTracks([FromQuery] FindLikeTracksQueryParams queryParams)
+    [HttpGet("FindLikedTracks")]
+    public async Task<IActionResult> FindLikedTracks([FromQuery] FindLikedTracksQueryParams queryParams)
     {
         var currentUserId = GetCurrentUserId();
         var res = await _libraryService.FindLikedTracksAsync(

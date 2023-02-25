@@ -39,9 +39,18 @@ public class ArtistRepository : IArtistRepository
         }
     }
 
-    public async Task<IEnumerable<Spotify.Shared.DAL.Artist.Models.Artist>> GetArtistsAsync(IEnumerable<string> artistsIds)
+    public async Task<IEnumerable<Spotify.Shared.DAL.Artist.Models.Artist>> GetArtistsAsync(
+        IEnumerable<string> artistsIds)
     {
-        var res = await _client.Artists.GetSeveral(new ArtistsRequest(artistsIds.ToList()));
-        return res.Artists.Select(artist => artist.ToDalArtist());
+        var artistIdsList = artistsIds.ToList();
+        if (artistIdsList.IsEmpty())
+        {
+            return Array.Empty<Spotify.Shared.DAL.Artist.Models.Artist>();
+        }
+
+        var res = await _client.Artists.GetSeveral(new ArtistsRequest(artistIdsList));
+        return res.Artists
+            .Where(artist => artist != null)
+            .Select(artist => artist.ToDalArtist());
     }
 }

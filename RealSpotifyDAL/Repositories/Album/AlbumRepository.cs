@@ -5,7 +5,7 @@ using SpotifyAPI.Web;
 using RealSpotify = SpotifyAPI.Web;
 using SharedDAL = Spotify.Shared.DAL;
 
-namespace RealSpotifyDAL.Repositories;
+namespace RealSpotifyDAL.Repositories.Album;
 
 /// <summary>
 /// Repository for fetching album information from the Spotify API
@@ -83,7 +83,15 @@ public class AlbumRepository : IAlbumRepository
 
     public async Task<IEnumerable<SharedDAL.Album.Models.Album>> GetAlbumsAsync(IEnumerable<string> albumIds)
     {
-        var res = await _spotifyClient.Albums.GetSeveral(new AlbumsRequest(albumIds.ToList()));
-        return res.Albums.Select(album => album.ToDalAlbum());
+        var albumIdsList = albumIds.ToList();
+        if (albumIdsList.IsEmpty())
+        {
+            return Array.Empty<Spotify.Shared.DAL.Album.Models.Album>();
+        }
+
+        var res = await _spotifyClient.Albums.GetSeveral(new AlbumsRequest(albumIdsList));
+        return res.Albums
+            .Where(album => album != null)
+            .Select(album => album.ToDalAlbum());
     }
 }

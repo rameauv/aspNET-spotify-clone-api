@@ -4,44 +4,20 @@ namespace Repositories.Contexts;
 
 public partial class SpotifyContext : DbContext
 {
-    public SpotifyContext()
-    {
-    }
-
     public SpotifyContext(DbContextOptions<SpotifyContext> options)
         : base(options)
     {
     }
 
-    public virtual DbSet<Album> Albums { get; set; }
-
-    public virtual DbSet<Artist> Artists { get; set; }
-
     public virtual DbSet<Like> Likes { get; set; }
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-
-    public virtual DbSet<Song> Songs { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("Spotify", "uuid-ossp");
-
-        modelBuilder.Entity<Album>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("Album");
-        });
-
-        modelBuilder.Entity<Artist>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("Artist");
-        });
 
         modelBuilder.Entity<Like>(entity =>
         {
@@ -57,17 +33,6 @@ public partial class SpotifyContext : DbContext
             entity.HasKey(e => e.Id).HasName("refreshtokens_pk");
 
             entity.HasIndex(e => e.Id, "refreshtokens_id_uindex").IsUnique();
-
-            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
-        });
-
-        modelBuilder.Entity<Song>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("song_pk");
-
-            entity.ToTable("Song");
-
-            entity.HasIndex(e => e.Id, "song_id_uindex").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
         });

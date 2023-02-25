@@ -18,7 +18,7 @@ public class LibraryService : ILibraryService
     private readonly SharedDAL.Artist.IArtistRepository _artistRepository;
     private readonly ITrackRepository _trackRepository;
 
-    LibraryService(
+    public LibraryService(
         SharedDAL.Like.ILikeRepository likeRepository,
         SharedDAL.Album.IAlbumRepository albumRepository,
         SharedDAL.Artist.IArtistRepository artistRepository,
@@ -49,15 +49,15 @@ public class LibraryService : ILibraryService
                     { SharedDAL.Like.Models.AssociatedType.Album, SharedDAL.Like.Models.AssociatedType.Artist }
             };
         var allLikes = await _likeRepository.FindLikesByUserId(userId, findLikesOptions);
-        var likesLookupByAssociatedType =
+        var itemIdLookupByAssociatedType =
             allLikes.Items.ToLookup(like => like.AssociatedType, like => like.AssociatedId);
         var likeIdLookupByAssociatedId = allLikes.Items.ToLookup(like => like.AssociatedId, like => like.Id);
         var albums =
             await _albumRepository.GetAlbumsAsync(
-                likesLookupByAssociatedType[SharedDAL.Like.Models.AssociatedType.Album]);
+                itemIdLookupByAssociatedType[SharedDAL.Like.Models.AssociatedType.Album]);
         var artists =
             await _artistRepository.GetArtistsAsync(
-                likesLookupByAssociatedType[SharedDAL.Like.Models.AssociatedType.Artist]);
+                itemIdLookupByAssociatedType[SharedDAL.Like.Models.AssociatedType.Artist]);
 
         return new LibraryItems(
             albums.Select(album => new Album(
@@ -97,9 +97,9 @@ public class LibraryService : ILibraryService
                 AssociatedTypes = new[] { SharedDAL.Like.Models.AssociatedType.Track }
             };
         var likes = await _likeRepository.FindLikesByUserId(userId, findLikeByUserIdOptions);
-        var likeIds = likes.Items.Select(like => like.Id);
+        var trackIds = likes.Items.Select(like => like.AssociatedId);
         var likeIdLookupByAssociatedId = likes.Items.ToLookup(like => like.AssociatedId, like => like.Id);
-        var tracks = await _trackRepository.GetTracksAsync(likeIds);
+        var tracks = await _trackRepository.GetTracksAsync(trackIds);
         return new Pagging<Track>(
             tracks.Select(track => new Track(
                 track.Id,

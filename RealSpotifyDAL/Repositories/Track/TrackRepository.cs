@@ -46,7 +46,15 @@ public class TrackRepository : ITrackRepository
 
     public async Task<IEnumerable<Spotify.Shared.DAL.Track.Models.Track>> GetTracksAsync(IEnumerable<string> trackIds)
     {
-        var res = await _client.Tracks.GetSeveral(new TracksRequest(trackIds.ToList()));
-        return res.Tracks.Select(track => track.ToDalTrack());
+        var trackIdsList = trackIds.ToList();
+        if (trackIdsList.IsEmpty())
+        {
+            return Array.Empty<Spotify.Shared.DAL.Track.Models.Track>();
+        }
+
+        var res = await _client.Tracks.GetSeveral(new TracksRequest(trackIdsList));
+        return res.Tracks
+            .Where(track => track != null)
+            .Select(track => track.ToDalTrack());
     }
 }
