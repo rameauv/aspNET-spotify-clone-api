@@ -6,7 +6,13 @@ public class SimpleAlbum : SimpleItemBase
     public string ArtistName { get; set; }
     public string AlbumType { get; set; }
 
-    public SimpleAlbum(string id, string? thumbnailUrl, string title, string artistName, string albumType)
+    public SimpleAlbum(
+        string id,
+        string? thumbnailUrl,
+        string title,
+        string artistName,
+        string albumType
+    )
         : base(id, thumbnailUrl)
     {
         Title = title;

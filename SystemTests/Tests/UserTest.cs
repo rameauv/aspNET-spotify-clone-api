@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using Api;
-using Api.Models;
+using Api.Controllers.User.Models;
 using Newtonsoft.Json;
 
 namespace SystemTests.Tests;

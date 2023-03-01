@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL.UnitTests", "BLL.UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTests", "SystemTests\SystemTests.csproj", "{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMapper.UnitTests", "AutoMapper.UnitTests\AutoMapper.UnitTests.csproj", "{24CA6ADA-50A0-4D38-8D60-AC4C10078501}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B9A070E-C168-4E5A-9025-47BEE40FD3CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24CA6ADA-50A0-4D38-8D60-AC4C10078501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24CA6ADA-50A0-4D38-8D60-AC4C10078501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24CA6ADA-50A0-4D38-8D60-AC4C10078501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24CA6ADA-50A0-4D38-8D60-AC4C10078501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

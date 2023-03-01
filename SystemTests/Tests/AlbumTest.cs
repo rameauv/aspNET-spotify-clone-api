@@ -1,7 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
 using Api;
-using Api.Models;
+using Api.Controllers.Album.Models;
+using Api.Controllers.Shared.Like;
 using Newtonsoft.Json;
 using SystemTests.Models;
 

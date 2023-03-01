@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+using AutoMapper;
 using Spotify.Shared.BLL.Library;
 using Spotify.Shared.BLL.Library.Models;
 using Spotify.Shared.BLL.Like.Models;
@@ -20,18 +20,21 @@ public class LibraryService : ILibraryService
     private readonly IAlbumRepository _albumRepository;
     private readonly IArtistRepository _artistRepository;
     private readonly ITrackRepository _trackRepository;
+    private readonly IMapper _mapper;
 
     public LibraryService(
         ILikeRepository likeRepository,
         IAlbumRepository albumRepository,
         IArtistRepository artistRepository,
-        ITrackRepository trackRepository
+        ITrackRepository trackRepository,
+        IMapper mapper
     )
     {
         _likeRepository = likeRepository;
         _albumRepository = albumRepository;
         _artistRepository = artistRepository;
         _trackRepository = trackRepository;
+        _mapper = mapper;
     }
 
     public async Task<Library> GetAsync(string userId)
@@ -66,13 +69,8 @@ public class LibraryService : ILibraryService
             albums.Select(album =>
             {
                 var like = likeLookupByAssociatedId[album.Id].First();
-                return new LibraryItem<SimpleAlbum>(new SimpleAlbum(
-                        album.Id,
-                        album.ThumbnailUrl,
-                        album.Title,
-                        album.ArtistName,
-                        album.AlbumType
-                    ),
+                return new LibraryItem<SimpleAlbum>(
+                    _mapper.Map<SimpleAlbum>(album),
                     like.CreatedAt,
                     like.Id
                 );
@@ -80,11 +78,8 @@ public class LibraryService : ILibraryService
             artists.Select(artist =>
             {
                 var like = likeLookupByAssociatedId[artist.Id].First();
-                return new LibraryItem<SimpleArtist>(new SimpleArtist(
-                        artist.Id,
-                        artist.ThumbnailUrl,
-                        artist.Name
-                    ),
+                return new LibraryItem<SimpleArtist>(
+                    _mapper.Map<SimpleArtist>(artist),
                     like.CreatedAt,
                     like.Id
                 );
@@ -117,12 +112,7 @@ public class LibraryService : ILibraryService
             {
                 var like = likeIdLookupByAssociatedId[track.Id].First();
                 return new LibraryItem<SimpleTrack>(
-                    new SimpleTrack(
-                        track.Id,
-                        track.ThumbnailUrl,
-                        track.Title,
-                        track.ArtistName
-                    ),
+                    _mapper.Map<SimpleTrack>(track),
                     like.CreatedAt,
                     like.Id
                 );

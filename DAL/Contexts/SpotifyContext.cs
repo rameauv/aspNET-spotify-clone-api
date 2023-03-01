@@ -26,7 +26,9 @@ public partial class SpotifyContext : DbContext
             entity.HasIndex(e => e.Id, "likes_id_uindex").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.CreatedAt).HasColumnType("timestamp without time zone");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>

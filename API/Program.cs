@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Api.AutoMapper;
+using Api.Controllers.Shared.Error;
 using Api.ExceptionFilters;
 using Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -133,7 +134,7 @@ builder.Logging.AddConsole();
 builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(ApiProfile), typeof(BllProfile));
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 // Project config
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);

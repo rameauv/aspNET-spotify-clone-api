@@ -65,7 +65,6 @@ public class LikeRepository : ILikeRepository
         {
             return null;
         }
-
         return res.ToDalLike();
     }
 

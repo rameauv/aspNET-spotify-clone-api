@@ -10,5 +10,4 @@ public class SimpleItemBase
 
     public string Id { get; set; }
     public string? ThumbnailUrl { get; set; }
-    public DateTime UpdateAt { get; set; }
 }
