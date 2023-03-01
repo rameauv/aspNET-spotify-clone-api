@@ -18,7 +18,7 @@ public class UserService : IUserService
     /// <param name="userRepository">The repository for interacting with user data.</param>
     public UserService(IUserRepository userRepository)
     {
-        this._userRepository = userRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<User> GetAsync(string id)

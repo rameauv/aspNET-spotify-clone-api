@@ -85,11 +85,13 @@ public class LibraryController : MyControllerBase
             currentUserId,
             new FindLikedTracksOptions(new PaginationOptions(queryParams.Limit, queryParams.Offset))
         );
-        var itemsDto = res.Items.Select(track => new LibraryItemDto<SimpleTrackDto>(
-            track.Item.ToDto(),
-            track.LikeCreatedAt,
-            track.LikeId
-        ));
+        var itemsDto = res.Items.Select(
+            track => new LibraryItemDto<SimpleTrackDto>(
+                track.Item.ToDto(),
+                track.LikeCreatedAt,
+                track.LikeId
+            )
+        );
         return Ok(new FindLikedTracksResultDto(
             itemsDto,
             res.Limit,

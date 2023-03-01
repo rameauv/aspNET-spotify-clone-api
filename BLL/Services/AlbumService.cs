@@ -21,6 +21,7 @@ public class AlbumService : IAlbumService
     /// </summary>
     /// <param name="albumRepository">The repository for accessing album data.</param>
     /// <param name="likeRepository">The repository for accessing like data.</param>
+    /// <param name="mapper">The object mapper service</param>
     public AlbumService(
         IAlbumRepository albumRepository,
         ILikeRepository likeRepository,
