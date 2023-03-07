@@ -1,3 +1,4 @@
+using AutoMapper;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Album.Models;
 using Spotify.Shared.BLL.Like.Models;
@@ -13,24 +14,28 @@ public class AlbumService : IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
     private readonly ILikeRepository _likeRepository;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AlbumService"/> class.
     /// </summary>
     /// <param name="albumRepository">The repository for accessing album data.</param>
     /// <param name="likeRepository">The repository for accessing like data.</param>
+    /// <param name="mapper">The object mapper service</param>
     public AlbumService(
         IAlbumRepository albumRepository,
-        ILikeRepository likeRepository
+        ILikeRepository likeRepository,
+        IMapper mapper
     )
     {
-        this._albumRepository = albumRepository;
-        this._likeRepository = likeRepository;
+        _albumRepository = albumRepository;
+        _likeRepository = likeRepository;
+        _mapper = mapper;
     }
 
     public async Task<Album?> GetAsync(string id, string userId)
     {
-        var albumTask = _albumRepository.GetAsync(id);
+        var albumTask = _albumRepository.TryGetAsync(id);
         var likeTask = _likeRepository.GetByAssociatedUserIdAsync(id, userId);
         await Task.WhenAll(albumTask, likeTask);
         var album = await albumTask;
@@ -56,7 +61,7 @@ public class AlbumService : IAlbumService
 
     public async Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
     {
-        var res = await _albumRepository.GetTracksAsync(id, new Shared.DAL.Album.Models.AlbumTracksRequest
+        var res = await _albumRepository.TryGetTracksAsync(id, new Shared.DAL.Album.Models.AlbumTracksRequest
         {
             Limit = albumTracksRequest?.Limit,
             Offset = albumTracksRequest?.Offset
@@ -67,7 +72,7 @@ public class AlbumService : IAlbumService
             return null;
         }
 
-        var mappedTracks = res.Items.Select(track => new SimpleTrack(
+        var mappedTracks = res.Items.Select(track => new AlbumTrack(
             track.Id,
             track.Title,
             track.ArtistName
@@ -83,6 +88,7 @@ public class AlbumService : IAlbumService
     public async Task<Like> SetLikeAsync(string id, string userId)
     {
         var like = await _likeRepository.SetAsync(id, "album", userId);
-        return new Like(like.Id, like.AssociatedId, like.AssociatedUser, like.AssociatedType);
+        var associatedType = _mapper.Map<AssociatedType>(like.AssociatedType);
+        return new Like(like.Id, like.AssociatedId, like.AssociatedUser, associatedType);
     }
 }

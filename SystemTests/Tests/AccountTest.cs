@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using Api.Models;
+using Api;
+using Api.Controllers.Account.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 

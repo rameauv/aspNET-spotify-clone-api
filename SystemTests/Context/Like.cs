@@ -8,5 +8,7 @@ public partial class Like
 
     public string AssociatedUser { get; set; } = null!;
 
-    public string? AssociatedType { get; set; }
+    public string AssociatedType { get; set; } = null!;
+
+    public DateTime CreatedAt { get; set; }
 }

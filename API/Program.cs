@@ -2,20 +2,26 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Api.AutoMapper;
+using Api.Controllers.Shared.Error;
 using Api.ExceptionFilters;
 using Api.Models;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealSpotifyDAL;
 using RealSpotifyDAL.Repositories;
+using RealSpotifyDAL.Repositories.Album;
+using RealSpotifyDAL.Repositories.Artist;
+using RealSpotifyDAL.Repositories.Track;
 using Repositories.Repositories;
+using Repositories.Repositories.Like;
+using Repositories.Repositories.User;
 using Spotify.BLL.Services;
 using Spotify.Shared;
 using Spotify.Shared.BLL.Album;
 using Spotify.Shared.BLL.Artist;
 using Spotify.Shared.BLL.Jwt;
+using Spotify.Shared.BLL.Library;
 using Spotify.Shared.BLL.Like;
 using Spotify.Shared.BLL.MyIdentity;
 using Spotify.Shared.BLL.Password;
@@ -128,7 +134,7 @@ builder.Logging.AddConsole();
 builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(ApiProfile), typeof(BllProfile));
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 // Project config
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
@@ -140,23 +146,24 @@ builder.Services.AddSingleton(jwtConfig);
 builder.Services.AddScoped<IIdentityUserRepository, IdentityUserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISearchRepository, SearchRepository>();
+builder.Services.AddScoped<MySpotifyClient, MySpotifyClient>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
-builder.Services.AddSingleton<ISearchRepository, SearchRepository>();
-builder.Services.AddSingleton<MySpotifyClient, MySpotifyClient>();
-builder.Services.AddSingleton<ITrackRepository, TrackRepository>();
-builder.Services.AddSingleton<IArtistRepository, ArtistRepository>();
-builder.Services.AddSingleton<IAlbumRepository, AlbumRepository>();
+builder.Services.AddScoped<ITrackRepository, TrackRepository>();
+builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
+builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
 // BLL Dependencies
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton<IJwtService, JwtService>();
-builder.Services.AddSingleton<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<ILibraryService, LibraryService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -226,4 +233,7 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace Api
+{
+    public partial class Program { }
+}

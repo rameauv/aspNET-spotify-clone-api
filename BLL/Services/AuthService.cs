@@ -41,11 +41,11 @@ public class AuthService : IAuthService
         ILogger<AuthService> logger
     )
     {
-        this._identityUserRepository = identityUserRepository;
-        this._refreshTokenRepository = refreshTokenRepository;
-        this._jwtService = jwtService;
-        this._passwordService = passwordService;
-        this._logger = logger;
+        _identityUserRepository = identityUserRepository;
+        _refreshTokenRepository = refreshTokenRepository;
+        _jwtService = jwtService;
+        _passwordService = passwordService;
+        _logger = logger;
     }
 
     public async Task Register(RegisterUser user)

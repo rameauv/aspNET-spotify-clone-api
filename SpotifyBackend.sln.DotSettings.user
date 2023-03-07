@@ -6,8 +6,9 @@
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/Environment/Highlighting/HighlightingEnabled/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/Highlighting/HighlightingMode/@EntryValue">OnlyMarkers</s:String>
-	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/valentinrameau/Library/Caches/JetBrains/Rider2022.3/resharper-host/temp/Rider/vAny/CoverageData/_SpotifyBackend.1932380419/Snapshot/snapshot.utdcvr</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=164d1f3f_002D07f1_002D4d3a_002D8bb6_002D376155886ef8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ShouldGetResults" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/valentinrameau/Library/Caches/JetBrains/Rider2022.3/resharper-host/temp/Rider/vAny/CoverageData/_SpotifyBackend.1932380419.01/Snapshot/snapshot.utdcvr</s:String>
+	
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=164d1f3f_002D07f1_002D4d3a_002D8bb6_002D376155886ef8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ShouldGetResults" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::7B9A070E-C168-4E5A-9025-47BEE40FD3CA::net7.0::SystemTests.Tests.SearchTest.ShouldGetResults&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
@@ -25,6 +26,18 @@
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=873185b9_002Dbec8_002D485d_002D9be6_002D74d8e3997218/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="2" Name="ShouldReturnNullIfTheUserIsNotFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8dd3c33c_002D318d_002D4cdf_002Db847_002D471a9a7e1e53/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ShouldGetABadRequestErrorWhenGettingAnAlbumWithAnInvalidId" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9673fd3c_002Da643_002D47f8_002Dbe40_002Da4d5224af481/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;BLL.UnitTests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Or&gt;
+    &lt;Project Location="/Users/valentinrameau/projects/SpotifyBackend/BLL.UnitTests" Presentation="&amp;lt;BLL.UnitTests&amp;gt;" /&gt;
+    &lt;Project Location="/Users/valentinrameau/projects/SpotifyBackend/SystemTests" Presentation="&amp;lt;SystemTests&amp;gt;" /&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;xUnit::24CA6ADA-50A0-4D38-8D60-AC4C10078501::net7.0::AutoMapper.UnitTests.ConfigurationTests.AutoMapper_Configuration_IsValid&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+  &lt;/Or&gt;
 &lt;/SessionState&gt;</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b22885ff_002D2b81_002D479d_002Da62d_002Dcc68ec6fd233/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="RefreshAccessToken" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;

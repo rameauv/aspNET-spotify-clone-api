@@ -1,4 +1,4 @@
-using Api.Models;
+using Api.Controllers.Shared.Error;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

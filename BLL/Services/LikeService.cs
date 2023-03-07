@@ -16,7 +16,7 @@ public class LikeService : ILikeService
     /// <param name="likeRepository">The repository for storing and managing likes.</param>
     public LikeService(ILikeRepository likeRepository)
     {
-        this._likeRepository = likeRepository;
+        _likeRepository = likeRepository;
     }
     
     public async Task DeleteAsync(string id, string userId)

@@ -11,4 +11,6 @@ public interface IArtistRepository
     /// <param name="id">The ID of the artist.</param>
     /// <returns>The artist with the specified ID, or null if no such artist exists.</returns>
     Task<Models.Artist?> GetAsync(string id);
+
+    Task<IEnumerable<Models.Artist>> GetArtistsAsync(IEnumerable<string> artistsIds);
 }

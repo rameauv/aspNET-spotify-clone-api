@@ -24,6 +24,7 @@ public partial class TestDbContext : DbContext
             entity.HasIndex(e => e.Id, "likes_id_uindex").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>

@@ -1,9 +1,9 @@
 using System.Net.Mime;
-using Api.Models;
+using Api.Controllers.Search.Models;
+using Api.Controllers.Shared.Error;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Extensions;
 using Spotify.Shared.BLL.Search;
 using Spotify.Shared.BLL.Search.Models;
 

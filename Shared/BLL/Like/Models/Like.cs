@@ -1,6 +1,6 @@
 namespace Spotify.Shared.BLL.Like.Models;
 
-public record Like(string Id, string AssociatedId, string AssociatedUser, string? AssociatedType)
+public record Like(string Id, string AssociatedId, string AssociatedUser, AssociatedType AssociatedType)
 {
     public string Id { get; set; } = Id;
 
@@ -8,5 +8,5 @@ public record Like(string Id, string AssociatedId, string AssociatedUser, string
 
     public string AssociatedUser { get; set; } = AssociatedUser;
 
-    public string? AssociatedType { get; set; } = AssociatedType;
+    public AssociatedType AssociatedType { get; set; } = AssociatedType;
 }
