@@ -47,8 +47,8 @@ public class LibraryTest : TestBase, IClassFixture<CustomWebApplicationFactory<P
         var libraryDto = JsonConvert.DeserializeObject<LibraryDto>(await res.Content.ReadAsStringAsync());
 
         Assert.NotNull(libraryDto);
-        Assert.Equal(1, libraryDto.Items.Albums.ToArray().Length);
-        Assert.Equal(1, libraryDto.Items.Artists.ToArray().Length);
+        Assert.Single(libraryDto.Items.Albums.ToArray());
+        Assert.Single(libraryDto.Items.Artists.ToArray());
     }
 
     [Fact]
@@ -93,8 +93,8 @@ public class LibraryTest : TestBase, IClassFixture<CustomWebApplicationFactory<P
         var libraryItemsDto = JsonConvert.DeserializeObject<LibraryItemsDto>(await res.Content.ReadAsStringAsync());
 
         Assert.NotNull(libraryItemsDto);
-        Assert.Equal(1, libraryItemsDto.Albums.ToArray().Length);
-        Assert.Equal(1, libraryItemsDto.Artists.ToArray().Length);
+        Assert.Single(libraryItemsDto.Albums.ToArray());
+        Assert.Single(libraryItemsDto.Artists.ToArray());
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public class LibraryTest : TestBase, IClassFixture<CustomWebApplicationFactory<P
             JsonConvert.DeserializeObject<FindLikedTracksResultDto>(await res.Content.ReadAsStringAsync());
 
         Assert.NotNull(findLikedTrackResultDto);
-        Assert.Equal(1, findLikedTrackResultDto.Items.ToArray().Length);
+        Assert.Single(findLikedTrackResultDto.Items.ToArray());
     }
 
     [Fact]

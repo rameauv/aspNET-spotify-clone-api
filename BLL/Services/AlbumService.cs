@@ -35,7 +35,7 @@ public class AlbumService : IAlbumService
 
     public async Task<Album?> GetAsync(string id, string userId)
     {
-        var albumTask = _albumRepository.GetAsync(id);
+        var albumTask = _albumRepository.TryGetAsync(id);
         var likeTask = _likeRepository.GetByAssociatedUserIdAsync(id, userId);
         await Task.WhenAll(albumTask, likeTask);
         var album = await albumTask;
@@ -61,7 +61,7 @@ public class AlbumService : IAlbumService
 
     public async Task<AlbumTracks?> GetTracksAsync(string id, AlbumTracksRequest? albumTracksRequest = null)
     {
-        var res = await _albumRepository.GetTracksAsync(id, new Shared.DAL.Album.Models.AlbumTracksRequest
+        var res = await _albumRepository.TryGetTracksAsync(id, new Shared.DAL.Album.Models.AlbumTracksRequest
         {
             Limit = albumTracksRequest?.Limit,
             Offset = albumTracksRequest?.Offset

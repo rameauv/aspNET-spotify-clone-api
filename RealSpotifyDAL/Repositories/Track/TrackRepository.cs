@@ -1,3 +1,4 @@
+using System.Net;
 using RealSpotifyDAL.Repositories.Track.Extensions;
 using Spotify.Shared.DAL.Track;
 using SpotifyAPI.Web;
@@ -35,7 +36,7 @@ public class TrackRepository : ITrackRepository
         }
         catch (APIException e)
         {
-            if (e.Message == "invalid id")
+            if (e.Response?.StatusCode == HttpStatusCode.BadRequest)
             {
                 return null;
             }
