@@ -1,0 +1,34 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: spotify-clone-api-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: api-service-ingress
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - spotify-clone-api-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /audioFile
+    route:
+    - destination:
+        host: api-audio-file
+  - route:
+    - destination:
+        host: api-monolith-service
